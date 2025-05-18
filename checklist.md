@@ -33,6 +33,7 @@
 ---
 
 ### 3. **APP móvil (Android - Java)**
+https://www.hellofresh.es/about/ingredientes-locales
 
 * [ ] Configurar Retrofit + estructura base (MVVM)
 * [ ] Crear models y repositories por módulo:
