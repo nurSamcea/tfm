@@ -1,0 +1,60 @@
+# Node.js
+node_modules/
+npm-debug.log
+.env
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+*.so
+*.jar
+*.war
+*.ear
+*.iml
+*.hprof
+*.orig
+*.pyc
+*.pyo
+*.rbc
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.log
+*.lock
+*.keystore
+*.jks
+*.properties
+*.gradle
+*.idea/
+.gradle/
+local.properties
+.DS_Store
+build/
+captures/
+output.json
+
+# Next.js
+.next/
+out/
+build/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
