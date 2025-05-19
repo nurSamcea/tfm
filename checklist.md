@@ -4,7 +4,8 @@
 ### 1. **Infraestructura y despliegue**
 
 * [X] Crear repositorio limpio (API + frontend + docs)
-* [ ] Entorno `.env` + Railway deploy
+* [ ] Entorno `.env`
+* [X] Railway deploy
 * [ ] CI/CD con GitHub Actions
 * [ ] Docker (opcional)
 * [ ] Base de datos (PostgreSQL)
