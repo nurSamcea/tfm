@@ -6,9 +6,9 @@
 * [X] Crear repositorio limpio (API + frontend + docs)
 * [ ] Entorno `.env`
 * [X] Railway deploy
-* [ ] CI/CD con GitHub Actions
-* [ ] Docker (opcional)
-* [ ] Base de datos (PostgreSQL)
+* [X] CI/CD con GitHub Actions
+* [ ] Docker (opcional). Por ahora solo he añadido ficheros Dockerfile, pensar si es necesario y se quiere añadir. “Posponer Docker hasta integración IoT o despliegue en otro entorno”
+* [X] Base de datos (PostgreSQL)
 
 ---
 
