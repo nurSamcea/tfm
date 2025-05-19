@@ -3,8 +3,9 @@
 
 ### 1. **Infraestructura y despliegue**
 
-* [ ] Crear repositorio limpio (API + frontend + docs)
-* [ ] Entorno `.env` + Railway deploy
+* [X] Crear repositorio limpio (API + frontend + docs)
+* [ ] Entorno `.env`
+* [X] Railway deploy
 * [ ] CI/CD con GitHub Actions
 * [ ] Docker (opcional)
 * [ ] Base de datos (PostgreSQL)
@@ -33,6 +34,7 @@
 ---
 
 ### 3. **APP móvil (Android - Java)**
+https://www.hellofresh.es/about/ingredientes-locales
 
 * [ ] Configurar Retrofit + estructura base (MVVM)
 * [ ] Crear models y repositories por módulo:
