@@ -1,0 +1,21 @@
+
+erDiagram
+  users ||--o{ products : provides
+  users ||--o{ transactions : makes
+  users ||--o{ shopping_lists : owns
+  users ||--o{ recipes : creates
+  users ||--|| impact_metrics : has
+  users ||--|| intake_profiles : has
+
+  shopping_lists ||--o{ shopping_list_items : contains
+  shopping_list_items }o--|| products : references
+  shopping_list_items }o--|| users : provided_by
+
+  recipes ||--o{ recipe_ingredients : includes
+  recipe_ingredients }o--|| products : uses
+
+  transactions ||--o{ blockchain_logs : logs
+  products ||--o{ sensor_readings : monitored_by
+  products ||--o{ qrs : identified_by
+
+  logistics_routes ||--o{ transactions : fulfills

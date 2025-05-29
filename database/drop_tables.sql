@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS
+  recommendations,
+  logistics_routes,
+  impact_metrics,
+  blockchain_logs,
+  sensor_readings,
+  transaction_items,
+  product_qrs,
+  weekly_plan_items,
+  weekly_plans,
+  recipe_ingredients,
+  recipes,
+  transactions,
+  shopping_list_items,
+  shopping_lists,
+  products,
+  product_templates,
+  users
+CASCADE;

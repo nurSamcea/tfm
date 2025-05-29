@@ -1,29 +1,21 @@
-from sqlalchemy import Column, Integer, String, Text, Numeric, Date, Boolean, ForeignKey, JSON, ARRAY, TIMESTAMP
+from sqlalchemy import Column, Integer, Float, Text, Boolean, Date, JSON, ForeignKey, DateTime, DECIMAL
 from backend.app.database import Base
-
-class ProductTemplate(Base):
-    __tablename__ = "product_templates"
-    id = Column(Integer, primary_key=True)
-    name = Column(Text, nullable=False)
-    category = Column(Text)
-    subcategory = Column(Text)
-    default_image_url = Column(Text)
-    nutrition = Column(JSON)
-    allergens = Column(ARRAY(Text))
-    labels = Column(ARRAY(Text))
+from datetime import datetime
 
 class Product(Base):
     __tablename__ = "products"
+
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
     description = Column(Text)
-    price = Column(Numeric(10, 2))
-    stock = Column(Integer)
+    price = Column(DECIMAL)
+    currency = Column(Text)
     unit = Column(Text)
+    category = Column(Text)
+    nutritional_info = Column(JSON)
+    stock_available = Column(Float)
     expiration_date = Column(Date)
+    is_eco = Column(Boolean)
     image_url = Column(Text)
-    is_local = Column(Boolean, default=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    template_id = Column(Integer, ForeignKey("product_templates.id"))
-    is_active = Column(Boolean, default=True)
-    created_at = Column(TIMESTAMP)
+    provider_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -1,33 +1,30 @@
 from pydantic import BaseModel
-from typing import Literal, Optional
+from typing import Optional
 from datetime import datetime
 
 class TransactionBase(BaseModel):
-    buyer_id: int
-    seller_id: int
+    user_id: int
+    shopping_list_id: int
     total_price: float
-    payment_method: Optional[str]
-    status: Optional[Literal['pending', 'paid', 'delivered', 'cancelled']] = 'pending'
-    delivery_method: Optional[str]
-    delivery_estimated: Optional[datetime]
+    currency: str
+    status: str
 
 class TransactionCreate(TransactionBase):
-    pass
+    created_at: Optional[datetime] = None
+    confirmed_at: Optional[datetime] = None
 
-class TransactionOut(TransactionBase):
+class TransactionRead(TransactionBase):
     id: int
-    created_at: datetime
+    created_at: Optional[datetime]
+    confirmed_at: Optional[datetime]
+
     class Config:
         orm_mode = True
 
-class TransactionItemBase(BaseModel):
-    product_id: int
-    quantity: int
-    unit_price: float
-    qr_id: Optional[int]
-
-class TransactionItem(TransactionItemBase):
+class TransactionOut(TransactionBase):
     id: int
-    transaction_id: int
+    created_at: Optional[datetime]
+    confirmed_at: Optional[datetime]
+
     class Config:
         orm_mode = True

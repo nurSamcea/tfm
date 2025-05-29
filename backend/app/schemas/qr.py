@@ -1,18 +1,21 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date, datetime
+from datetime import datetime
 
-class ProductQRCreate(BaseModel):
+class QRBase(BaseModel):
     product_id: int
-    blockchain_hash: str
-    qr_code: str
-    origin: Optional[str]
-    collected_at: Optional[date]
-    certification: Optional[str]
-    temperature_log: Optional[dict]
+    qr_hash: str
+    qr_metadata: Optional[dict]
 
-class ProductQROut(ProductQRCreate):
+class QRCreate(QRBase):
+    pass
+
+class QRRead(QRBase):
     id: int
     created_at: datetime
+
     class Config:
         orm_mode = True
+
+class QrOut(QRRead):
+    pass

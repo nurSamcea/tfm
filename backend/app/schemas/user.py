@@ -7,13 +7,15 @@ class UserBase(BaseModel):
     email: EmailStr
     role: Literal['consumer', 'farmer', 'retailer', 'restaurant', 'admin']
     entity_name: Optional[str]
-    location: Optional[dict]
+    location_lat: Optional[float]
+    location_lon: Optional[float]
     preferences: Optional[dict]
+    intake_profile_id: Optional[int]
 
 class UserCreate(UserBase):
-    password: str
+    password_hash: str
 
-class UserOut(UserBase):
+class UserRead(UserBase):
     id: int
     created_at: datetime
 

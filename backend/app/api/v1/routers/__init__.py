@@ -1,13 +1,18 @@
-from .auth import router as auth_router
-from .users import router as users_router
-from .products import router as products_router
-from .shopping import router as shopping_router
-from .transactions import router as transactions_router
-from .recipes import router as recipes_router
-from .planning import router as planning_router
-from .qrs import router as qrs_router
-from .sensors import router as sensors_router
-from .blockchain import router as blockchain_router
-from .impact import router as impact_router
-from .logistics import router as logistics_router
-from .recommendations import router as recommendations_router
+from . import (
+    users,
+    intake_profiles,
+    products,
+    shopping_lists,
+    shopping_list_groups,
+    shopping_list_items,
+    recipes,
+    recipe_ingredients,
+    weekly_plans,
+    weekly_plan_items,
+    transactions,
+    logistics_routes,
+    sensor_readings,
+    qrs,
+    blockchain_logs,
+    impact_metrics,
+)

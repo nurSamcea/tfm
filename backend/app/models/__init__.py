@@ -1,10 +1,16 @@
-from .blockchain import BlockchainLog
-from .impact import ImpactMetric
-from .logistics import LogisticsRoute
-from .plan import WeeklyPlan, WeeklyPlanItem
-from .product import Product, ProductTemplate
-from .qr import ProductQR
-from .recipe import Recipe, RecipeIngredient
-from .sensor import SensorReading
-from .transaction import Transaction, TransactionItem
+from .blockchain_log import BlockchainLog
+from .impact_metric import ImpactMetric
+from .logistic_route import LogisticsRoute
+from .weekly_plan import WeeklyPlan
+from .weekly_plan_item import WeeklyPlanItem
+from .product import Product
+from .qr import QR
+from .recipe import Recipe
+from .recipe_ingredient import RecipeIngredient
+from .sensor_reading import SensorReading
+from .transaction import Transaction
 from .user import User
+from .shopping_list import ShoppingList
+from .shopping_list_group import ShoppingListGroup
+from .shopping_list_item import ShoppingListItem
+from .intake_profile import IntakeProfile

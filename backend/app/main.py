@@ -1,38 +1,31 @@
-# main.py
-
 from fastapi import FastAPI
+
 from backend.app.api.v1.routers import (
-    auth_router,
-    users_router,
-    products_router,
-    shopping_router,
-    transactions_router,
-    recipes_router,
-    planning_router,
-    qrs_router,
-    sensors_router,
-    blockchain_router,
-    impact_router,
-    logistics_router,
-    recommendations_router,
+    users, intake_profiles, products, shopping_lists, shopping_list_groups,
+    shopping_list_items, recipes, recipe_ingredients, weekly_plans,
+    weekly_plan_items, transactions, logistics_routes, sensor_readings,
+    qrs, blockchain_logs, impact_metrics
 )
 
 app = FastAPI(title="Zero Platform API", version="1.0.0")
 
-# Register routers
-app.include_router(auth_router)
-app.include_router(users_router)
-app.include_router(products_router)
-app.include_router(shopping_router)
-app.include_router(transactions_router)
-app.include_router(recipes_router)
-app.include_router(planning_router)
-app.include_router(qrs_router)
-app.include_router(sensors_router)
-app.include_router(blockchain_router)
-app.include_router(impact_router)
-app.include_router(logistics_router)
-app.include_router(recommendations_router)
+# Registrar rutas
+app.include_router(users.router)
+app.include_router(intake_profiles.router)
+app.include_router(products.router)
+app.include_router(shopping_lists.router)
+app.include_router(shopping_list_groups.router)
+app.include_router(shopping_list_items.router)
+app.include_router(recipes.router)
+app.include_router(recipe_ingredients.router)
+app.include_router(weekly_plans.router)
+app.include_router(weekly_plan_items.router)
+app.include_router(transactions.router)
+app.include_router(logistics_routes.router)
+app.include_router(sensor_readings.router)
+app.include_router(qrs.router)
+app.include_router(blockchain_logs.router)
+app.include_router(impact_metrics.router)
 
 
 @app.get("/")

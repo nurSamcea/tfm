@@ -20,3 +20,8 @@ También se tendrá en cuenta:
 
 > psql "postgresql://postgres:sspBvGuWGQrNsdBTiHOnusZuLjtAFLVY@trolley.proxy.rlwy.net:55739/railway" -f fake_data.sql
 
+Para hacer cambios en las tablas
+
+> psql "postgresql://postgres:sspBvGuWGQrNsdBTiHOnusZuLjtAFLVY@trolley.proxy.rlwy.net:55739/railway"
+
+> ALTER TABLE qrs RENAME COLUMN metadata TO qr_metadata;

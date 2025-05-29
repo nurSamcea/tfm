@@ -16,16 +16,135 @@
 
 * [X] Modelado de datos (productos, recetas, usuarios, pedidos, sensores, trazabilidad)
   > uvicorn backend.app.main:app --reload
-* [ ] Endpoints básicos:
-  * [ ] Inventario (`GET /inventory`, `POST /inventory/add`)
-  * [ ] Recetas (`GET /recipes`, `POST /recipes/favorite`)
-  * [ ] Lista compra (`POST /shopping-list/from-inventory`)
-  * [ ] Impacto (`GET /user/stats`)
-  * [ ] Rutas y logística (`POST /routes/optimize`)
+* [X] Endpoints básicos:
+### 🔐 AUTH (Autenticación y registro)
+* [ ] `POST /auth/register` – Registro de nuevo usuario
+* [ ] `POST /auth/login` – Inicio de sesión con JWT
+* [ ] `GET /auth/me` – Obtener perfil autenticado
+### 👤 USERS (Gestión de usuarios)
+* [ ] `GET /users/` – Ver todos los usuarios (admin)
+* [ ] `GET /users/{id}` – Ver usuario por ID
+* [ ] `PUT /users/{id}` – Actualizar usuario
+* [ ] `DELETE /users/{id}` – Eliminar usuario
+* [ ] `GET /users/preferences/{id}` – Ver preferencias
+* [ ] `POST /users/preferences/{id}` – Actualizar preferencias
+
+---
+
+### 🛒 PRODUCTS (Gestión de productos)
+
+* [ ] `GET /products/` – Ver todos los productos
+* [ ] `GET /products/{id}` – Ver un producto específico
+* [ ] `GET /products/by_owner/{id}` – Productos creados por usuario
+* [ ] `POST /products/` – Crear nuevo producto
+* [ ] `PUT /products/{id}` – Actualizar producto
+* [ ] `DELETE /products/{id}` – Eliminar producto
+
+---
+
+### 🧺 SHOPPING LIST (Lista de la compra)
+
+* [ ] `POST /shopping/lists/` – Crear nueva lista
+* [ ] `GET /shopping/lists/{user_id}` – Ver lista por usuario
+* [ ] `POST /shopping/lists/{list_id}/add` – Añadir producto a la lista
+* [ ] `PUT /shopping/items/{item_id}` – Editar cantidad/estado
+* [ ] `DELETE /shopping/items/{item_id}` – Eliminar producto
+
+---
+
+### 📦 TRANSACTIONS (Pedidos)
+
+* [ ] `POST /transactions/` – Crear nuevo pedido
+* [ ] `GET /transactions/{id}` – Ver pedido por ID
+* [ ] `GET /transactions/by_user/{id}` – Ver pedidos por usuario
+* [ ] `PUT /transactions/{id}/status` – Cambiar estado del pedido
+
+---
+
+### 🍽 RECIPES (Recetas)
+
+* [ ] `POST /recipes/` – Crear receta
+* [ ] `GET /recipes/` – Ver todas las recetas
+* [ ] `GET /recipes/{id}` – Ver receta por ID
+* [ ] `GET /recipes/by_user/{id}` – Ver recetas de un usuario
+* [ ] `PUT /recipes/{id}` – Actualizar receta
+* [ ] `DELETE /recipes/{id}` – Eliminar receta
+* [ ] `GET /recipes/suggested?from_inventory=true` – Recetas según inventario
+* [ ] `POST /recipes/favorite` – Marcar como favorita
+* [ ] `GET /recipes/favorites` – Ver favoritas
+
+---
+
+### 📅 WEEKLY PLANS (Planning semanal)
+
+* [ ] `POST /planning/` – Crear planning semanal
+* [ ] `GET /planning/{user_id}` – Ver planning por usuario
+* [ ] `PUT /planning/item/{id}` – Editar receta/día
+* [ ] `DELETE /planning/item/{id}` – Eliminar celda
+
+---
+
+### 🌍 IMPACT METRICS (Impacto)
+
+* [ ] `GET /impact/user/{user_id}` – Ver impacto personal
+* [ ] `GET /impact/` – Ver métricas globales (admin)
+* [ ] `PUT /impact/{id}` – Actualizar métricas
+
+---
+
+### 🚚 LOGISTICS (Rutas y entregas)
+
+* [ ] `POST /logistics/` – Crear ruta logística
+* [ ] `GET /logistics/` – Ver todas las rutas
+* [ ] `GET /logistics/{route_id}` – Ver ruta por ID
+* [ ] `GET /logistics/by_driver/{name}` – Ver rutas por conductor
+* [ ] `POST /logistics/optimize` – Optimizar rutas (mock)
+* [ ] `GET /logistics/summary` – Resumen de rutas simuladas
+
+---
+
+### 🤖 RECOMMENDATIONS (Sugerencias inteligentes)
+
+* [ ] `GET /recommendations/user/{user_id}` – Recomendaciones para el usuario
+* [ ] `POST /recommendations/context/` – Enviar contexto y recibir sugerencias
+* [ ] `GET /recommendations/` – Ver todas (admin o debug)
+
+---
+
+### 📲 QR & TRACEABILITY (Trazabilidad con QR)
+
+* [ ] `POST /qrs/` – Generar QR + hash
+* [ ] `GET /qrs/{qr_code}` – Ver trazabilidad desde hash
+* [ ] `GET /qrs/product/{product_id}` – Ver QR por producto
+
+---
+
+### 🌡 SENSORS (Datos de sensores IoT)
+
+* [ ] `POST /sensors/` – Insertar nueva lectura
+* [ ] `GET /sensors/` – Ver todas las lecturas
+* [ ] `GET /sensors/by_product/{product_id}` – Lecturas por producto
+
+---
+
+### ⛓ BLOCKCHAIN LOGS (Auditoría trazable)
+
+* [ ] `GET /blockchain/` – Ver todos los logs
+* [ ] `GET /blockchain/by_transaction/{id}` – Ver log por transacción
+
+
 * [ ] Lógica avanzada:
-  * [ ] Algoritmo de sugerencias
-  * [ ] Optimización de rutas (mock)
-  * [ ] Cálculo de impacto
+
+| Lógica                                            | Estado | Descripción                                          |
+| ------------------------------------------------- | ------ | ---------------------------------------------------- |
+| \[ ] Algoritmo de sugerencias                     | 🔄     | Recomendar productos y recetas personalizadas        |
+| \[ ] Optimización de rutas (mock mínimo)          | 🔄     | Agrupar pedidos por zona y simular entregas          |
+| \[ ] Cálculo de impacto                           | 🔄     | CO₂ ahorrado, compras locales, productos salvados    |
+| \[ ] Generador automático de menú semanal         | ⏳      | Crear menú + lista desde preferencias e inventario   |
+| \[ ] Comparador de precios por supermercado       | ⏳      | Mostrar precio óptimo por producto o grupo           |
+| \[ ] Sustitución de productos por alergias/dietas | ⏳      | Reemplazo automático según restricciones del usuario |
+| \[ ] Reposición automática                        | ⏳      | Detectar bajo stock y generar alerta/pedido          |
+| \[ ] Planificador con arrastrar recetas           | ⏳      | Agregar recetas favoritas a calendario de comidas    |
 * [ ] Seguridad y autenticación JWT
 * [ ] Logs de blockchain simulados (`product_hash`, `event`, `timestamp`)
 * [ ] Endpoint de recepción de sensores (`POST /sensor-data`)

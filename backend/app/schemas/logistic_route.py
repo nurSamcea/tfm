@@ -3,16 +3,22 @@ from typing import Optional
 from datetime import datetime
 
 class LogisticsRouteBase(BaseModel):
-    route_id: str
     driver_name: Optional[str]
-    from_point: str
-    to_point: str
-    distance_km: float
-    estimated_time_min: int
+    distance_km: Optional[float]
+    orders_ids: Optional[dict]
     vehicle_type: Optional[str]
+    estimated_time_min: Optional[int]
 
-class LogisticsRouteOut(LogisticsRouteBase):
+class LogisticsRouteCreate(LogisticsRouteBase):
+    pass
+
+class LogisticsRouteRead(LogisticsRouteBase):
     id: int
     created_at: datetime
+
     class Config:
         orm_mode = True
+
+
+class LogisticsRouteOut(LogisticsRouteRead):
+    pass

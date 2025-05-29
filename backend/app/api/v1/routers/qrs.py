@@ -1,33 +1,19 @@
-from typing import List
-
-from backend.app import models, schemas
-from backend.app.database import get_db
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/qrs", tags=["qrs"])
+from backend.app import schemas, database, models
+from backend.app.database import get_db
 
+router = APIRouter(prefix="/qrs", tags=["Qrs"])
 
-# Crear QR para un producto (con hash y trazabilidad)
-@router.post("/", response_model=schemas.ProductQROut)
-def create_qr(qr: schemas.ProductQRCreate, db: Session = Depends(get_db)):
-    db_qr = models.ProductQR(**qr.dict())
-    db.add(db_qr)
+@router.post("/", response_model=schemas.QrOut)
+def create_qr(item: schemas.QRCreate, db: Session = Depends(get_db)):
+    db_item = models.QR(**item.dict())
+    db.add(db_item)
     db.commit()
-    db.refresh(db_qr)
-    return db_qr
+    db.refresh(db_item)
+    return db_item
 
-
-# Obtener trazabilidad por código QR
-@router.get("/{qr_code}", response_model=schemas.ProductQROut)
-def get_qr(qr_code: str, db: Session = Depends(get_db)):
-    qr = db.query(models.ProductQR).filter(models.ProductQR.qr_code == qr_code).first()
-    if not qr:
-        raise HTTPException(status_code=404, detail="QR no encontrado")
-    return qr
-
-
-# Obtener QR por producto
-@router.get("/product/{product_id}", response_model=List[schemas.ProductQROut])
-def get_qrs_by_product(product_id: int, db: Session = Depends(get_db)):
-    return db.query(models.ProductQR).filter(models.ProductQR.product_id == product_id).all()
+@router.get("/", response_model=list[schemas.QrOut])
+def read_qrs(db: Session = Depends(get_db)):
+    return db.query(models.QR).all()
