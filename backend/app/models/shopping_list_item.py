@@ -1,8 +1,10 @@
 from backend.app.database import Base
 from sqlalchemy import Column, Integer, Float, Text, DateTime, Date, ForeignKey, JSON
+from sqlalchemy.orm import relationship
 
 
 class ShoppingListItem(Base):
+    """Ítem de una lista de compra agrupada por proveedor."""
     __tablename__ = "shopping_list_items"
 
     id = Column(Integer, primary_key=True)
@@ -17,3 +19,7 @@ class ShoppingListItem(Base):
     trace_hash = Column(Text)
     nutritional_info = Column(JSON)
     added_at = Column(DateTime)
+
+    # Relaciones
+    group = relationship("ShoppingListGroup", back_populates="items")
+    product = relationship("Product")

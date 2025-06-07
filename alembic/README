@@ -1,0 +1,5 @@
+Tras cambiar los modelos, se ejecuta desde zero:
+> alembic revision --autogenerate -m "Descripción del cambio"
+
+Aplicar la migración a la base de datos desde zero:
+> alembic upgrade head

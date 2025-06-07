@@ -56,6 +56,35 @@ CREATE TABLE products (
   provider_id INT REFERENCES users(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE products
+ADD COLUMN generic_name TEXT;
+ALTER TABLE products
+ADD CONSTRAINT fk_generic_name
+FOREIGN KEY (generic_name) REFERENCES nutritional_info(generic_name);
+
+
+CREATE TABLE nutritional_info (
+  id SERIAL PRIMARY KEY,
+  generic_name TEXT NOT NULL UNIQUE,  -- "tomate", "lenteja", "pimiento", etc.
+  kcal FLOAT,
+  protein FLOAT,
+  carbohydrates FLOAT,
+  sugars FLOAT,
+  fat FLOAT,
+  saturated_fat FLOAT,
+  fiber FLOAT,
+  salt FLOAT,
+  cholesterol FLOAT,
+  calcium FLOAT,
+  iron FLOAT,
+  vitamin_c FLOAT,
+  vitamin_d FLOAT,
+  vitamin_b12 FLOAT,
+  potassium FLOAT,
+  magnesium FLOAT,
+  per_unit TEXT,          -- Ej: "100g", "unidad", etc.
+  source TEXT             -- Fuente opcional de los datos
+);
 
 -- Información nutricional (copiada en cada compra o receta)
 -- No es tabla en este diseño, es campo JSONB usado en varias tablas
@@ -79,6 +108,11 @@ CREATE TABLE shopping_list_groups (
   delivery_estimate TIMESTAMP,
   logistics_route_id INT REFERENCES logistics_routes(id)
 );
+ALTER TABLE shopping_list_groups
+ADD COLUMN delivery_window JSONB, -- ej: {"start": "10:00", "end": "12:00"}
+ADD COLUMN delivery_status TEXT DEFAULT 'not_delivered', -- estado de entrega
+ADD COLUMN logistics_stop_order INT; -- orden de parada en la ruta
+
 
 -- Elementos dentro del grupo de compra
 CREATE TABLE shopping_list_items (
@@ -168,6 +202,58 @@ CREATE TABLE logistics_routes (
   vehicle_type TEXT,
   estimated_time_min INT
 );
+ALTER TABLE logistics_routes
+ADD COLUMN driver_id INT REFERENCES drivers(id),
+ADD COLUMN vehicle_id INT REFERENCES vehicles(id),
+ADD COLUMN date DATE,
+ADD COLUMN status TEXT DEFAULT 'pending';
+
+
+-- nodos de recogida y entrega
+CREATE TABLE logistics_route_stops (
+  id SERIAL PRIMARY KEY,
+  logistics_route_id INT REFERENCES logistics_routes(id),
+  stop_order INT,
+  stop_type TEXT CHECK (stop_type IN ('pickup', 'delivery')),
+  related_group_id INT REFERENCES shopping_list_groups(id),
+  sender_id INT REFERENCES users(id),     -- el que entrega (agricultor o supermercado)
+  receiver_id INT REFERENCES users(id),   -- el que recibe (supermercado o consumidor)
+  location_lat DECIMAL,
+  location_lon DECIMAL,
+  eta TIMESTAMP,                          -- hora estimada de llegada
+  status TEXT DEFAULT 'pending'          -- 'pending', 'delivered', 'failed', etc.
+);
+
+
+-- Conductores
+CREATE TABLE drivers (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone TEXT,
+  email TEXT UNIQUE,
+  license_number TEXT,
+  vehicle_id INT REFERENCES vehicles(id),
+  location_lat DECIMAL, -- ubicación inicial o actual
+  location_lon DECIMAL,
+  working_hours JSONB, -- ej: {"start": "08:00", "end": "18:00"}
+  available BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- vehiculos propios
+CREATE TABLE vehicles (
+  id SERIAL PRIMARY KEY,
+  type TEXT, -- "bike", "van", "truck", etc.
+  name TEXT,
+  plate_number TEXT,
+  capacity_kg FLOAT,
+  capacity_m3 FLOAT,
+  speed_kmph FLOAT,
+  emissions_factor FLOAT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 -- Lecturas de sensores
 CREATE TABLE sensor_readings (

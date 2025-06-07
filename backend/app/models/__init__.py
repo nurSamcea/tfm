@@ -14,3 +14,5 @@ from .shopping_list import ShoppingList
 from .shopping_list_group import ShoppingListGroup
 from .shopping_list_item import ShoppingListItem
 from .intake_profile import IntakeProfile
+from .vehicle import Vehicle
+from .driver import Driver

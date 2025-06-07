@@ -1,0 +1,3973 @@
+{
+  'users': [
+    {
+      'id': 1,
+      'name': 'Jennifer Foster',
+      'email': 'rramirez@example.org',
+      'password_hash': '86517a16ce7b3a9314032c1a4b16a4d061a3c6d88d82bf2ea3dd0df5f02d0ba3',
+      'role': 'farmer',
+      'entity_name': 'Bird-Carlson',
+      'location_lat': Decimal(
+      '44.497453'
+      ),
+      'location_lon': Decimal(
+      '72.995971'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      5,
+      20,
+      10,
+      4,
+      21)
+    },
+    {
+      'id': 2,
+      'name': 'Francisco Stephens',
+      'email': 'colemannicholas@example.net',
+      'password_hash': 'fcc41b281ea36d11aadd79a9424c3c8a30a5b09910379b966cec4941a5162397',
+      'role': 'farmer',
+      'entity_name': 'Stanley PLC',
+      'location_lat': Decimal(
+      '-60.872028'
+      ),
+      'location_lon': Decimal(
+      '123.901976'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      4,
+      26,
+      17,
+      15,
+      25)
+    },
+    {
+      'id': 3,
+      'name': 'Diana Rodriguez',
+      'email': 'rsanchez@example.org',
+      'password_hash': '3777a54ec000b9ef1d62edf1b9291759692b3f45b4f04d82c66e5a1f8fd92aa5',
+      'role': 'farmer',
+      'entity_name': 'Davis, Daniel and Gutierrez',
+      'location_lat': Decimal(
+      '45.398142'
+      ),
+      'location_lon': Decimal(
+      '84.199692'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      1,
+      5,
+      18,
+      4,
+      22)
+    },
+    {
+      'id': 4,
+      'name': 'Donald Smith',
+      'email': 'deancarl@example.com',
+      'password_hash': '60605c6b6380f801420afd50ca2c147d259e91bd30251600005094e54f430fa8',
+      'role': 'farmer',
+      'entity_name': 'Kelly PLC',
+      'location_lat': Decimal(
+      '-44.149467'
+      ),
+      'location_lon': Decimal(
+      '163.876582'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      1,
+      4,
+      23,
+      8,
+      53)
+    },
+    {
+      'id': 5,
+      'name': 'Deborah Knapp',
+      'email': 'szimmerman@example.net',
+      'password_hash': '4e0776e5856dfc0d92964b21b76e0631d9377cb076e235c0e0bc6a18956fc205',
+      'role': 'farmer',
+      'entity_name': 'Brown and Sons',
+      'location_lat': Decimal(
+      '61.296540'
+      ),
+      'location_lon': Decimal(
+      '35.840669'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      3,
+      17,
+      14,
+      1,
+      41)
+    },
+    {
+      'id': 6,
+      'name': 'Hannah Giles',
+      'email': 'martinemily@example.org',
+      'password_hash': '4912b2f92b65213fc537021611c1ed171354fbe47b468c99edc343e68fb7113c',
+      'role': 'farmer',
+      'entity_name': 'Johnson, Walters and Watson',
+      'location_lat': Decimal(
+      '-84.414018'
+      ),
+      'location_lon': Decimal(
+      '27.349194'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      2,
+      12,
+      14,
+      22,
+      37)
+    },
+    {
+      'id': 7,
+      'name': 'David Moore',
+      'email': 'wford@example.net',
+      'password_hash': 'b21cc846ba6f1cda7d9bfb3715d8e07ccb9ddcdc99ee8151e6dbd3fae3dd824a',
+      'role': 'retailer',
+      'entity_name': 'Mayer, Wiggins and Garcia',
+      'location_lat': Decimal(
+      '-83.539806'
+      ),
+      'location_lon': Decimal(
+      '-24.449061'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      2,
+      11,
+      5,
+      50,
+      31)
+    },
+    {
+      'id': 8,
+      'name': 'Abigail Payne',
+      'email': 'arobinson@example.net',
+      'password_hash': '656b948b0b2e62b9a4e7e3017bf262b7faa681a052eeb82f2ff6929cb6762814',
+      'role': 'retailer',
+      'entity_name': 'Lopez-Rowe',
+      'location_lat': Decimal(
+      '-72.697316'
+      ),
+      'location_lon': Decimal(
+      '-9.887835'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      1,
+      14,
+      2,
+      3,
+      11)
+    },
+    {
+      'id': 9,
+      'name': 'Cynthia Johnson',
+      'email': 'hernandezcrystal@example.com',
+      'password_hash': '8c9c67a639cb51dcf06a28d12588b7b0585346fd73e79b7d4d8544c2a1873059',
+      'role': 'retailer',
+      'entity_name': 'Lam-Anderson',
+      'location_lat': Decimal(
+      '19.604704'
+      ),
+      'location_lon': Decimal(
+      '-177.957730'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      2,
+      24,
+      5,
+      34,
+      34)
+    },
+    {
+      'id': 10,
+      'name': 'Stephen Wilkins',
+      'email': 'ronald58@example.net',
+      'password_hash': '69bf79c5440cc0d14bbd9ea7ffc5b19e6e16b72f9d8e791d6172414da8c88ed0',
+      'role': 'retailer',
+      'entity_name': 'Johnson PLC',
+      'location_lat': Decimal(
+      '84.997141'
+      ),
+      'location_lon': Decimal(
+      '53.913856'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      5,
+      14,
+      15,
+      19,
+      39)
+    },
+    {
+      'id': 11,
+      'name': 'Richard Moore',
+      'email': 'gonzalezbrandi@example.net',
+      'password_hash': 'cfa61eb204477571cc7df24fe6c4bfca376e6df58c18ce6cc6f1c39ba6a00a9e',
+      'role': 'retailer',
+      'entity_name': 'Suarez and Sons',
+      'location_lat': Decimal(
+      '85.527102'
+      ),
+      'location_lon': Decimal(
+      '21.400615'
+      ),
+      'preferences': {},
+      'intake_profile_id': None,
+      'created_at': datetime.datetime(2025,
+      2,
+      8,
+      10,
+      27,
+      11)
+    },
+    {
+      'id': 12,
+      'name': 'Leslie Watson',
+      'email': 'carsonerin@example.com',
+      'password_hash': '98495d817c37bbcfcde3e58dc4370482e1f39ca0cb269fd31def93b725a6175f',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '77.133071'
+      ),
+      'location_lon': Decimal(
+      '51.663109'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      4,
+      7,
+      23,
+      32,
+      58)
+    },
+    {
+      'id': 13,
+      'name': 'Jose Mills',
+      'email': 'lewisloretta@example.net',
+      'password_hash': '24c2d100ed78f749417b547410e91f43be8907fdda9bcd90a19000dd9e9d1b82',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '29.494610'
+      ),
+      'location_lon': Decimal(
+      '-172.412407'
+      ),
+      'preferences': {},
+      'intake_profile_id': 3,
+      'created_at': datetime.datetime(2025,
+      4,
+      17,
+      15,
+      23,
+      37)
+    },
+    {
+      'id': 14,
+      'name': 'Vickie Parsons',
+      'email': 'greenandrea@example.com',
+      'password_hash': '2076e16e4eb6225348b6070bef3c05f1ca190af685ff178ff2547c31af03867e',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-1.029648'
+      ),
+      'location_lon': Decimal(
+      '147.926262'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      4,
+      21,
+      10,
+      42,
+      17)
+    },
+    {
+      'id': 15,
+      'name': 'Mary Thomas',
+      'email': 'amygonzalez@example.net',
+      'password_hash': '974514bb88a54f1df4eca3187b275b22a328c62bfe69dd16fc1242b8b2b7c185',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-79.157720'
+      ),
+      'location_lon': Decimal(
+      '-23.444161'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      5,
+      28,
+      14,
+      29,
+      10)
+    },
+    {
+      'id': 16,
+      'name': 'Kayla Clark',
+      'email': 'jadams@example.org',
+      'password_hash': '453df5c6f307f00908b4fe4e839a2ed2e7cc9135a0687179659a1cf6a2df7fb6',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-38.070912'
+      ),
+      'location_lon': Decimal(
+      '-114.893774'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      5,
+      19,
+      22,
+      8,
+      56)
+    },
+    {
+      'id': 17,
+      'name': 'Chelsea Wells',
+      'email': 'tadkins@example.org',
+      'password_hash': 'd9a01896204625a1be2b6957cbe9769b293b589e69c5f8bfcb1e874b40666c9b',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-68.104908'
+      ),
+      'location_lon': Decimal(
+      '-120.274964'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      2,
+      5,
+      6,
+      8,
+      6)
+    },
+    {
+      'id': 18,
+      'name': 'Hannah Jensen',
+      'email': 'powersholly@example.org',
+      'password_hash': '4c76ff306a58507d94808b92a9ba8cb9d92742bcd4ec4235b3cba736a7a60990',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '63.674701'
+      ),
+      'location_lon': Decimal(
+      '11.462723'
+      ),
+      'preferences': {},
+      'intake_profile_id': 3,
+      'created_at': datetime.datetime(2025,
+      4,
+      20,
+      17,
+      9,
+      36)
+    },
+    {
+      'id': 19,
+      'name': 'Lisa Allen',
+      'email': 'upace@example.com',
+      'password_hash': 'cefdcf7554e8a48164b97e879768e4bd25710e62a7bec43c748252864377c25a',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '85.540585'
+      ),
+      'location_lon': Decimal(
+      '153.534181'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      5,
+      12,
+      3,
+      26,
+      21)
+    },
+    {
+      'id': 20,
+      'name': 'Dillon Mendez',
+      'email': 'jcraig@example.net',
+      'password_hash': '2e45804156d2e923862efc6b487bb5eedfd3c1b60e5388a0126c28c70d6c41e8',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-65.224655'
+      ),
+      'location_lon': Decimal(
+      '43.529276'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      4,
+      4,
+      9,
+      43,
+      52)
+    },
+    {
+      'id': 21,
+      'name': 'Stephen Anderson',
+      'email': 'andrewbaird@example.com',
+      'password_hash': 'd0e164ab57d144726d659b99bfa69b5bbeb20fea70351159987776e60da75cef',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '77.186115'
+      ),
+      'location_lon': Decimal(
+      '131.947739'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      3,
+      9,
+      10,
+      38,
+      10)
+    },
+    {
+      'id': 22,
+      'name': 'Dr. Amanda Mclean',
+      'email': 'yjones@example.net',
+      'password_hash': '80973902cbe76bc20cfc9359e72afb8b2ad050b0ecd7879133a50db85e342429',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '71.652504'
+      ),
+      'location_lon': Decimal(
+      '161.370966'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      4,
+      29,
+      6,
+      36,
+      33)
+    },
+    {
+      'id': 23,
+      'name': 'Daniel Martinez',
+      'email': 'nhenry@example.com',
+      'password_hash': 'c574edd2d8e4574e584cdb87676ae33eea939b76bfef5707726f14da8332347b',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-1.619606'
+      ),
+      'location_lon': Decimal(
+      '-162.657623'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      5,
+      8,
+      22,
+      51,
+      6)
+    },
+    {
+      'id': 24,
+      'name': 'Nicholas Klein',
+      'email': 'james55@example.net',
+      'password_hash': 'eb6948afd824545af7747b6d3c1daa9bdc26149ab0b1905448a987a073a5aa2f',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-67.843980'
+      ),
+      'location_lon': Decimal(
+      '-96.400593'
+      ),
+      'preferences': {},
+      'intake_profile_id': 3,
+      'created_at': datetime.datetime(2025,
+      2,
+      11,
+      22,
+      53,
+      32)
+    },
+    {
+      'id': 25,
+      'name': 'Amy Coleman',
+      'email': 'mitchell13@example.net',
+      'password_hash': '1dbbac19b7cd88471a85d117476cfba85d83997d1c932510649ee4c6ba598cc9',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-45.894186'
+      ),
+      'location_lon': Decimal(
+      '50.455228'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      4,
+      19,
+      1,
+      27,
+      21)
+    },
+    {
+      'id': 26,
+      'name': 'Gregory Hoover',
+      'email': 'vargasholly@example.org',
+      'password_hash': '5e97f14f52cfe3c4d27bc007aaf0900cdaa21e76d47fc4a9a6b402dece1b3d4f',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-63.427324'
+      ),
+      'location_lon': Decimal(
+      '85.974492'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      2,
+      13,
+      17,
+      24,
+      2)
+    },
+    {
+      'id': 27,
+      'name': 'Timothy Barker',
+      'email': 'crystal60@example.com',
+      'password_hash': '582315080b07c1738085317014363d563f59cad69e393b0b14bc7cdf80c825cb',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '89.070658'
+      ),
+      'location_lon': Decimal(
+      '-142.029393'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      1,
+      4,
+      13,
+      49,
+      10)
+    },
+    {
+      'id': 28,
+      'name': 'David Bullock',
+      'email': 'rhonda30@example.com',
+      'password_hash': '7a8efb22aafac96ea67ea5315b62239055a8d08a352eda165e1a2af8080eb663',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '8.914308'
+      ),
+      'location_lon': Decimal(
+      '-165.943164'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      2,
+      15,
+      9,
+      21,
+      7)
+    },
+    {
+      'id': 29,
+      'name': 'Mrs. Kathleen Jones',
+      'email': 'troymorris@example.com',
+      'password_hash': 'e147ae3345273e5bc26412e8b7ef42f913efb73c6832f96220220cebf39ffc72',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '16.411386'
+      ),
+      'location_lon': Decimal(
+      '-18.989602'
+      ),
+      'preferences': {},
+      'intake_profile_id': 3,
+      'created_at': datetime.datetime(2025,
+      1,
+      19,
+      21,
+      29,
+      47)
+    },
+    {
+      'id': 30,
+      'name': 'Sherry Suarez',
+      'email': 'shawnjohnston@example.net',
+      'password_hash': '9a050197642b49de4a366004951ab44fdb37e811741829a854d001bffb2ec794',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-73.969544'
+      ),
+      'location_lon': Decimal(
+      '-60.150410'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      3,
+      7,
+      0,
+      48,
+      43)
+    },
+    {
+      'id': 31,
+      'name': 'Jennifer Bennett',
+      'email': 'diana00@example.org',
+      'password_hash': 'b8f00961cf1ab362a0817b515e33e5d7bfca5d4485e9c10fb13c0af07bece553',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '38.869672'
+      ),
+      'location_lon': Decimal(
+      '36.536971'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      3,
+      23,
+      8,
+      14,
+      21)
+    },
+    {
+      'id': 32,
+      'name': 'David Griffin',
+      'email': 'huffmankatelyn@example.org',
+      'password_hash': '3ac786db7332fb5fa3f1e79628414e47e418366e2276dc302f27db36e8b9c037',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-89.493435'
+      ),
+      'location_lon': Decimal(
+      '-125.998765'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      4,
+      12,
+      6,
+      28,
+      37)
+    },
+    {
+      'id': 33,
+      'name': 'Robert Johnson',
+      'email': 'lindamarshall@example.org',
+      'password_hash': '568e09858bb6b647246a3cdc1fe4548158f8099d17e18c056f3ef567a4ad6a7b',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '27.580582'
+      ),
+      'location_lon': Decimal(
+      '28.013298'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      3,
+      17,
+      1,
+      19,
+      39)
+    },
+    {
+      'id': 34,
+      'name': 'Robert Anderson',
+      'email': 'vincentsuarez@example.net',
+      'password_hash': '596d08754961ff12fcdae0fc273a921ea7bbf5b96681454fb57615c956c61f2e',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-63.642953'
+      ),
+      'location_lon': Decimal(
+      '78.744195'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      5,
+      16,
+      4,
+      9,
+      25)
+    },
+    {
+      'id': 35,
+      'name': 'Pamela Cooper',
+      'email': 'jesse55@example.com',
+      'password_hash': '0d1db4f3353d8eb4bd9544130ebfb4b7e2b54effc3d7bf84cf698a7008256533',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-58.883114'
+      ),
+      'location_lon': Decimal(
+      '-32.883937'
+      ),
+      'preferences': {},
+      'intake_profile_id': 3,
+      'created_at': datetime.datetime(2025,
+      3,
+      8,
+      15,
+      41,
+      58)
+    },
+    {
+      'id': 36,
+      'name': 'Cheryl Thompson',
+      'email': 'ufisher@example.net',
+      'password_hash': '7523f2b137ce8de578ce07d2e86b250432f89a217b45fba4240c58d82de440b6',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-83.356154'
+      ),
+      'location_lon': Decimal(
+      '-80.451644'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      1,
+      16,
+      8,
+      5,
+      7)
+    },
+    {
+      'id': 37,
+      'name': 'Johnathan Chen',
+      'email': 'bpope@example.org',
+      'password_hash': '6b0281f3ec107538565ed8dd40250c8358f251104162398ae78e6461387ca532',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-33.907782'
+      ),
+      'location_lon': Decimal(
+      '102.593404'
+      ),
+      'preferences': {},
+      'intake_profile_id': 2,
+      'created_at': datetime.datetime(2025,
+      4,
+      12,
+      23,
+      47,
+      58)
+    },
+    {
+      'id': 38,
+      'name': 'Andrea Peterson',
+      'email': 'derek57@example.org',
+      'password_hash': '85efc5e45295ed7f7e1b9843dfcef8ffeb3f9c4978545a79ee7348ddc945b4fb',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '55.470668'
+      ),
+      'location_lon': Decimal(
+      '-35.885882'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      1,
+      9,
+      1,
+      49,
+      21)
+    },
+    {
+      'id': 39,
+      'name': 'Michael Hebert',
+      'email': 'kjohnson@example.com',
+      'password_hash': '38567a325c23b3ce74859e2662f3681bc4698bdd6a8fc1d4822172a881af92eb',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '63.958433'
+      ),
+      'location_lon': Decimal(
+      '122.105735'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      1,
+      20,
+      23,
+      36,
+      23)
+    },
+    {
+      'id': 40,
+      'name': 'Dr. Bruce Vazquez',
+      'email': 'farrellelizabeth@example.org',
+      'password_hash': '7dbd28dc91d0721b3102d5ae45aac67a5f52917fd47d0a8ebc1df3d53b451e8d',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-46.768607'
+      ),
+      'location_lon': Decimal(
+      '-168.665919'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      2,
+      21,
+      7,
+      29,
+      1)
+    },
+    {
+      'id': 41,
+      'name': 'Dustin Perez',
+      'email': 'powerssamuel@example.org',
+      'password_hash': 'a11dd434f0ed6c76ba8d53529dbacc4dfd1f407b6b698a3e21e744ffaa370007',
+      'role': 'consumer',
+      'entity_name': None,
+      'location_lat': Decimal(
+      '-63.602330'
+      ),
+      'location_lon': Decimal(
+      '72.002081'
+      ),
+      'preferences': {},
+      'intake_profile_id': 1,
+      'created_at': datetime.datetime(2025,
+      5,
+      5,
+      16,
+      45,
+      10)
+    }
+  ],
+  'products': [
+    {
+      'id': 1,
+      'name': 'Tomates Ecológicos',
+      'generic_name': 'tomate',
+      'description': 'Tomates Ecológicos de alta calidad',
+      'price': 1.96,
+      'currency': 'EUR',
+      'unit': 'kg',
+      'category': 'vegetales',
+      'nutritional_info': None,
+      'stock_available': 134.8,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': True,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Tomates+Ecológicos',
+      'provider_id': 3,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    },
+    {
+      'id': 2,
+      'name': 'Zanahorias',
+      'generic_name': 'zanahoria',
+      'description': 'Zanahorias de alta calidad',
+      'price': 3.28,
+      'currency': 'EUR',
+      'unit': 'kg',
+      'category': 'vegetales',
+      'nutritional_info': None,
+      'stock_available': 90.0,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      16,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': True,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Zanahorias',
+      'provider_id': 2,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    },
+    {
+      'id': 3,
+      'name': 'Manzanas',
+      'generic_name': 'manzana',
+      'description': 'Manzanas de alta calidad',
+      'price': 2.71,
+      'currency': 'EUR',
+      'unit': 'kg',
+      'category': 'frutas',
+      'nutritional_info': None,
+      'stock_available': 192.8,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      4,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': True,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Manzanas',
+      'provider_id': 3,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    },
+    {
+      'id': 4,
+      'name': 'Pan integral',
+      'generic_name': 'pan integral',
+      'description': 'Pan integral de alta calidad',
+      'price': 4.13,
+      'currency': 'EUR',
+      'unit': 'unidad',
+      'category': 'panadería',
+      'nutritional_info': None,
+      'stock_available': 187.5,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      12,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': False,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Pan+integral',
+      'provider_id': 4,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    },
+    {
+      'id': 5,
+      'name': 'Leche vegetal',
+      'generic_name': 'leche vegetal',
+      'description': 'Leche vegetal de alta calidad',
+      'price': 4.67,
+      'currency': 'EUR',
+      'unit': 'litro',
+      'category': 'bebidas',
+      'nutritional_info': None,
+      'stock_available': 127.7,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      8,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': False,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Leche+vegetal',
+      'provider_id': 5,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    },
+    {
+      'id': 6,
+      'name': 'Tofu orgánico',
+      'generic_name': 'tofu',
+      'description': 'Tofu orgánico de alta calidad',
+      'price': 4.96,
+      'currency': 'EUR',
+      'unit': 'unidad',
+      'category': 'proteínas',
+      'nutritional_info': None,
+      'stock_available': 193.2,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      19,
+      19,
+      40,
+      28,
+      558043),
+      'is_eco': True,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Tofu+orgánico',
+      'provider_id': 5,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      558043)
+    }
+  ],
+  'shopping_lists': [
+    {
+      'id': 1,
+      'user_id': 38,
+      'created_at': datetime.datetime(2025,
+      5,
+      27,
+      19,
+      40,
+      28,
+      559080),
+      'total_price': 25.12,
+      'currency': 'EUR',
+      'status': 'pending'
+    },
+    {
+      'id': 2,
+      'user_id': 24,
+      'created_at': datetime.datetime(2025,
+      5,
+      26,
+      19,
+      40,
+      28,
+      559080),
+      'total_price': 6.81,
+      'currency': 'EUR',
+      'status': 'pending'
+    },
+    {
+      'id': 3,
+      'user_id': 18,
+      'created_at': datetime.datetime(2025,
+      5,
+      28,
+      19,
+      40,
+      28,
+      559080),
+      'total_price': 11.04,
+      'currency': 'EUR',
+      'status': 'pending'
+    }
+  ],
+  'shopping_list_groups': [
+    {
+      'id': 1,
+      'shopping_list_id': 1,
+      'provider_id': 4,
+      'subtotal_price': 3.57,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      28,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 2,
+      'shopping_list_id': 1,
+      'provider_id': 3,
+      'subtotal_price': 9.71,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      28,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 3,
+      'shopping_list_id': 1,
+      'provider_id': 5,
+      'subtotal_price': 11.84,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      28,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 4,
+      'shopping_list_id': 2,
+      'provider_id': 4,
+      'subtotal_price': 4.08,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      27,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 5,
+      'shopping_list_id': 2,
+      'provider_id': 3,
+      'subtotal_price': 2.73,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      27,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 6,
+      'shopping_list_id': 3,
+      'provider_id': 5,
+      'subtotal_price': 4.62,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      29,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    },
+    {
+      'id': 7,
+      'shopping_list_id': 3,
+      'provider_id': 3,
+      'subtotal_price': 6.42,
+      'delivery_estimate': datetime.datetime(2025,
+      5,
+      29,
+      19,
+      40,
+      28,
+      559080),
+      'logistics_route_id': None,
+      'delivery_window': {
+        'start': '10:00',
+        'end': '12:00'
+      },
+      'delivery_status': 'not_delivered',
+      'logistics_stop_order': None
+    }
+  ],
+  'shopping_list_items': [
+    {
+      'id': 1,
+      'shopping_list_group_id': 1,
+      'product_id': 4,
+      'quantity': 1.87,
+      'unit': 'kg',
+      'price_unit': 1.91,
+      'currency': 'EUR',
+      'total_price': 3.57,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '7c5f6a13289e4e7ab2e9f43222660e07',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 2,
+      'shopping_list_group_id': 2,
+      'product_id': 1,
+      'quantity': 4.9,
+      'unit': 'kg',
+      'price_unit': 1.98,
+      'currency': 'EUR',
+      'total_price': 9.71,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '4ff60c51fb1e484fa09d14f181fa1b38',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 3,
+      'shopping_list_group_id': 3,
+      'product_id': 5,
+      'quantity': 3.37,
+      'unit': 'kg',
+      'price_unit': 1.05,
+      'currency': 'EUR',
+      'total_price': 3.54,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '28eceff7779a434796f1d16d570b237d',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 4,
+      'shopping_list_group_id': 3,
+      'product_id': 6,
+      'quantity': 4.39,
+      'unit': 'kg',
+      'price_unit': 1.89,
+      'currency': 'EUR',
+      'total_price': 8.3,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '18d694e24be64e22aee04b7ba0aac54f',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 5,
+      'shopping_list_group_id': 4,
+      'product_id': 4,
+      'quantity': 1.53,
+      'unit': 'kg',
+      'price_unit': 2.67,
+      'currency': 'EUR',
+      'total_price': 4.08,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '99672150f5b340a49d3ccc833ee09359',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 6,
+      'shopping_list_group_id': 5,
+      'product_id': 3,
+      'quantity': 1.86,
+      'unit': 'kg',
+      'price_unit': 1.47,
+      'currency': 'EUR',
+      'total_price': 2.73,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': 'e0ba18f5b9c141d9a009be7c461c1727',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 7,
+      'shopping_list_group_id': 6,
+      'product_id': 6,
+      'quantity': 1.83,
+      'unit': 'kg',
+      'price_unit': 2.53,
+      'currency': 'EUR',
+      'total_price': 4.62,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '1a32c7429c91405ca48bc01d78a63ddc',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 8,
+      'shopping_list_group_id': 7,
+      'product_id': 1,
+      'quantity': 3.09,
+      'unit': 'kg',
+      'price_unit': 2.08,
+      'currency': 'EUR',
+      'total_price': 6.42,
+      'expiration_date': datetime.datetime(2025,
+      6,
+      9,
+      19,
+      40,
+      28,
+      559080),
+      'trace_hash': '786b07f4d9684e42b57df24ecaffeb3c',
+      'nutritional_info': {},
+      'added_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    }
+  ],
+  'transactions': Mm[
+    {
+      'id': 1,
+      'user_id': 1,
+      'shopping_list_id': 1,
+      'total_price': 31.63,
+      'currency': 'EUR',
+      'status': 'cancelled',
+      'created_at': datetime.datetime(2025,
+      5,
+      23,
+      19,
+      40,
+      28,
+      559080),
+      'confirmed_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 2,
+      'user_id': 2,
+      'shopping_list_id': 2,
+      'total_price': 32.81,
+      'currency': 'EUR',
+      'status': 'cancelled',
+      'created_at': datetime.datetime(2025,
+      5,
+      22,
+      19,
+      40,
+      28,
+      559080),
+      'confirmed_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 3,
+      'user_id': 3,
+      'shopping_list_id': 3,
+      'total_price': 40.82,
+      'currency': 'EUR',
+      'status': 'pending',
+      'created_at': datetime.datetime(2025,
+      5,
+      27,
+      19,
+      40,
+      28,
+      559080),
+      'confirmed_at': None
+    }
+  ],
+  'sensor_readings': [
+    {
+      'product_id': 1,
+      'temperature': 3.9,
+      'humidity': 30.1,
+      'gas_level': 0.75,
+      'light_level': 388.6,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 1,
+      'temperature': 1.1,
+      'humidity': 68.2,
+      'gas_level': 0.84,
+      'light_level': 193.7,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_5'
+    },
+    {
+      'product_id': 1,
+      'temperature': 7.2,
+      'humidity': 65.9,
+      'gas_level': 0.86,
+      'light_level': 290.8,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 2,
+      'temperature': 8.4,
+      'humidity': 68.6,
+      'gas_level': 0.16,
+      'light_level': 321.4,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_2'
+    },
+    {
+      'product_id': 2,
+      'temperature': 6.6,
+      'humidity': 64.2,
+      'gas_level': 0.6,
+      'light_level': 359.7,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 2,
+      'temperature': 4.6,
+      'humidity': 61.6,
+      'gas_level': 0.63,
+      'light_level': 313.2,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 3,
+      'temperature': 7.6,
+      'humidity': 49.7,
+      'gas_level': 0.69,
+      'light_level': 340.5,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_5'
+    },
+    {
+      'product_id': 3,
+      'temperature': 1.9,
+      'humidity': 61.9,
+      'gas_level': 0.25,
+      'light_level': 415.9,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 3,
+      'temperature': 6.1,
+      'humidity': 52.6,
+      'gas_level': 0.37,
+      'light_level': 220.2,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 4,
+      'temperature': 7.2,
+      'humidity': 37.0,
+      'gas_level': 0.08,
+      'light_level': 463.7,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_5'
+    },
+    {
+      'product_id': 4,
+      'temperature': 4.7,
+      'humidity': 47.6,
+      'gas_level': 0.5,
+      'light_level': 158.3,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 4,
+      'temperature': 5.3,
+      'humidity': 54.5,
+      'gas_level': 0.15,
+      'light_level': 469.7,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 5,
+      'temperature': 6.0,
+      'humidity': 59.8,
+      'gas_level': 0.16,
+      'light_level': 434.8,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 5,
+      'temperature': 4.6,
+      'humidity': 34.8,
+      'gas_level': 0.78,
+      'light_level': 494.6,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 5,
+      'temperature': 7.6,
+      'humidity': 56.9,
+      'gas_level': 0.8,
+      'light_level': 146.5,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 6,
+      'temperature': 1.0,
+      'humidity': 63.2,
+      'gas_level': 0.75,
+      'light_level': 438.1,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_2'
+    },
+    {
+      'product_id': 6,
+      'temperature': 3.3,
+      'humidity': 54.6,
+      'gas_level': 0.54,
+      'light_level': 439.6,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_2'
+    },
+    {
+      'product_id': 6,
+      'temperature': 6.3,
+      'humidity': 57.5,
+      'gas_level': 0.08,
+      'light_level': 154.2,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 7,
+      'temperature': 6.4,
+      'humidity': 39.1,
+      'gas_level': 0.94,
+      'light_level': 498.3,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_5'
+    },
+    {
+      'product_id': 7,
+      'temperature': 8.7,
+      'humidity': 68.4,
+      'gas_level': 0.94,
+      'light_level': 389.9,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 7,
+      'temperature': 6.9,
+      'humidity': 51.1,
+      'gas_level': 0.21,
+      'light_level': 324.1,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 8,
+      'temperature': 7.1,
+      'humidity': 62.1,
+      'gas_level': 0.12,
+      'light_level': 364.6,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 8,
+      'temperature': 8.2,
+      'humidity': 35.7,
+      'gas_level': 0.62,
+      'light_level': 188.1,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 8,
+      'temperature': 4.6,
+      'humidity': 52.6,
+      'gas_level': 0.49,
+      'light_level': 268.8,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 9,
+      'temperature': 4.5,
+      'humidity': 52.3,
+      'gas_level': 0.87,
+      'light_level': 194.3,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 9,
+      'temperature': 9.4,
+      'humidity': 69.4,
+      'gas_level': 0.35,
+      'light_level': 467.0,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 9,
+      'temperature': 6.0,
+      'humidity': 65.6,
+      'gas_level': 0.89,
+      'light_level': 102.7,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_4'
+    },
+    {
+      'product_id': 10,
+      'temperature': 2.0,
+      'humidity': 65.1,
+      'gas_level': 0.51,
+      'light_level': 252.7,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    },
+    {
+      'product_id': 10,
+      'temperature': 8.5,
+      'humidity': 45.2,
+      'gas_level': 0.51,
+      'light_level': 217.3,
+      'shock_detected': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_3'
+    },
+    {
+      'product_id': 10,
+      'temperature': 7.6,
+      'humidity': 62.5,
+      'gas_level': 0.04,
+      'light_level': 453.2,
+      'shock_detected': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'source_device': 'sensor_1'
+    }
+  ],
+  'qrs': [
+    {
+      'product_id': 1,
+      'qr_hash': 'e4e96b5715ccada61df7bce4cf153813edddae102ad2f7d5a5f96f8ea5c490d1',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': 'acc63e60-e8e8-405a-ab3e-3d7f8e6ec38c'
+      }
+    },
+    {
+      'product_id': 2,
+      'qr_hash': 'ec509dedc5cd546d55a141166f7f368455fc77d202cc457a91320794f059fe56',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': 'd66d6fe6-60e0-4d07-81c8-c447381ce405'
+      }
+    },
+    {
+      'product_id': 3,
+      'qr_hash': '6ce590577ea72b54d4008c122904e91dd910c16e000956fafbe35df0ee5146a4',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': 'ad7768a3-303b-4526-b424-6ef9c316c6f1'
+      }
+    },
+    {
+      'product_id': 4,
+      'qr_hash': '344fb401d2f83c47e7808d5eb32914b11035e263e64e2f68936ee5dbfc289815',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': '12a190d7-2d1c-43e8-8abe-5a0e42155cac'
+      }
+    },
+    {
+      'product_id': 5,
+      'qr_hash': '25356b08347e23d6ff3044753cb81a08a3173e899b4bc88228fec5fd10fdfe6c',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': '7aa967ec-daec-4ab0-bfaa-3cf7730d6acd'
+      }
+    },
+    {
+      'product_id': 6,
+      'qr_hash': 'ab6fdc83a0897068ede7cd9bd1c3052d6ee1dad8d7e12edd75bf63ce69e66648',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': '0a76c1b0-1420-4ff8-b103-7e11bc611315'
+      }
+    },
+    {
+      'product_id': 7,
+      'qr_hash': '439b22e72aba2522074b7f206bdc73b8cf27191358242da0426113cfe3cb3f09',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': 'a2c2b1a7-fc5f-4298-a761-978dafaf3839'
+      }
+    },
+    {
+      'product_id': 8,
+      'qr_hash': '13a99eedf6f484b5f4bfecbaee09c4aaf7002e950f6f4bc1341086a13e8cfb3d',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': '02a92a59-4fd1-4171-ba07-0c000e0f46a2'
+      }
+    },
+    {
+      'product_id': 9,
+      'qr_hash': '3fd22510dd1049ce393468738716dd0ef357fb06e97a106e7fe5814f24e68463',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': '8b312241-1240-4b77-9ad4-3cbc26ada9ea'
+      }
+    },
+    {
+      'product_id': 10,
+      'qr_hash': '82adb9a0ebf098c5f99c7fd605e236d5298a981aa7380c92fa6bc049bb37d84b',
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'metadata': {
+        'trace_id': 'eacf8e71-f37a-4d8b-97d6-b987c50165d0'
+      }
+    }
+  ],
+  'blockchain_logs': [
+    {
+      'entity_type': 'product',
+      'entity_id': 1,
+      'hash': '69b16a5cea9925f5ffa419b3502fd2ec63308ebec717be4464f8cd03fd27c036',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563048)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 2,
+      'hash': 'dfe71a3a82e60f8e4a1c20992585d3e5845d4109bd0dc8c7a4237a0964f848c5',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563100)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 3,
+      'hash': '68be925a7f1c63498b20eaf6d7bedf98939648d68addd9026735df2e3d74ce9f',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563100)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 4,
+      'hash': '37ab4b3b8b6194093237d6e56eee47fbe8906ac03c88e743b614b38fb16ff2e6',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563100)
+    },
+    {
+      'entity_type': 'transaction',
+      'entity_id': 5,
+      'hash': '3af8cc9e87c2e88357655b055eb6a0419c0a6a9f456edf42ce8ff9e10ac9405b',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 6,
+      'hash': '8eee3b5721b7bdce2d1799c99b56dd4de49070e1424fd2545608e538b40b2d53',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 7,
+      'hash': '141dd0991588213f1f66f71cf9e8764e43fc8e253962bf574f04d3e2eb1ef9b0',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    },
+    {
+      'entity_type': 'sensor',
+      'entity_id': 8,
+      'hash': 'ed2a72024ed6ec453cd8c91283842e6054042f311b057fd6ce3a768331fcdd73',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    },
+    {
+      'entity_type': 'transaction',
+      'entity_id': 9,
+      'hash': '8659df772933a8592723c458f91d785348b41b0449a08cee7db3519cea9c26d8',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    },
+    {
+      'entity_type': 'product',
+      'entity_id': 10,
+      'hash': 'abdd9d05484f92f2e107eab2edebf48a5f8b954b6152763e06017f2c22994e2c',
+      'timestamp': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      563143)
+    }
+  ],
+
+  'intake_profiles': [
+    {
+      'id': 1,
+      'name': 'Adulta activa',
+      'gender': 'female',
+      'age_range': '30-40',
+      'activity': 'active',
+      'kcal': 2200,
+      'protein': 50.0,
+      'carbohydrates': 275.0,
+      'sugars': 50.0,
+      'fat': 70.0,
+      'saturated_fat': 20.0,
+      'fiber': 30.0,
+      'salt': 5.0,
+      'cholesterol': 300.0,
+      'calcium': 1000.0,
+      'iron': 18.0,
+      'vitamin_c': 75.0,
+      'vitamin_d': 15.0,
+      'vitamin_b12': 2.4,
+      'potassium': 4700.0,
+      'magnesium': 310.0
+    },
+    {
+      'id': 2,
+      'name': 'Niño escolar',
+      'gender': 'male',
+      'age_range': '6-12',
+      'activity': 'moderate',
+      'kcal': 1600,
+      'protein': 30.0,
+      'carbohydrates': 200.0,
+      'sugars': 35.0,
+      'fat': 50.0,
+      'saturated_fat': 15.0,
+      'fiber': 25.0,
+      'salt': 4.0,
+      'cholesterol': 200.0,
+      'calcium': 1300.0,
+      'iron': 10.0,
+      'vitamin_c': 45.0,
+      'vitamin_d': 10.0,
+      'vitamin_b12': 1.8,
+      'potassium': 3000.0,
+      'magnesium': 200.0
+    },
+    {
+      'id': 3,
+      'name': 'Deportista adulto',
+      'gender': 'male',
+      'age_range': '20-35',
+      'activity': 'very_active',
+      'kcal': 2800,
+      'protein': 120.0,
+      'carbohydrates': 350.0,
+      'sugars': 60.0,
+      'fat': 90.0,
+      'saturated_fat': 25.0,
+      'fiber': 35.0,
+      'salt': 6.0,
+      'cholesterol': 350.0,
+      'calcium': 1200.0,
+      'iron': 20.0,
+      'vitamin_c': 90.0,
+      'vitamin_d': 20.0,
+      'vitamin_b12': 3.0,
+      'potassium': 5000.0,
+      'magnesium': 350.0
+    }
+  ],
+  'nutritional_info': [
+    {
+      'id': 1,
+      'generic_name': 'tomate',
+      'kcal': 18,
+      'protein': 0.9,
+      'carbohydrates': 3.9,
+      'sugars': 2.6,
+      'fat': 0.2,
+      'saturated_fat': 0.0,
+      'fiber': 1.2,
+      'salt': 0.01,
+      'cholesterol': 0.0,
+      'calcium': 10.0,
+      'iron': 0.3,
+      'vitamin_c': 13.7,
+      'vitamin_d': 0.0,
+      'vitamin_b12': 0.0,
+      'potassium': 237.0,
+      'magnesium': 11.0,
+      'per_unit': '100g',
+      'source': 'USDA'
+    },
+    {
+      'id': 2,
+      'generic_name': 'zanahoria',
+      'kcal': 41,
+      'protein': 0.9,
+      'carbohydrates': 10.0,
+      'sugars': 4.7,
+      'fat': 0.2,
+      'saturated_fat': 0.0,
+      'fiber': 2.8,
+      'salt': 0.07,
+      'cholesterol': 0.0,
+      'calcium': 33.0,
+      'iron': 0.3,
+      'vitamin_c': 5.9,
+      'vitamin_d': 0.0,
+      'vitamin_b12': 0.0,
+      'potassium': 320.0,
+      'magnesium': 12.0,
+      'per_unit': '100g',
+      'source': 'USDA'
+    },
+    {
+      'id': 3,
+      'generic_name': 'manzana',
+      'kcal': 52,
+      'protein': 0.3,
+      'carbohydrates': 14.0,
+      'sugars': 10.4,
+      'fat': 0.2,
+      'saturated_fat': 0.0,
+      'fiber': 2.4,
+      'salt': 0.01,
+      'cholesterol': 0.0,
+      'calcium': 6.0,
+      'iron': 0.1,
+      'vitamin_c': 4.6,
+      'vitamin_d': 0.0,
+      'vitamin_b12': 0.0,
+      'potassium': 107.0,
+      'magnesium': 5.0,
+      'per_unit': '100g',
+      'source': 'USDA'
+    },
+    {
+      'id': 4,
+      'generic_name': 'pan integral',
+      'kcal': 247,
+      'protein': 8.8,
+      'carbohydrates': 41.0,
+      'sugars': 5.0,
+      'fat': 3.4,
+      'saturated_fat': 0.5,
+      'fiber': 7.0,
+      'salt': 0.45,
+      'cholesterol': 0.0,
+      'calcium': 107.0,
+      'iron': 2.5,
+      'vitamin_c': 0.0,
+      'vitamin_d': 0.0,
+      'vitamin_b12': 0.0,
+      'potassium': 230.0,
+      'magnesium': 70.0,
+      'per_unit': '100g',
+      'source': 'Tabla Española'
+    },
+    {
+      'id': 5,
+      'generic_name': 'leche vegetal',
+      'kcal': 46,
+      'protein': 1.0,
+      'carbohydrates': 6.0,
+      'sugars': 2.9,
+      'fat': 1.5,
+      'saturated_fat': 0.3,
+      'fiber': 0.4,
+      'salt': 0.13,
+      'cholesterol': 0.0,
+      'calcium': 120.0,
+      'iron': 0.3,
+      'vitamin_c': 0.0,
+      'vitamin_d': 1.0,
+      'vitamin_b12': 0.5,
+      'potassium': 150.0,
+      'magnesium': 15.0,
+      'per_unit': '100ml',
+      'source': 'Envase fabricante'
+    },
+    {
+      'id': 6,
+      'generic_name': 'tofu',
+      'kcal': 76,
+      'protein': 8.0,
+      'carbohydrates': 1.9,
+      'sugars': 0.3,
+      'fat': 4.8,
+      'saturated_fat': 0.7,
+      'fiber': 0.3,
+      'salt': 0.01,
+      'cholesterol': 0.0,
+      'calcium': 350.0,
+      'iron': 5.4,
+      'vitamin_c': 0.0,
+      'vitamin_d': 0.0,
+      'vitamin_b12': 0.0,
+      'potassium': 121.0,
+      'magnesium': 30.0,
+      'per_unit': '100g',
+      'source': 'USDA'
+    }
+  ],
+  'recipes': [
+    {
+      'id': 1,
+      'name': 'Receta Saludable 1',
+      'description': 'Descripción de la receta 1',
+      'author_id': 1,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Receta+1',
+      'steps': [
+        {
+          'step': 1,
+          'instruction': 'Mezclar los ingredientes'
+        },
+        {
+          'step': 2,
+          'instruction': 'Cocinar por 20 min'
+        }
+      ],
+      'time_minutes': 11,
+      'difficulty': 'fácil',
+      'is_vegan': True,
+      'is_gluten_free': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'tags': [
+        'saludable',
+        'rápido'
+      ],
+      'nutrition_total': {}
+    },
+    {
+      'id': 2,
+      'name': 'Receta Saludable 2',
+      'description': 'Descripción de la receta 2',
+      'author_id': 2,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Receta+2',
+      'steps': [
+        {
+          'step': 1,
+          'instruction': 'Mezclar los ingredientes'
+        },
+        {
+          'step': 2,
+          'instruction': 'Cocinar por 20 min'
+        }
+      ],
+      'time_minutes': 27,
+      'difficulty': 'fácil',
+      'is_vegan': False,
+      'is_gluten_free': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'tags': [
+        'saludable',
+        'rápido'
+      ],
+      'nutrition_total': {}
+    },
+    {
+      'id': 3,
+      'name': 'Receta Saludable 3',
+      'description': 'Descripción de la receta 3',
+      'author_id': 1,
+      'image_url': 'https://dummyimage.com/600x400/000/fff&text=Receta+3',
+      'steps': [
+        {
+          'step': 1,
+          'instruction': 'Mezclar los ingredientes'
+        },
+        {
+          'step': 2,
+          'instruction': 'Cocinar por 20 min'
+        }
+      ],
+      'time_minutes': 35,
+      'difficulty': 'media',
+      'is_vegan': True,
+      'is_gluten_free': False,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'tags': [
+        'saludable',
+        'rápido'
+      ],
+      'nutrition_total': {}
+    }
+  ],
+  'recipe_ingredients': [
+    {
+      'id': 1,
+      'recipe_id': 1,
+      'product_id': 6,
+      'name': 'Ingrediente 6',
+      'quantity': 0.61,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': True
+    },
+    {
+      'id': 2,
+      'recipe_id': 1,
+      'product_id': 5,
+      'name': 'Ingrediente 5',
+      'quantity': 0.36,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': False
+    },
+    {
+      'id': 3,
+      'recipe_id': 2,
+      'product_id': 6,
+      'name': 'Ingrediente 6',
+      'quantity': 0.87,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': False
+    },
+    {
+      'id': 4,
+      'recipe_id': 2,
+      'product_id': 5,
+      'name': 'Ingrediente 5',
+      'quantity': 0.71,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': True
+    },
+    {
+      'id': 5,
+      'recipe_id': 3,
+      'product_id': 1,
+      'name': 'Ingrediente 1',
+      'quantity': 0.65,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': True
+    },
+    {
+      'id': 6,
+      'recipe_id': 3,
+      'product_id': 3,
+      'name': 'Ingrediente 3',
+      'quantity': 0.11,
+      'unit': 'kg',
+      'nutritional_info': {},
+      'optional': False
+    }
+  ],
+  'weekly_plans': [
+    {
+      'id': 1,
+      'user_id': 1,
+      'intake_profile_id': 1,
+      'week_start': datetime.date(2025,
+      5,
+      26),
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'comment': 'Plan semanal 1'
+    },
+    {
+      'id': 2,
+      'user_id': 2,
+      'intake_profile_id': 2,
+      'week_start': datetime.date(2025,
+      5,
+      26),
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'comment': 'Plan semanal 2'
+    },
+    {
+      'id': 3,
+      'user_id': 3,
+      'intake_profile_id': 3,
+      'week_start': datetime.date(2025,
+      5,
+      26),
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080),
+      'comment': 'Plan semanal 3'
+    }
+  ],
+  'weekly_plan_items': [
+    {
+      'id': 1,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 2,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 3,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 4,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Martes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 5,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Martes',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 6,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Martes',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 7,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 8,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 9,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Cena',
+      'recipe_id': 2,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 10,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 11,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 12,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 13,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 14,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 15,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 16,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 17,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 18,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 19,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 20,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 21,
+      'weekly_plan_id': 1,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Cena',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 22,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 23,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 24,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Cena',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 25,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Martes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 26,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Martes',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 27,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Martes',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 28,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 29,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 30,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 31,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 32,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 33,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Cena',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 34,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 35,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 36,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 37,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 38,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 39,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 40,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Desayuno',
+      'recipe_id': 3,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 41,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 42,
+      'weekly_plan_id': 2,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 43,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 44,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 45,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Lunes',
+      'meal_type': 'Cena',
+      'recipe_id': 3,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 46,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Martes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 3,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 47,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Martes',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 48,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Martes',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 49,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 50,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 51,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Miércoles',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 52,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 53,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Comida',
+      'recipe_id': 1,
+      'portions': 1,
+      'nutrition_total': {}
+    },
+    {
+      'id': 54,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Jueves',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 55,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 56,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 57,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Viernes',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 58,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Desayuno',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 59,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Comida',
+      'recipe_id': 3,
+      'portions': 2,
+      'nutrition_total': {}
+    },
+    {
+      'id': 60,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Sábado',
+      'meal_type': 'Cena',
+      'recipe_id': 1,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 61,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Desayuno',
+      'recipe_id': 1,
+      'portions': 3,
+      'nutrition_total': {}
+    },
+    {
+      'id': 62,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Comida',
+      'recipe_id': 2,
+      'portions': 4,
+      'nutrition_total': {}
+    },
+    {
+      'id': 63,
+      'weekly_plan_id': 3,
+      'day_of_week': 'Domingo',
+      'meal_type': 'Cena',
+      'recipe_id': 2,
+      'portions': 1,
+      'nutrition_total': {}
+    }
+  ],
+  'vehicles': [
+    {
+      'id': 1,
+      'type': 'truck',
+      'name': 'Vehículo 1',
+      'plate_number': 'E6141F',
+      'capacity_kg': 722.0303527137066,
+      'capacity_m3': 1.8718033137556658,
+      'speed_kmph': 56.431334592229724,
+      'emissions_factor': 0.11,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      559080)
+    },
+    {
+      'id': 2,
+      'type': 'truck',
+      'name': 'Vehículo 2',
+      'plate_number': 'E8187F',
+      'capacity_kg': 797.4765460361709,
+      'capacity_m3': 8.420849181625442,
+      'speed_kmph': 81.89233487374034,
+      'emissions_factor': 0.47,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      560049)
+    },
+    {
+      'id': 3,
+      'type': 'truck',
+      'name': 'Vehículo 3',
+      'plate_number': 'H9562L',
+      'capacity_kg': 650.5577907620104,
+      'capacity_m3': 7.870451970765208,
+      'speed_kmph': 46.284747547499514,
+      'emissions_factor': 0.45,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      560049)
+    },
+    {
+      'id': 4,
+      'type': 'van',
+      'name': 'Vehículo 4',
+      'plate_number': 'D3361Q',
+      'capacity_kg': 615.9063210338531,
+      'capacity_m3': 6.420603076822001,
+      'speed_kmph': 69.17112568661656,
+      'emissions_factor': 0.11,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      561045)
+    },
+    {
+      'id': 5,
+      'type': 'bike',
+      'name': 'Vehículo 5',
+      'plate_number': 'E5783W',
+      'capacity_kg': 191.32624458055977,
+      'capacity_m3': 7.949719716763014,
+      'speed_kmph': 53.645049997400605,
+      'emissions_factor': 0.28,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      561045)
+    }
+  ],
+  'drivers': [
+    {
+      'id': 1,
+      'name': 'Darren Shelton',
+      'phone': '001-518-319-6674x507',
+      'email': 'tammyelliott@example.org',
+      'license_number': '843514',
+      'vehicle_id': 1,
+      'location_lat': Decimal(
+      '78.822351'
+      ),
+      'location_lon': Decimal(
+      '116.789572'
+      ),
+      'working_hours': {
+        'start': '08:00',
+        'end': '18:00'
+      },
+      'available': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      560049)
+    },
+    {
+      'id': 2,
+      'name': 'Ashley Wood',
+      'phone': '+1-304-589-5027x802',
+      'email': 'kristopheraguilar@example.org',
+      'license_number': '795571',
+      'vehicle_id': 2,
+      'location_lat': Decimal(
+      '4.4114095'
+      ),
+      'location_lon': Decimal(
+      '-58.112198'
+      ),
+      'working_hours': {
+        'start': '08:00',
+        'end': '18:00'
+      },
+      'available': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      560049)
+    },
+    {
+      'id': 3,
+      'name': 'Karen Matthews',
+      'phone': '001-664-692-7576x912',
+      'email': 'johnhendrix@example.com',
+      'license_number': '937658',
+      'vehicle_id': 3,
+      'location_lat': Decimal(
+      '-4.250324'
+      ),
+      'location_lon': Decimal(
+      '80.263110'
+      ),
+      'working_hours': {
+        'start': '08:00',
+        'end': '18:00'
+      },
+      'available': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      561045)
+    },
+    {
+      'id': 4,
+      'name': 'Karen Tanner',
+      'phone': '214-903-0040',
+      'email': 'stephanie55@example.com',
+      'license_number': '824140',
+      'vehicle_id': 4,
+      'location_lat': Decimal(
+      '50.200805'
+      ),
+      'location_lon': Decimal(
+      '56.845418'
+      ),
+      'working_hours': {
+        'start': '08:00',
+        'end': '18:00'
+      },
+      'available': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      561045)
+    },
+    {
+      'id': 5,
+      'name': 'Elizabeth Rodriguez MD',
+      'phone': '909-989-4418',
+      'email': 'georgelee@example.org',
+      'license_number': '531511',
+      'vehicle_id': 5,
+      'location_lat': Decimal(
+      '16.439078'
+      ),
+      'location_lon': Decimal(
+      '176.039462'
+      ),
+      'working_hours': {
+        'start': '08:00',
+        'end': '18:00'
+      },
+      'available': True,
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050)
+    }
+  ],
+  'logistics_routes': [
+    {
+      'id': 1,
+      'driver_name': 'Karen Tanner',
+      'distance_km': 15.31,
+      'orders_ids': [
+        1
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'van',
+      'estimated_time_min': 36,
+      'driver_id': 4,
+      'vehicle_id': 4,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    },
+    {
+      'id': 2,
+      'driver_name': 'Ashley Wood',
+      'distance_km': 10.14,
+      'orders_ids': [
+        2
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'truck',
+      'estimated_time_min': 59,
+      'driver_id': 2,
+      'vehicle_id': 2,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    },
+    {
+      'id': 3,
+      'driver_name': 'Elizabeth Rodriguez MD',
+      'distance_km': 16.87,
+      'orders_ids': [
+        3
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'bike',
+      'estimated_time_min': 36,
+      'driver_id': 5,
+      'vehicle_id': 5,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    },
+    {
+      'id': 4,
+      'driver_name': 'Darren Shelton',
+      'distance_km': 14.2,
+      'orders_ids': [
+        4
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'truck',
+      'estimated_time_min': 11,
+      'driver_id': 1,
+      'vehicle_id': 1,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    },
+    {
+      'id': 5,
+      'driver_name': 'Ashley Wood',
+      'distance_km': 17.06,
+      'orders_ids': [
+        5
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'truck',
+      'estimated_time_min': 10,
+      'driver_id': 2,
+      'vehicle_id': 2,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    },
+    {
+      'id': 6,
+      'driver_name': 'Darren Shelton',
+      'distance_km': 16.37,
+      'orders_ids': [
+        6
+      ],
+      'created_at': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      40,
+      28,
+      562050),
+      'vehicle_type': 'truck',
+      'estimated_time_min': 17,
+      'driver_id': 1,
+      'vehicle_id': 1,
+      'date': datetime.date(2025,
+      5,
+      30),
+      'status': 'pending'
+    }
+  ],
+  'logistics_route_stops': [
+    {
+      'id': 1,
+      'logistics_route_id': 1,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 1,
+      'sender_id': 5,
+      'receiver_id': 6,
+      'location_lat': Decimal(
+      '69.572637'
+      ),
+      'location_lon': Decimal(
+      '0.728233'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      18,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 2,
+      'logistics_route_id': 1,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 1,
+      'sender_id': 1,
+      'receiver_id': 9,
+      'location_lat': Decimal(
+      '70.765611'
+      ),
+      'location_lon': Decimal(
+      '-175.553181'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      46,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 3,
+      'logistics_route_id': 2,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 2,
+      'sender_id': 5,
+      'receiver_id': 10,
+      'location_lat': Decimal(
+      '-74.061039'
+      ),
+      'location_lon': Decimal(
+      '160.967513'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      22,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 4,
+      'logistics_route_id': 2,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 2,
+      'sender_id': 2,
+      'receiver_id': 10,
+      'location_lat': Decimal(
+      '36.8465095'
+      ),
+      'location_lon': Decimal(
+      '150.740076'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      10,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 5,
+      'logistics_route_id': 3,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 3,
+      'sender_id': 1,
+      'receiver_id': 8,
+      'location_lat': Decimal(
+      '-49.8103765'
+      ),
+      'location_lon': Decimal(
+      '121.987643'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      44,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 6,
+      'logistics_route_id': 3,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 3,
+      'sender_id': 5,
+      'receiver_id': 8,
+      'location_lat': Decimal(
+      '-22.7509045'
+      ),
+      'location_lon': Decimal(
+      '39.343029'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      5,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 7,
+      'logistics_route_id': 4,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 4,
+      'sender_id': 1,
+      'receiver_id': 7,
+      'location_lat': Decimal(
+      '-37.332878'
+      ),
+      'location_lon': Decimal(
+      '-21.658691'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      19,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 8,
+      'logistics_route_id': 4,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 4,
+      'sender_id': 1,
+      'receiver_id': 8,
+      'location_lat': Decimal(
+      '-28.134163'
+      ),
+      'location_lon': Decimal(
+      '-101.935803'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      19,
+      50,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 9,
+      'logistics_route_id': 5,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 5,
+      'sender_id': 2,
+      'receiver_id': 6,
+      'location_lat': Decimal(
+      '87.013249'
+      ),
+      'location_lon': Decimal(
+      '-77.128794'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      17,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 10,
+      'logistics_route_id': 5,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 5,
+      'sender_id': 5,
+      'receiver_id': 7,
+      'location_lat': Decimal(
+      '-2.302826'
+      ),
+      'location_lon': Decimal(
+      '-65.076604'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      6,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 11,
+      'logistics_route_id': 6,
+      'stop_order': 1,
+      'stop_type': 'pickup',
+      'related_group_id': 6,
+      'sender_id': 4,
+      'receiver_id': 6,
+      'location_lat': Decimal(
+      '87.865675'
+      ),
+      'location_lon': Decimal(
+      '23.761698'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      20,
+      10,
+      28,
+      562050),
+      'status': 'pending'
+    },
+    {
+      'id': 12,
+      'logistics_route_id': 6,
+      'stop_order': 2,
+      'stop_type': 'delivery',
+      'related_group_id': 6,
+      'sender_id': 2,
+      'receiver_id': 6,
+      'location_lat': Decimal(
+      '-53.3730475'
+      ),
+      'location_lon': Decimal(
+      '104.445506'
+      ),
+      'eta': datetime.datetime(2025,
+      5,
+      30,
+      21,
+      7,
+      28,
+      562050),
+      'status': 'pending'
+    }
+  ],
+  'impact_metrics': [
+    {
+      'user_id': 1,
+      'co2_saved_kg': 1.63,
+      'local_support_eur': 74.88,
+      'waste_prevented_kg': 4.57
+    },
+    {
+      'user_id': 2,
+      'co2_saved_kg': 3.42,
+      'local_support_eur': 43.09,
+      'waste_prevented_kg': 4.47
+    },
+    {
+      'user_id': 3,
+      'co2_saved_kg': 8.58,
+      'local_support_eur': 32.54,
+      'waste_prevented_kg': 2.33
+    },
+    {
+      'user_id': 4,
+      'co2_saved_kg': 3.38,
+      'local_support_eur': 142.51,
+      'waste_prevented_kg': 2.75
+    },
+    {
+      'user_id': 5,
+      'co2_saved_kg': 6.04,
+      'local_support_eur': 25.32,
+      'waste_prevented_kg': 0.63
+    },
+    {
+      'user_id': 6,
+      'co2_saved_kg': 14.49,
+      'local_support_eur': 154.1,
+      'waste_prevented_kg': 1.75
+    },
+    {
+      'user_id': 7,
+      'co2_saved_kg': 8.56,
+      'local_support_eur': 50.45,
+      'waste_prevented_kg': 3.15
+    },
+    {
+      'user_id': 8,
+      'co2_saved_kg': 5.16,
+      'local_support_eur': 32.2,
+      'waste_prevented_kg': 1.6
+    },
+    {
+      'user_id': 9,
+      'co2_saved_kg': 7.01,
+      'local_support_eur': 153.73,
+      'waste_prevented_kg': 4.76
+    },
+    {
+      'user_id': 10,
+      'co2_saved_kg': 14.1,
+      'local_support_eur': 94.95,
+      'waste_prevented_kg': 4.22
+    }
+  ]
+}

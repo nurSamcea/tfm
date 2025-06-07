@@ -18,25 +18,26 @@ Pasos:
      - penalizaciones según el modo
 5. Devolver la cesta óptima o cercana al óptimo.
 
-
-2. Agrupación de compras por proveedor para minimizar número de proveedores en una compra (una sola entrega).
-- Set Covering Heurístico o ILP con penalización por proveedor extra
-
+------------
 3. Rutas logísticas óptimas
 - Vehicle Routing Problem (VRP) con Google OR-Tools
 
+------------
 4. Visualización y navegación logística
 - OSRM / OpenRouteService (API de routing sobre OSM)
 - Folium / Leaflet para dibujar rutas frontend.
 
+------------
 5. Predicción de demanda: prever qué productos serán más demandados para mejorar stock y logística.
 - Modelos de series temporales (ARIMA, Prophet)
 - En el futuro: Redes neuronales recurrentes (RNN, LSTM)
 
+------------
 6. Planificación semanal de recetas
 - Greedy heurístico + filtros nutricionales
 - Alternativa: Knapsack multidimensional si hay que ajustar cantidades con precisión.
 
+------------
 7. Recomendación de productos o recetas
 - Filtrado colaborativo o basado en contenido
 - Alternativa: Clustering (k-means) para agrupar hábitos similares

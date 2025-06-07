@@ -9,7 +9,6 @@ class ProductBase(BaseModel):
     currency: Optional[str]
     unit: Optional[str]
     category: Optional[str]
-    nutritional_info: Optional[dict]
     stock_available: Optional[float]
     expiration_date: Optional[date]
     is_eco: Optional[bool]

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:sspBvGuWGQrNsdBTiHOnusZuLjtAFLVY@trolley.proxy.rlwy.net:55739/railway
+      - ENVIRONMENT=development
