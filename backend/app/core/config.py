@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     DEBUG: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    BLOCKCHAIN_URL: str = "http://localhost:8545"  # URL por defecto para desarrollo local
 
     class Config:
         env_file = ".env"

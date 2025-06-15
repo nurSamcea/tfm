@@ -1,0 +1,65 @@
+{
+    "contractName": "ProductTraceability",
+    "abi": [
+        {
+            "inputs": [
+                {"name": "productId", "type": "uint256"},
+                {"name": "name", "type": "string"},
+                {"name": "category", "type": "string"},
+                {"name": "isEco", "type": "bool"},
+                {"name": "location", "type": "string"}
+            ],
+            "name": "registerProduct",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"name": "transactionId", "type": "uint256"},
+                {"name": "productId", "type": "uint256"},
+                {"name": "quantity", "type": "uint256"},
+                {"name": "price", "type": "uint256"}
+            ],
+            "name": "recordTransaction",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "productId", "type": "uint256"}],
+            "name": "verifyProduct",
+            "outputs": [
+                {"name": "isAuthentic", "type": "bool"},
+                {"name": "message", "type": "string"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "productId", "type": "uint256"}],
+            "name": "getProductHistory",
+            "outputs": [
+                {"name": "transactionIds", "type": "uint256[]"},
+                {"name": "previousOwners", "type": "address[]"},
+                {"name": "timestamp", "type": "uint256"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "transactionId", "type": "uint256"}],
+            "name": "transactions",
+            "outputs": [
+                {"name": "id", "type": "uint256"},
+                {"name": "buyer", "type": "address"},
+                {"name": "productId", "type": "uint256"},
+                {"name": "quantity", "type": "uint256"},
+                {"name": "price", "type": "uint256"},
+                {"name": "timestamp", "type": "uint256"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+} 
