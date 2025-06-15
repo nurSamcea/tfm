@@ -1,3 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">frontend</string>
+    <string name="app_name">EcoMarket</string>
+    
+    <!-- Strings generales -->
+    <string name="no_products">No hay productos disponibles</string>
+    <string name="add_product">Añadir producto</string>
+    <string name="title_register">Registro</string>
+    <string name="title_login">Iniciar Sesión</string>
+    <string name="title_product_detail">Detalle del Producto</string>
+    <string name="remove_item">Eliminar item</string>
+    
+    <!-- Strings de navegación -->
+    <string name="nav_products">Productos</string>
+    <string name="nav_certification">Certificación</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="nav_inventory">Inventario</string>
+    <string name="nav_suppliers">Proveedores</string>
+    <string name="nav_purchases">Compras</string>
+    <string name="nav_cart">Carrito</string>
+    <string name="nav_orders">Pedidos</string>
+    <string name="nav_metrics">Métricas</string>
+    <string name="nav_sales">Ventas</string>
+    
+    <!-- Títulos de navegación -->
+    <string name="title_products">Productos</string>
+    <string name="title_certifications">Certificaciones</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_inventory">Inventario</string>
+    <string name="title_suppliers">Proveedores</string>
+    <string name="title_purchases">Compras</string>
+    
+    <!-- Mensajes de error -->
+    <string name="error_network">Error de conexión</string>
+    <string name="error_unknown">Error desconocido</string>
+    <string name="error_login">Error al iniciar sesión</string>
+    <string name="error_register">Error al registrarse</string>
+    
+    <!-- Mensajes de éxito -->
+    <string name="success_login">Inicio de sesión exitoso</string>
+    <string name="success_register">Registro exitoso</string>
+    <string name="success_update">Actualización exitosa</string>
+    
+    <!-- Etiquetas de formularios -->
+    <string name="label_email">Correo electrónico</string>
+    <string name="label_password">Contraseña</string>
+    <string name="label_name">Nombre</string>
+    <string name="label_address">Dirección</string>
+    <string name="label_phone">Teléfono</string>
+    
+    <!-- Botones -->
+    <string name="button_login">Iniciar sesión</string>
+    <string name="button_register">Registrarse</string>
+    <string name="button_save">Guardar</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_add">Añadir</string>
+    <string name="button_edit">Editar</string>
+    <string name="button_delete">Eliminar</string>
+    
+    <!-- Mensajes de confirmación -->
+    <string name="confirm_delete">¿Está seguro de que desea eliminar?</string>
+    <string name="confirm_logout">¿Está seguro de que desea cerrar sesión?</string>
+    
+    <!-- Tipos de usuario -->
+    <string name="user_type_farmer">Agricultor</string>
+    <string name="user_type_supermarket">Supermercado</string>
+    <string name="user_type_consumer">Consumidor</string>
+
+    <!-- Login -->
+    <string name="login">Iniciar sesión</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="dont_have_account">¿No tienes una cuenta? Regístrate</string>
+
+    <!-- Register -->
+    <string name="register">Registrarse</string>
+    <string name="name">Nombre</string>
+    <string name="farmer">Agricultor</string>
+    <string name="supermarket">Supermercado</string>
+    <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión</string>
+
+    <!-- Products -->
+    <string name="add_to_cart">Añadir al carrito</string>
+    <string name="product_name">Nombre del producto</string>
+    <string name="description">Descripción</string>
+    <string name="price">Precio</string>
+    <string name="stock">Stock</string>
+    <string name="category">Categoría</string>
+
+    <!-- Sustainability Metrics -->
+    <string name="sustainability_metrics">Métricas de sostenibilidad</string>
+    <string name="water_usage">Uso de agua</string>
+    <string name="carbon_footprint">Huella de carbono</string>
+    <string name="pesticide_usage">Uso de pesticidas</string>
+    <string name="soil_health">Salud del suelo</string>
+    <string name="biodiversity">Biodiversidad</string>
+
+    <!-- Cart -->
+    <string name="remove">Eliminar</string>
+    <string name="quantity">Cantidad</string>
+    <string name="total">Total</string>
+
+    <!-- Farmer -->
+    <string name="edit">Editar</string>
+    <string name="supplier">Proveedor</string>
+
+    <!-- Supermarket -->
+    <string name="restock">Reabastecer</string>
+
+
+    <string name="error_empty_fields">Por favor, completa todos los campos</string>
+
 </resources>

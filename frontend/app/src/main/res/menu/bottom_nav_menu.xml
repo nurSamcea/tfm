@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Menú para Agricultores -->
+    <item
+        android:id="@+id/navigation_farmer_products"
+        android:icon="@drawable/ic_products"
+        android:title="@string/title_products" />
+
+    <item
+        android:id="@+id/navigation_farmer_certifications"
+        android:icon="@drawable/ic_certification"
+        android:title="@string/title_certifications" />
+
+    <item
+        android:id="@+id/navigation_farmer_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/title_profile" />
+
+    <!-- Menú para Supermercados -->
+    <item
+        android:id="@+id/navigation_supermarket_inventory"
+        android:icon="@drawable/ic_inventory"
+        android:title="@string/title_inventory" />
+
+    <item
+        android:id="@+id/navigation_supermarket_suppliers"
+        android:icon="@drawable/ic_suppliers"
+        android:title="@string/title_suppliers" />
+
+    <item
+        android:id="@+id/navigation_supermarket_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/title_profile" />
+
+    <!-- Menú para Consumidores -->
+    <item
+        android:id="@+id/navigation_consumer_products"
+        android:icon="@drawable/ic_products"
+        android:title="@string/title_products" />
+
+    <item
+        android:id="@+id/navigation_consumer_purchases"
+        android:icon="@drawable/ic_purchases"
+        android:title="@string/title_purchases" />
+
+    <item
+        android:id="@+id/navigation_consumer_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/title_profile" />
+</menu> 
