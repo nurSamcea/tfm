@@ -31,7 +31,7 @@ public class SupermarketInventoryFragment extends Fragment implements Supermarke
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_supermarket_inventory, container, false);
         
-        recyclerView = view.findViewById(R.id.inventoryRecyclerView);
+        recyclerView = view.findViewById(R.id.inventory_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         
         // Inicializar lista de productos (esto vendría de tu API/backend)

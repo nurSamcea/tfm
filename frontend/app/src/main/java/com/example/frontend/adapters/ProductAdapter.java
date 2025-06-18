@@ -13,7 +13,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private static final String TAG = "ProductAdapter";
+    private static final String TAG = "Curr.ERROR ProductAdapter";
     private List<Product> products;
     private OnProductClickListener listener;
 

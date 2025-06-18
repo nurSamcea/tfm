@@ -24,26 +24,26 @@ public class InventoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_supermarket_inventory, container, false);
-        
+
         // Inicializar RecyclerView
-        inventoryRecyclerView = view.findViewById(R.id.inventoryRecyclerView);
+        inventoryRecyclerView = view.findViewById(R.id.inventory_recycler_view);
         inventoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         // Inicializar lista de inventario
         inventoryList = new ArrayList<>();
         inventoryAdapter = new SupermarketInventoryAdapter(inventoryList);
         inventoryRecyclerView.setAdapter(inventoryAdapter);
-        
+
         // Configurar FAB para añadir nuevo producto
-        FloatingActionButton fabAddProduct = view.findViewById(R.id.fabAddProduct);
+        FloatingActionButton fabAddProduct = view.findViewById(R.id.fab_add_item);
         fabAddProduct.setOnClickListener(v -> showAddProductDialog());
-        
+
         // Cargar inventario
         loadInventory();
-        
+
         return view;
     }
-    
+
     private void loadInventory() {
         // TODO: Implementar carga de inventario desde el backend
         // Por ahora, añadimos datos de ejemplo
@@ -51,7 +51,7 @@ public class InventoryFragment extends Fragment {
         inventoryList.add(new Product("2", "Lechuga", "Lechuga fresca de temporada", 1.99, 30));
         inventoryAdapter.notifyDataSetChanged();
     }
-    
+
     private void showAddProductDialog() {
         // TODO: Implementar diálogo para añadir nuevo producto al inventario
         // 1. Mostrar formulario con campos:
@@ -63,4 +63,4 @@ public class InventoryFragment extends Fragment {
         // 3. Crear pedido al agricultor
         // 4. Actualizar inventario
     }
-} 
+}

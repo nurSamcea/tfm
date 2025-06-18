@@ -1,6 +1,7 @@
 package com.example.frontend.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,8 @@ import javax.inject.Inject;
 @AndroidEntryPoint
 public class AddProductFragment extends Fragment {
     private FragmentAddProductBinding binding;
-    
+    private static final String TAG = "Curr.ERROR FragmentAddProductBinding";
+
     @Inject
     ApiService apiService;
 
@@ -35,6 +37,7 @@ public class AddProductFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: Iniciando la aplicación");
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonSave.setOnClickListener(v -> saveProduct());

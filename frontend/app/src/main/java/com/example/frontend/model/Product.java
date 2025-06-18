@@ -19,7 +19,7 @@ public class Product {
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
                    SustainabilityMetrics sustainabilityMetrics, String blockchainId,
-                   String description, String farmerName, Date harvestDate) {
+                   String description, int farmerId, Date harvestDate) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -31,6 +31,9 @@ public class Product {
         this.farmerId = farmerId;
         this.harvestDate = harvestDate;
         this.sustainabilityMetrics = sustainabilityMetrics;
+    }
+    public Product(String id, String name, String category, double price, int quantity, int stock) {
+        this(id, name, category, price, quantity, stock, null, null, "", 0, new Date());
     }
 
     public Product() {
