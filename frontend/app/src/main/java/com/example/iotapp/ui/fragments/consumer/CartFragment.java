@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
 import com.example.iotapp.adapters.CartAdapter;
-import com.example.iotapp.models.Order;
+import com.example.frontend.model.Order;
 import com.example.iotapp.models.Product;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +65,10 @@ public class CartFragment extends Fragment {
     }
     
     private void updateTotal() {
-        double total = cartItems.stream()
-                .mapToDouble(Order.OrderItem::getTotalPrice)
-                .sum();
+        double total = 0.0;
+        for (Order.OrderItem item : cartItems) {
+            total += item.getTotalPrice();
+        }
         totalTextView.setText(String.format("Total: €%.2f", total));
     }
     

@@ -80,7 +80,7 @@
     <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión</string>
 
     <!-- Products -->
-    <string name="add_to_cart">Añadir al carrito</string>
+    <string name="add_to_cart">Añadir</string>
     <string name="product_name">Nombre del producto</string>
     <string name="description">Descripción</string>
     <string name="price">Precio</string>

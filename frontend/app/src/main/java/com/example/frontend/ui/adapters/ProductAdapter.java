@@ -4,9 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
@@ -24,6 +26,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> productList = new ArrayList<>();
     private final boolean isConsumerMode;
     private final OnProductClickListener listener;
+    private int selectedPosition = -1;
 
     // Constructor adaptado para lambda
     public ProductAdapter(OnProductClickListener listener) {
@@ -57,20 +60,26 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.descriptionTextView.setText(product.getDescription());
         holder.priceTextView.setText(String.format("€%.2f", product.getPrice()));
         holder.stockTextView.setText(String.format("Stock: %d", product.getStock()));
-
-        // Clic en toda la tarjeta
+        // Imagen de ejemplo
+        holder.productImageView.setImageResource(R.drawable.ic_products);
+        // Selección visual
+        holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), position == selectedPosition ? R.color.primary_light : android.R.color.white));
         holder.itemView.setOnClickListener(v -> {
+            int prev = selectedPosition;
+            selectedPosition = holder.getAdapterPosition();
+            notifyItemChanged(prev);
+            notifyItemChanged(selectedPosition);
             if (listener != null) {
                 listener.onProductClick(product);
             }
         });
-
-        // Botón solo visible para consumidores
+        // Botón añadir al carrito
         if (isConsumerMode) {
             holder.addToCartButton.setVisibility(View.VISIBLE);
             holder.addToCartButton.setOnClickListener(v -> {
-                // Aquí puedes extender para avisar también al listener si quieres
-                // o manejar lógica desde el adapter
+                if (listener != null) {
+                    listener.onProductClick(product);
+                }
             });
         } else {
             holder.addToCartButton.setVisibility(View.GONE);
@@ -88,6 +97,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView priceTextView;
         TextView stockTextView;
         Button addToCartButton;
+        ImageView productImageView;
 
         ProductViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +106,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             priceTextView = itemView.findViewById(R.id.productPrice);
             stockTextView = itemView.findViewById(R.id.productStock);
             addToCartButton = itemView.findViewById(R.id.addToCartButton);
+            productImageView = itemView.findViewById(R.id.imageViewProduct);
         }
     }
 }
