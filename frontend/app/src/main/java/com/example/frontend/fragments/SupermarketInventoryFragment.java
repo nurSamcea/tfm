@@ -29,7 +29,7 @@ public class SupermarketInventoryFragment extends Fragment implements Supermarke
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_supermarket_inventory, container, false);
+        View view = inflater.inflate(R.layout.fragment_supermarket_orders_inventory, container, false);
         
         recyclerView = view.findViewById(R.id.inventory_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

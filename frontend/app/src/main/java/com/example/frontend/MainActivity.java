@@ -8,15 +8,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.frontend.fragments.SupermarketInventoryFragment;
 import com.example.frontend.ui.consumer.ConsumerProductsFragment;
 import com.example.frontend.ui.consumer.ConsumerProfileFragment;
 import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
 import com.example.frontend.ui.farmer.FarmerCertificationsFragment;
+import com.example.frontend.ui.farmer.FarmerProductsFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
+import com.example.frontend.ui.supermarket.SupermarketDashboardFragment;
+import com.example.frontend.ui.supermarket.SupermarketOrdersInventoryFragment;
 import com.example.frontend.ui.supermarket.SupermarketProfileFragment;
-import com.example.frontend.ui.supermarket.SupermarketSuppliersFragment;
-import com.example.iotapp.ui.fragments.farmer.FarmerProductsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new FarmerProfileFragment();
                         }
                     } else if (userType.equals("supermarket")) {
-                        if (itemId == R.id.navigation_supermarket_inventory) {
-                            selectedFragment = new SupermarketInventoryFragment();
-                        } else if (itemId == R.id.navigation_supermarket_suppliers) {
-                            selectedFragment = new SupermarketSuppliersFragment();
+                        if (itemId == R.id.navigation_supermarket_dashboard) {
+                            selectedFragment = new SupermarketDashboardFragment();
+                        } else if (itemId == R.id.navigation_supermarket_orders_inventory) {
+                            selectedFragment = new SupermarketOrdersInventoryFragment();
                         } else if (itemId == R.id.navigation_supermarket_profile) {
                             selectedFragment = new SupermarketProfileFragment();
                         }
@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
                     if (selectedFragment != null) {
                         Log.d(TAG, "Replacing fragment: " + selectedFragment.getClass().getSimpleName());
                         getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment, selectedFragment)
-                            .commit();
+                                .replace(R.id.nav_host_fragment, selectedFragment)
+                                .commit();
                     } else {
                         Log.e(TAG, "No fragment selected for item ID: " + itemId);
                     }
