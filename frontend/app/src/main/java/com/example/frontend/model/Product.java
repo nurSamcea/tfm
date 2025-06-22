@@ -12,7 +12,7 @@ public class Product {
     private SustainabilityMetrics sustainabilityMetrics;
     private String blockchainId;
     private String description;
-    private int farmerId;
+    private Integer farmerId;
     private Date harvestDate;
     private boolean sustainable;
 
@@ -32,6 +32,7 @@ public class Product {
         this.harvestDate = harvestDate;
         this.sustainabilityMetrics = sustainabilityMetrics;
     }
+
     public Product(String id, String name, String category, double price, int quantity, int stock) {
         this(id, name, category, price, quantity, stock, null, null, "", 0, new Date());
     }
@@ -90,6 +91,10 @@ public class Product {
         this.stock = stock;
     }
 
+    public void setHarvestDate(Date harvestDate) {
+        this.harvestDate = harvestDate;
+    }
+
     public SustainabilityMetrics getSustainabilityMetrics() {
         return sustainabilityMetrics;
     }
@@ -110,7 +115,7 @@ public class Product {
         return description;
     }
 
-    public int getFarmerId() {
+    public Integer getFarmerId() {
         return farmerId;
     }
 

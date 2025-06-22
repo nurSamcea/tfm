@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="@drawable/item_background"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/productName"
+        android:text="Tomate cherry"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/productSupplier"
+        android:text="Proveedor: EcoHuerta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#555" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        android:text="1.80 €/kg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#555" />
+
+    <TextView
+        android:id="@+id/productDistance"
+        android:text="6 km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#777" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnViewOptions"
+            android:text="Ver opciones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:text="+ Añadir"
+            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

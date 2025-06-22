@@ -58,7 +58,7 @@
     <fragment
         android:id="@+id/navigation_supermarket_inventory"
         android:name="com.example.frontend.ui.supermarket.InventoryFragment"
-        android:label="@string/title_inventory">
+        android:label="@string/title_supermarket_orders">
         <action
             android:id="@+id/action_inventory_to_product_detail"
             app:destination="@id/navigation_product_detail" />
@@ -97,7 +97,7 @@
     <!-- Pantalla de detalle de producto (compartida) -->
     <fragment
         android:id="@+id/navigation_product_detail"
-        android:name="com.example.frontend.ui.common.ProductDetailFragment"
+        android:name="com.example.frontend.ui.fragments.ProductDetailFragment"
         android:label="@string/title_product_detail">
         <argument
             android:name="productId"

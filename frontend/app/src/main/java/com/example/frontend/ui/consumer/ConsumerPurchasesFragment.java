@@ -1,7 +1,6 @@
 package com.example.frontend.ui.consumer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.model.Order;
+import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.utils.CartPreferences;
-import com.example.iotapp.adapters.CartAdapter;
+import com.example.frontend.ui.adapters.CartAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ConsumerPurchasesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CartAdapter cartAdapter;
     private CartPreferences cartPrefs;
-    private List<Order.OrderItem> cartItems = new ArrayList<>();
+    private List<ConsumerOrder.OrderItem> cartItems = new ArrayList<>();
 
     @Nullable
     @Override
@@ -39,7 +38,7 @@ public class ConsumerPurchasesFragment extends Fragment {
         cartPrefs = new CartPreferences(requireContext());
 
         // Cargar carrito
-        List<Order.OrderItem> savedCart = cartPrefs.getCartItems();
+        List<ConsumerOrder.OrderItem> savedCart = cartPrefs.getCartItems();
         if (savedCart != null) cartItems.addAll(savedCart);
 
         // Configurar RecyclerView
@@ -50,14 +49,14 @@ public class ConsumerPurchasesFragment extends Fragment {
 
         cartAdapter.setOnCartItemClickListener(new CartAdapter.OnCartItemClickListener() {
             @Override
-            public void onQuantityChanged(Order.OrderItem item, int newQuantity) {
+            public void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity) {
                 item.setQuantity(newQuantity);
                 cartPrefs.saveCartItems(cartItems);
                 cartAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onRemoveItem(Order.OrderItem item) {
+            public void onRemoveItem(ConsumerOrder.OrderItem item) {
                 cartItems.remove(item);
                 cartPrefs.saveCartItems(cartItems);
                 cartAdapter.notifyDataSetChanged();

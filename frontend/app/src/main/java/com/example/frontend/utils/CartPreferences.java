@@ -3,7 +3,7 @@ package com.example.frontend.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.frontend.model.Order;
+import com.example.frontend.model.ConsumerOrder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,15 +31,15 @@ public class CartPreferences {
     // -------------------------------
     // Carrito
     // -------------------------------
-    public void saveCartItems(List<Order.OrderItem> items) {
+    public void saveCartItems(List<ConsumerOrder.OrderItem> items) {
         String json = gson.toJson(items);
         prefs.edit().putString(KEY_CART_ITEMS, json).apply();
     }
 
-    public List<Order.OrderItem> getCartItems() {
+    public List<ConsumerOrder.OrderItem> getCartItems() {
         String json = prefs.getString(KEY_CART_ITEMS, null);
         if (json == null) return null;
-        Type type = new TypeToken<List<Order.OrderItem>>() {}.getType();
+        Type type = new TypeToken<List<ConsumerOrder.OrderItem>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

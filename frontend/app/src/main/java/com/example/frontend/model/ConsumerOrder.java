@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Order {
+public class ConsumerOrder {
     public enum OrderStatus {
         PENDING,
         CONFIRMED,
@@ -24,7 +24,7 @@ public class Order {
     private String paymentMethod;
     private String trackingNumber;
 
-    public Order(String id, String consumerId, String sellerId) {
+    public ConsumerOrder(String id, String consumerId, String sellerId) {
         this.id = id;
         this.consumerId = consumerId;
         this.sellerId = sellerId;

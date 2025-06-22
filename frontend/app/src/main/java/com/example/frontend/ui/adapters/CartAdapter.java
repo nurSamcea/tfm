@@ -1,33 +1,29 @@
-package com.example.iotapp.adapters;
+package com.example.frontend.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.model.Order;
-import com.google.android.material.card.MaterialCardView;
+import com.example.frontend.model.ConsumerOrder;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<Order.OrderItem> cartItems;
+    private List<ConsumerOrder.OrderItem> cartItems;
     private OnCartItemClickListener listener;
     private int selectedPosition = 0;
 
     public interface OnCartItemClickListener {
-        void onQuantityChanged(Order.OrderItem item, int newQuantity);
-        void onRemoveItem(Order.OrderItem item);
+        void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity);
+        void onRemoveItem(ConsumerOrder.OrderItem item);
     }
 
-    public CartAdapter(List<Order.OrderItem> cartItems) {
+    public CartAdapter(List<ConsumerOrder.OrderItem> cartItems) {
         this.cartItems = cartItems;
     }
 
@@ -45,10 +41,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        Order.OrderItem item = cartItems.get(position);
+        ConsumerOrder.OrderItem item = cartItems.get(position);
         holder.productNameTextView.setText(item.getProductName() != null ? item.getProductName() : "Producto");
         holder.quantityTextView.setText("x" + item.getQuantity());
         holder.priceTextView.setText(String.format("€%.2f", item.getUnitPrice() * item.getQuantity()));
+        
+        // Botón para aumentar cantidad
+        holder.increaseButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onQuantityChanged(item, item.getQuantity() + 1);
+            }
+        });
+        
+        // Botón para disminuir cantidad
+        holder.decreaseButton.setOnClickListener(v -> {
+            if (listener != null && item.getQuantity() > 1) {
+                listener.onQuantityChanged(item, item.getQuantity() - 1);
+            }
+        });
+        
         holder.removeButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onRemoveItem(item);
@@ -66,12 +77,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView quantityTextView;
         TextView priceTextView;
         ImageButton removeButton;
+        ImageButton increaseButton;
+        ImageButton decreaseButton;
         CartViewHolder(View itemView) {
             super(itemView);
             productNameTextView = itemView.findViewById(R.id.textViewProductName);
             quantityTextView = itemView.findViewById(R.id.textViewQuantity);
             priceTextView = itemView.findViewById(R.id.textViewPrice);
             removeButton = itemView.findViewById(R.id.buttonRemove);
+            increaseButton = itemView.findViewById(R.id.buttonIncrease);
+            decreaseButton = itemView.findViewById(R.id.buttonDecrease);
         }
     }
 } 

@@ -17,17 +17,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearSnapHelper;
 
 import com.example.frontend.R;
 import com.example.frontend.model.Product;
-import com.example.frontend.model.Order;
+import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.utils.CartPreferences;
 import com.example.frontend.ui.adapters.ProductAdapter;
-import com.example.iotapp.adapters.CartAdapter;
+import com.example.frontend.ui.adapters.CartAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ConsumerProductsFragment extends Fragment {
     private List<Product> products;
     private RecyclerView cartRecyclerView;
     private CartAdapter cartAdapter;
-    private List<Order.OrderItem> cartItems = new ArrayList<>();
+    private List<ConsumerOrder.OrderItem> cartItems = new ArrayList<>();
     private EditText searchBar;
     private CheckBox filterDistance, filterPrice, filterGlutenFree, filterEco, filterCategory;
     private double totalCarrito = 0.0;
@@ -76,7 +75,7 @@ public class ConsumerProductsFragment extends Fragment {
         });
 
         // Cargar estado guardado
-        List<Order.OrderItem> savedCart = cartPrefs.getCartItems();
+        List<ConsumerOrder.OrderItem> savedCart = cartPrefs.getCartItems();
         if (savedCart != null) cartItems.addAll(savedCart);
         searchBar.setText(cartPrefs.getSearchQuery());
         filterDistance.setChecked(cartPrefs.getFilterDistance());
@@ -118,18 +117,17 @@ public class ConsumerProductsFragment extends Fragment {
 
         // Carrito
         cartRecyclerView = view.findViewById(R.id.cart_recycler_view);
-        cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         cartAdapter = new CartAdapter(cartItems);
         cartRecyclerView.setAdapter(cartAdapter);
-        new LinearSnapHelper().attachToRecyclerView(cartRecyclerView);
         cartAdapter.setOnCartItemClickListener(new CartAdapter.OnCartItemClickListener() {
-            public void onQuantityChanged(Order.OrderItem item, int newQuantity) {
+            public void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity) {
                 item.setQuantity(newQuantity);
                 actualizarTotalCarrito();
                 cartPrefs.saveCartItems(cartItems);
                 cartAdapter.notifyDataSetChanged();
             }
-            public void onRemoveItem(Order.OrderItem item) {
+            public void onRemoveItem(ConsumerOrder.OrderItem item) {
                 cartItems.remove(item);
                 actualizarTotalCarrito();
                 cartPrefs.saveCartItems(cartItems);
@@ -142,9 +140,9 @@ public class ConsumerProductsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         products = new ArrayList<>();
         adapter = new ProductAdapter(product -> {
-            Order.OrderItem item = buscarEnCarrito(product.getId());
+            ConsumerOrder.OrderItem item = buscarEnCarrito(product.getId());
             if (item == null) {
-                item = new Order.OrderItem(product.getId(), 1, product.getPrice());
+                item = new ConsumerOrder.OrderItem(product.getId(), 1, product.getPrice());
                 item.setProductName(product.getName());
                 cartItems.add(item);
                 Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
@@ -165,16 +163,22 @@ public class ConsumerProductsFragment extends Fragment {
 
         Button btnFinalizeCart = view.findViewById(R.id.btn_finalize_cart);
         btnFinalizeCart.setOnClickListener(v -> {
-            // Guardar carrito actual en SharedPreferences (ya lo tienes en cartPrefs)
+            // Guardar carrito actual
             cartPrefs.saveCartItems(cartItems);
-
-            // Navegar a la pestaña del carrito
-            // Si usas BottomNavigationView, puedes hacerlo así:
-            BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
-            bottomNav.setSelectedItemId(R.id.navigation_cart);
-
-            // O si usas Navigation Component:
-            // Navigation.findNavController(view).navigate(R.id.action_consumerProductsFragment_to_consumerPurchasesFragment);
+            
+            // Mostrar mensaje de éxito
+            Toast.makeText(getContext(), "Carrito guardado correctamente", Toast.LENGTH_SHORT).show();
+            
+            // Intentar navegar de forma segura
+            try {
+                BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
+                if (bottomNav != null) {
+                    bottomNav.setSelectedItemId(R.id.navigation_consumer_purchases);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error al navegar: " + e.getMessage());
+                Toast.makeText(getContext(), "Error al navegar al carrito", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -204,7 +208,7 @@ public class ConsumerProductsFragment extends Fragment {
 
     private void actualizarTotalCarrito() {
         totalCarrito = 0.0;
-        for (Order.OrderItem item : cartItems) {
+        for (ConsumerOrder.OrderItem item : cartItems) {
             totalCarrito += item.getUnitPrice() * item.getQuantity();
         }
         if (cartTotalText != null) {
@@ -212,8 +216,8 @@ public class ConsumerProductsFragment extends Fragment {
         }
     }
 
-    private Order.OrderItem buscarEnCarrito(String productId) {
-        for (Order.OrderItem item : cartItems) {
+    private ConsumerOrder.OrderItem buscarEnCarrito(String productId) {
+        for (ConsumerOrder.OrderItem item : cartItems) {
             if (item.getProductId().equals(productId)) return item;
         }
         return null;

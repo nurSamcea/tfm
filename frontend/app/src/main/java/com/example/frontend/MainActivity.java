@@ -14,9 +14,9 @@ import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
 import com.example.frontend.ui.farmer.FarmerCertificationsFragment;
 import com.example.frontend.ui.farmer.FarmerProductsFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
-import com.example.frontend.ui.supermarket.SupermarketDashboardFragment;
-import com.example.frontend.ui.supermarket.SupermarketOrdersInventoryFragment;
+import com.example.frontend.ui.supermarket.SupermarketInventoryFragment;
 import com.example.frontend.ui.supermarket.SupermarketProfileFragment;
+import com.example.frontend.ui.supermarket.SupermarketSuppliersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new FarmerProfileFragment();
                         }
                     } else if (userType.equals("supermarket")) {
-                        if (itemId == R.id.navigation_supermarket_dashboard) {
-                            selectedFragment = new SupermarketDashboardFragment();
-                        } else if (itemId == R.id.navigation_supermarket_orders_inventory) {
-                            selectedFragment = new SupermarketOrdersInventoryFragment();
+                        if (itemId == R.id.navigation_supermarket_suppliers) {
+                            selectedFragment = new SupermarketSuppliersFragment();
+                        } else if (itemId == R.id.navigation_supermarket_inventory) {
+                            selectedFragment = new SupermarketInventoryFragment();
                         } else if (itemId == R.id.navigation_supermarket_profile) {
                             selectedFragment = new SupermarketProfileFragment();
                         }
