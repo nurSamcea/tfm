@@ -27,7 +27,6 @@ class User(Base):
     location_lat = Column(DECIMAL)
     location_lon = Column(DECIMAL)
     preferences = Column(JSON)
-    intake_profile_id = Column(Integer, ForeignKey("intake_profiles.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relaciones

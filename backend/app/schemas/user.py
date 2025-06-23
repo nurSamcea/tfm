@@ -10,7 +10,6 @@ class UserBase(BaseModel):
     location_lat: Optional[float]
     location_lon: Optional[float]
     preferences: Optional[dict]
-    intake_profile_id: Optional[int]
 
 class UserCreate(UserBase):
     password_hash: str

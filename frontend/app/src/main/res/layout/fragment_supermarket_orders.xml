@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pedidos recientes"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_margin="16dp"
+        android:textColor="#000000" />
+
+    <!-- Lista de pedidos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_orders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="56dp"
+        android:paddingBottom="72dp"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!-- Botón flotante para nuevo pedido -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_new_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Nuevo pedido"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        app:backgroundTint="@color/primary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,14 +1,37 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fresh_products_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
-    build: 
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
       - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/fresh_products_db
+    depends_on:
+      - db
     volumes:
       - ./backend:/app
-    environment:
-      - DATABASE_URL=postgresql://postgres:sspBvGuWGQrNsdBTiHOnusZuLjtAFLVY@trolley.proxy.rlwy.net:55739/railway
-      - ENVIRONMENT=development
+
+  mqtt:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
+volumes:
+  postgres_data:

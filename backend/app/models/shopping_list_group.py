@@ -11,7 +11,6 @@ class ShoppingListGroup(Base):
     provider_id = Column(Integer, ForeignKey("users.id"))
     subtotal_price = Column(DECIMAL)
     delivery_estimate = Column(DateTime)
-    logistics_route_id = Column(Integer, ForeignKey("logistics_routes.id"))
 
     # Relaciones
     shopping_list = relationship("ShoppingList", back_populates="groups")

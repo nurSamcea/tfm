@@ -7,7 +7,6 @@ class ShoppingListGroupBase(BaseModel):
     provider_id: int
     subtotal_price: float
     delivery_estimate: Optional[datetime]
-    logistics_route_id: Optional[int]
 
 class ShoppingListGroupCreate(ShoppingListGroupBase):
     pass

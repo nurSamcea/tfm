@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_login">
+
+    <!-- Pantalla de inicio de sesión -->
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.frontend.ui.auth.LoginFragment"
+        android:label="@string/title_login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/navigation_register" />
+        <action
+            android:id="@+id/action_login_to_farmer_home"
+            app:destination="@id/navigation_farmer_products" />
+        <action
+            android:id="@+id/action_login_to_supermarket_home"
+            app:destination="@id/navigation_supermarket_inventory" />
+        <action
+            android:id="@+id/action_login_to_consumer_home"
+            app:destination="@id/navigation_consumer_products" />
+    </fragment>
+
+    <!-- Pantalla de registro -->
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.example.frontend.ui.auth.RegisterFragment"
+        android:label="@string/title_register">
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
+
+    <!-- Navegación para Agricultores -->
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.frontend.ui.fragments.ProductsFragment"
+        android:label="Productos">
+
+        <action
+            android:id="@+id/action_productsFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_farmer_certifications"
+        android:name="com.example.frontend.ui.farmer.CertificationsFragment"
+        android:label="@string/title_certifications" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_profile"
+        android:name="com.example.frontend.ui.farmer.ProfileFragment"
+        android:label="@string/title_profile" />
+
+    <!-- Navegación para Supermercados -->
+    <fragment
+        android:id="@+id/navigation_supermarket_inventory"
+        android:name="com.example.frontend.ui.supermarket.InventoryFragment"
+        android:label="@string/title_supermarket_orders">
+        <action
+            android:id="@+id/action_inventory_to_product_detail"
+            app:destination="@id/navigation_product_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_supermarket_suppliers"
+        android:name="com.example.frontend.ui.supermarket.SuppliersFragment"
+        android:label="@string/title_suppliers" />
+
+    <fragment
+        android:id="@+id/navigation_supermarket_profile"
+        android:name="com.example.frontend.ui.supermarket.ProfileFragment"
+        android:label="@string/title_profile" />
+
+    <!-- Navegación para Consumidores -->
+    <fragment
+        android:id="@+id/navigation_consumer_products"
+        android:name="com.example.frontend.ui.consumer.ProductsFragment"
+        android:label="@string/title_products">
+        <action
+            android:id="@+id/action_products_to_product_detail"
+            app:destination="@id/navigation_product_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_consumer_purchases"
+        android:name="com.example.frontend.ui.consumer.PurchasesFragment"
+        android:label="@string/title_purchases" />
+
+    <fragment
+        android:id="@+id/navigation_consumer_profile"
+        android:name="com.example.frontend.ui.consumer.ProfileFragment"
+        android:label="@string/title_profile" />
+
+    <!-- Pantalla de detalle de producto (compartida) -->
+    <fragment
+        android:id="@+id/navigation_product_detail"
+        android:name="com.example.frontend.ui.fragments.ProductDetailFragment"
+        android:label="@string/title_product_detail">
+        <argument
+            android:name="productId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.example.frontend.ui.fragments.AddProductFragment"
+        android:label="AddProductFragment" />
+
+</navigation> 

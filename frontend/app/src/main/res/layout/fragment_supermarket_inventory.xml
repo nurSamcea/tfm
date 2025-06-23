@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/title_recent_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📦 Pedidos recientes de consumidores"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginBottom="12dp"
+            android:textColor="#222" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_recent_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/title_order_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📂 Historial de pedidos"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginBottom="12dp"
+            android:textColor="#222" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxStrokeColor="#00C853"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="🔍 Buscar por nombre o ID..."
+                android:background="@android:color/transparent"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/text_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📝 Filtros: [✓ Estado: En camino] [✓ Últimos 7 días]"
+            android:textSize="15sp"
+            android:textColor="#666"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/text_kpis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📊 KPIs:\n- Pedidos entregados esta semana: 15\n- Pendientes de envío: 3\n- Tiempo promedio entrega: 1.2 días"
+            android:textSize="15sp"
+            android:layout_marginBottom="10dp"
+            android:textColor="#222" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_order_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F8F9FA" />
+
+    </LinearLayout>
+</ScrollView>
