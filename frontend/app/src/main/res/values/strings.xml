@@ -23,8 +23,11 @@
     <string name="nav_sales">Ventas</string>
     
     <!-- Títulos de navegación -->
-    <string name="title_products">Productos</string>
+    <string name="title_farmer_stock">Stock</string>
+    <string name="title_farmer_orders">Pedidos</string>
+    <string name="title_farmer_statistics">Statistics</string>
     <string name="title_certifications">Certificaciones</string>
+    <string name="title_products">Productos</string>
     <string name="title_profile">Perfil</string>
     <string name="title_supermarket_orders">Inventario</string>
     <string name="title_suppliers">Proveedores</string>

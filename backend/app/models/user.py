@@ -30,7 +30,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relaciones
-    intake_profile = relationship("IntakeProfile", back_populates="users")
+    # intake_profile = relationship("IntakeProfile", back_populates="users")
     products = relationship("Product", back_populates="provider")
     shopping_lists = relationship("ShoppingList", back_populates="user")
     impact_metrics = relationship("ImpactMetric", back_populates="user")

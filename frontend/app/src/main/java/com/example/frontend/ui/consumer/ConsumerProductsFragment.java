@@ -28,10 +28,18 @@ import com.example.frontend.utils.CartPreferences;
 import com.example.frontend.ui.adapters.ProductAdapter;
 import com.example.frontend.ui.adapters.CartAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.frontend.api.ApiService;
+import com.example.frontend.api.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.example.frontend.api.ProductFilterRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConsumerProductsFragment extends Fragment {
     private static final String TAG = "ConsumerProductsFragment";
@@ -87,32 +95,34 @@ public class ConsumerProductsFragment extends Fragment {
         // Listeners
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 cartPrefs.saveSearchQuery(s.toString());
-                filtrarProductos();
+                loadSampleProducts();
             }
+
             @Override public void afterTextChanged(Editable s) {}
         });
 
         filterDistance.setOnCheckedChangeListener((b, v) -> {
             cartPrefs.saveFilterDistance(v);
-            filtrarProductos();
+            loadSampleProducts();
         });
         filterPrice.setOnCheckedChangeListener((b, v) -> {
             cartPrefs.saveFilterPrice(v);
-            filtrarProductos();
+            loadSampleProducts();
         });
         filterGlutenFree.setOnCheckedChangeListener((b, v) -> {
             cartPrefs.saveFilterGlutenFree(v);
-            filtrarProductos();
+            loadSampleProducts();
         });
         filterEco.setOnCheckedChangeListener((b, v) -> {
             cartPrefs.saveFilterEco(v);
-            filtrarProductos();
+            loadSampleProducts();
         });
         filterCategory.setOnCheckedChangeListener((b, v) -> {
             cartPrefs.saveFilterCategory(v);
-            filtrarProductos();
+            loadSampleProducts();
         });
 
         // Carrito
@@ -159,7 +169,6 @@ public class ConsumerProductsFragment extends Fragment {
         loadSampleProducts();
         cartTotalText = view.findViewById(R.id.cart_total_text);
         actualizarTotalCarrito();
-        filtrarProductos();
 
         Button btnFinalizeCart = view.findViewById(R.id.btn_finalize_cart);
         btnFinalizeCart.setOnClickListener(v -> {
@@ -181,29 +190,55 @@ public class ConsumerProductsFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
-    private void loadSampleProducts() {
-        products.add(new Product("1", "Tomates Orgánicos", "Tomates frescos de cultivo ecológico", 2.99, 50, 6));
-        products.add(new Product("2", "Lechuga", "Lechuga fresca de temporada", 1.99, 30, 20));
-        products.add(new Product("3", "Zanahorias", "Zanahorias orgánicas", 1.50, 40, 10));
-        products.add(new Product("4", "Manzanas", "Manzanas de producción local", 2.50, 60, 40));
-        adapter.submitList(new ArrayList<>(products));
+    private ProductFilterRequest construirRequest() {
+        ProductFilterRequest req = new ProductFilterRequest();
+        req.search = searchBar.getText().toString();
+        req.filters = new HashMap<>();
+        req.filters.put("eco", filterEco.isChecked());
+        req.filters.put("gluten_free", filterGlutenFree.isChecked());
+        req.filters.put("price", filterPrice.isChecked()); // 👈 importante
+        req.filters.put("distance", filterDistance.isChecked()); // 👈 importante
+
+        boolean usarScore = filterDistance.isChecked(); // solo usamos score si hay distancia
+
+        if (usarScore) {
+            req.weights = new HashMap<>();
+            if (filterPrice.isChecked()) {
+                req.weights.put("price", 1.0f);
+            }
+            if (filterDistance.isChecked()) {
+                req.weights.put("distance", 1.0f);
+            }
+        } else {
+            req.weights = null; // 🔥 NO usamos pesos si solo es precio
+        }
+
+        return req;
     }
 
-    private void filtrarProductos() {
-        String query = searchBar.getText().toString().toLowerCase(Locale.ROOT);
-        List<Product> filtrados = new ArrayList<>();
-        for (Product p : products) {
-            boolean matches = p.getName().toLowerCase(Locale.ROOT).contains(query);
-            if (filterGlutenFree.isChecked() && !p.getDescription().toLowerCase().contains("sin gluten")) continue;
-            if (filterEco.isChecked() && !p.getDescription().toLowerCase().contains("eco")) continue;
-            // Puedes seguir añadiendo lógica según filtros
-            if (matches) filtrados.add(p);
-        }
-        adapter.submitList(filtrados);
+    private void loadSampleProducts() {
+        ProductFilterRequest req = construirRequest();
+        ApiService apiService = RetrofitClient.getInstance().getRetrofit().create(ApiService.class);
+        Call<List<Product>> call = apiService.getProductsOptimized(req);
+        call.enqueue(new Callback<List<Product>>() {
+            @Override
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    products.clear();
+                    products.addAll(response.body());
+                    adapter.submitList(new ArrayList<>(products));
+                } else {
+                    Toast.makeText(getContext(), "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void actualizarTotalCarrito() {

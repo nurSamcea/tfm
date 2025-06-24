@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_orders"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Filtros por estado -->
+    <LinearLayout
+        android:id="@+id/status_filters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="12dp">
+
+        <Button android:id="@+id/filter_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Todos" />
+
+        <Button android:id="@+id/filter_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pendientes"
+            android:layout_marginStart="8dp" />
+
+        <Button android:id="@+id/filter_on_way"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="En camino"
+            android:layout_marginStart="8dp" />
+
+        <Button android:id="@+id/filter_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entregados"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Lista de pedidos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_orders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

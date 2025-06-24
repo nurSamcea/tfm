@@ -77,6 +77,13 @@ public interface ApiService {
 
     @GET("blockchain/transactions/{id}")
     Call<BlockchainTransactionInfo> getTransactionBlockchainInfo(@Path("id") String transactionId);
+
+    // Endpoint mejorado para buscar productos con filtros de texto y tipo de proveedor
+    @GET("products")
+    Call<List<Product>> getProductsFiltered(@Query("search") String search, @Query("provider_role") String providerRole);
+
+    @POST("/products/optimized/")
+    Call<List<Product>> getProductsOptimized(@Body ProductFilterRequest request);
 }
 
 

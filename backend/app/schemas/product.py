@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict, List
 from datetime import date, datetime
 
 class ProductBase(BaseModel):
@@ -24,3 +24,21 @@ class ProductRead(ProductBase):
 
     class Config:
         orm_mode = True
+
+class ProductFilterRequest(BaseModel):
+    search: Optional[str]
+    filters: Dict[str, bool] = {} # Ej: {"eco": true, "gluten_free": false, ...}
+    weights: Dict[str, float] = {} # Ej: {"price": 0.5, "distance": 0.3, ...}
+    user_lat: Optional[float] = None
+    user_lon: Optional[float] = None
+
+class ProductOptimizedResponse(BaseModel):
+    id: int
+    name: str
+    price: float
+    category: Optional[str]
+    is_eco: Optional[bool]
+    is_gluten_free: Optional[bool]
+    provider_id: int
+    distance_km: Optional[float]
+    score: float

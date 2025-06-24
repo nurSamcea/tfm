@@ -15,6 +15,8 @@ public class Product {
     private Integer farmerId;
     private Date harvestDate;
     private boolean sustainable;
+    private Double distance_km;
+    private Double score;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -129,5 +131,21 @@ public class Product {
 
     public void setSustainable(boolean sustainable) {
         this.sustainable = sustainable;
+    }
+
+    public Double getDistance_km() {
+        return distance_km;
+    }
+
+    public void setDistance_km(Double distance_km) {
+        this.distance_km = distance_km;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 }

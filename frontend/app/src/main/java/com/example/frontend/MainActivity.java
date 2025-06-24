@@ -12,8 +12,11 @@ import com.example.frontend.ui.consumer.ConsumerProductsFragment;
 import com.example.frontend.ui.consumer.ConsumerProfileFragment;
 import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
 import com.example.frontend.ui.farmer.FarmerCertificationsFragment;
+import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProductsFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
+import com.example.frontend.ui.farmer.FarmerStatisticsFragment;
+import com.example.frontend.ui.farmer.FarmerStockFragment;
 import com.example.frontend.ui.supermarket.SupermarketInventoryFragment;
 import com.example.frontend.ui.supermarket.SupermarketProfileFragment;
 import com.example.frontend.ui.supermarket.SupermarketSuppliersFragment;
@@ -102,10 +105,12 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new ConsumerProfileFragment();
                         }
                     } else if (userType.equals("farmer")) {
-                        if (itemId == R.id.navigation_farmer_products) {
-                            selectedFragment = new FarmerProductsFragment();
-                        } else if (itemId == R.id.navigation_farmer_certifications) {
-                            selectedFragment = new FarmerCertificationsFragment();
+                        if (itemId == R.id.navigation_farmer_stock) {
+                            selectedFragment = new FarmerStockFragment();
+                        } else if (itemId == R.id.navigation_farmer_orders) {
+                            selectedFragment = new FarmerOrdersFragment();
+                        } else if (itemId == R.id.navigation_farmer_statistics) {
+                            selectedFragment = new FarmerStatisticsFragment();
                         } else if (itemId == R.id.navigation_farmer_profile) {
                             selectedFragment = new FarmerProfileFragment();
                         }

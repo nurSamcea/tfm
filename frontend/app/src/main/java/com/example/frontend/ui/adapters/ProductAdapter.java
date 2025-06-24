@@ -84,6 +84,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         } else {
             holder.addToCartButton.setVisibility(View.GONE);
         }
+        // Si quieres mostrar el score o la distancia en el layout, añade aquí la lógica para mostrar esos campos en el ViewHolder.
+        // Por ejemplo:
+        // holder.scoreTextView.setText(product.getScore() != null ? String.format("Score: %.2f", product.getScore()) : "");
+        // holder.distanceTextView.setText(product.getDistance_km() != null ? String.format("Distancia: %.1f km", product.getDistance_km()) : "");
     }
 
     @Override
