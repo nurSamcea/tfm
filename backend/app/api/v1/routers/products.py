@@ -63,8 +63,8 @@ def get_products_optimized(
     request: ProductFilterRequest = Body(...),
     db: Session = Depends(database.get_db)
 ):
-    # 1. Obtener productos base
-    query = db.query(models.Product)
+    # 1. Obtener productos base (join con User para tener coordenadas del proveedor)
+    query = db.query(models.Product).join(models.User, models.Product.provider_id == models.User.id)
     if request.search:
         query = query.filter(
             (models.Product.name.ilike(f"%{request.search}%")) |

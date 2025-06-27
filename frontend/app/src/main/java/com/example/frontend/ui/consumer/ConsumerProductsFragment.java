@@ -34,6 +34,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.frontend.api.ProductFilterRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import android.location.Location;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +60,10 @@ public class ConsumerProductsFragment extends Fragment {
     private double totalCarrito = 0.0;
     private TextView cartTotalText;
     private CartPreferences cartPrefs;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Double userLat = null;
+    private Double userLon = null;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
     @Nullable
     @Override
@@ -190,7 +200,38 @@ public class ConsumerProductsFragment extends Fragment {
             }
         });
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        obtenerUbicacionUsuario();
+
         return view;
+    }
+
+    private void obtenerUbicacionUsuario() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+            .addOnSuccessListener(location -> {
+                if (location != null) {
+                    userLat = location.getLatitude();
+                    userLon = location.getLongitude();
+                    // Si el filtro de distancia está marcado, recarga productos
+                    if (filterDistance != null && filterDistance.isChecked()) {
+                        loadSampleProducts();
+                    }
+                }
+            });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                obtenerUbicacionUsuario();
+            }
+        }
     }
 
     private ProductFilterRequest construirRequest() {
@@ -199,11 +240,10 @@ public class ConsumerProductsFragment extends Fragment {
         req.filters = new HashMap<>();
         req.filters.put("eco", filterEco.isChecked());
         req.filters.put("gluten_free", filterGlutenFree.isChecked());
-        req.filters.put("price", filterPrice.isChecked()); // 👈 importante
-        req.filters.put("distance", filterDistance.isChecked()); // 👈 importante
+        req.filters.put("price", filterPrice.isChecked());
+        req.filters.put("distance", filterDistance.isChecked());
 
-        boolean usarScore = filterDistance.isChecked(); // solo usamos score si hay distancia
-
+        boolean usarScore = filterDistance.isChecked();
         if (usarScore) {
             req.weights = new HashMap<>();
             if (filterPrice.isChecked()) {
@@ -212,10 +252,16 @@ public class ConsumerProductsFragment extends Fragment {
             if (filterDistance.isChecked()) {
                 req.weights.put("distance", 1.0f);
             }
+            // Añadir ubicación si está disponible
+            if (userLat != null && userLon != null) {
+                req.user_lat = userLat;
+                req.user_lon = userLon;
+            }
         } else {
-            req.weights = null; // 🔥 NO usamos pesos si solo es precio
+            req.weights = null;
+            req.user_lat = null;
+            req.user_lon = null;
         }
-
         return req;
     }
 

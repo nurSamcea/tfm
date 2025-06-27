@@ -18,13 +18,31 @@ def main():
 
         # 1. Usuarios
         users = [
-            user.User(id=1, name='Juan Agrícola', email='juan@campo.com', password_hash='hash1', role='farmer', entity_name='Finca Juan'),
-            user.User(id=2, name='Marta Orgánica', email='marta@eco.com', password_hash='hash2', role='farmer', entity_name='EcoMarta'),
-            user.User(id=3, name='SuperMercadoX', email='x@super.com', password_hash='hash3', role='supermarket', entity_name='SuperMercadoX'),
-            user.User(id=4, name='SuperMercadoY', email='y@super.com', password_hash='hash4', role='supermarket', entity_name='SuperMercadoY'),
-            user.User(id=5, name='Laura Cliente', email='laura@cliente.com', password_hash='hash5', role='consumer', entity_name=None),
-            user.User(id=6, name='Pedro Cliente', email='pedro@cliente.com', password_hash='hash6', role='consumer', entity_name=None),
+            user.User(id=1, name='Juan Agrícola', email='juan@campo.com', password_hash='hash1', role='farmer',
+                      entity_name='Finca Juan',
+                      location_lat=41.5033, location_lon=-5.7446),  # Zamora
+
+            user.User(id=2, name='Marta Orgánica', email='marta@eco.com', password_hash='hash2', role='farmer',
+                      entity_name='EcoMarta',
+                      location_lat=36.7213, location_lon=-4.4214),  # Málaga
+
+            user.User(id=3, name='SuperMercadoX', email='x@super.com', password_hash='hash3', role='supermarket',
+                      entity_name='SuperMercadoX',
+                      location_lat=40.4168, location_lon=-3.7038),  # Madrid
+
+            user.User(id=4, name='SuperMercadoY', email='y@super.com', password_hash='hash4', role='supermarket',
+                      entity_name='SuperMercadoY',
+                      location_lat=41.3874, location_lon=2.1686),  # Barcelona
+
+            user.User(id=5, name='Laura Cliente', email='laura@cliente.com', password_hash='hash5', role='consumer',
+                      entity_name=None,
+                      location_lat=39.4699, location_lon=-0.3763),  # Valencia
+
+            user.User(id=6, name='Pedro Cliente', email='pedro@cliente.com', password_hash='hash6', role='consumer',
+                      entity_name=None,
+                      location_lat=43.3623, location_lon=-8.4115),  # A Coruña
         ]
+
         db.add_all(users)
         db.commit()
 
