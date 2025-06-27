@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ public class ConsumerPurchasesFragment extends Fragment {
     private CartAdapter cartAdapter;
     private CartPreferences cartPrefs;
     private List<ConsumerOrder.OrderItem> cartItems = new ArrayList<>();
+    private Button btnTramitarPedido;
 
     @Nullable
     @Override
@@ -37,7 +39,8 @@ public class ConsumerPurchasesFragment extends Fragment {
 
         cartPrefs = new CartPreferences(requireContext());
 
-        // Cargar carrito
+        // Inicializar carrito vacío
+        cartItems.clear();
         List<ConsumerOrder.OrderItem> savedCart = cartPrefs.getCartItems();
         if (savedCart != null) cartItems.addAll(savedCart);
 
@@ -61,6 +64,14 @@ public class ConsumerPurchasesFragment extends Fragment {
                 cartPrefs.saveCartItems(cartItems);
                 cartAdapter.notifyDataSetChanged();
             }
+        });
+
+        // Botón para tramitar pedido
+        btnTramitarPedido = view.findViewById(R.id.btn_tramitar_pedido);
+        btnTramitarPedido.setOnClickListener(v -> {
+            cartItems.clear();
+            cartPrefs.saveCartItems(cartItems);
+            cartAdapter.notifyDataSetChanged();
         });
 
         return view;

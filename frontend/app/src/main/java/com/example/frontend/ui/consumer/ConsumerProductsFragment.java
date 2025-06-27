@@ -184,10 +184,12 @@ public class ConsumerProductsFragment extends Fragment {
         btnFinalizeCart.setOnClickListener(v -> {
             // Guardar carrito actual
             cartPrefs.saveCartItems(cartItems);
-            
+            // Resetear carrito local de la pantalla 1
+            cartItems.clear();
+            cartAdapter.notifyDataSetChanged();
+            actualizarTotalCarrito();
             // Mostrar mensaje de éxito
             Toast.makeText(getContext(), "Carrito guardado correctamente", Toast.LENGTH_SHORT).show();
-            
             // Intentar navegar de forma segura
             try {
                 BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);

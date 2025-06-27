@@ -21,7 +21,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/btn_tramitar_pedido" />
+
+    <Button
+        android:id="@+id/btn_tramitar_pedido"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Tramitar pedido"
+        app:layout_constraintTop_toBottomOf="@id/purchases_recycler_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        android:layout_marginTop="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout> 
