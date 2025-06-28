@@ -7,13 +7,15 @@ public class FarmerProduct {
     private String stock;
     private String price;
     private String harvestDate;
+    private int imageResId;
 
-    public FarmerProduct(String name, boolean available, String stock, String price, String harvestDate) {
+    public FarmerProduct(String name, boolean isOrganic, String stock, String price, String harvestDate, int imageResId) {
         this.name = name;
         this.available = available;
         this.stock = stock;
         this.price = price;
         this.harvestDate = harvestDate;
+        this.imageResId = imageResId;
     }
 
     public String getName() {
@@ -36,7 +38,10 @@ public class FarmerProduct {
         return harvestDate;
     }
 
-    // Si necesitas setters también:
+    public int getImageResId() {
+        return imageResId;
+    }
+
     public void setStock(String stock) {
         this.stock = stock;
     }

@@ -31,7 +31,7 @@ public class FarmerStockFragment extends Fragment {
 
     private EditText searchInput;
     private ImageButton filterButton;
-    private Button addProductButton;
+    private ImageButton addProductButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -46,10 +46,10 @@ public class FarmerStockFragment extends Fragment {
 
         // Datos simulados
         stockList = new ArrayList<>();
-        stockList.add(new FarmerProduct("Tomate Cherry", true, "2 kg", "2.50 €/kg", "22/06"));
-        stockList.add(new FarmerProduct("Lechuga Romana", false, "4 cajas", "1.10 €/unidad", "21/06"));
-        stockList.add(new FarmerProduct("Berenjena Ecológica", false,"10 kg", "2.20€/kg",  "27/08"));
-        stockList.add(new FarmerProduct("Pepino", false, "8 kg", "1.00€/kg","28/08"));
+        stockList.add(new FarmerProduct("Tomate Cherry", true, "2 kg", "2.50 €/kg", "22/06", R.drawable.tomate_cherry));
+        stockList.add(new FarmerProduct("Lechuga Romana", false, "4 cajas", "1.10 €/unidad", "21/06", R.drawable.lechuga_romana));
+        stockList.add(new FarmerProduct("Berenjena Ecológica", false, "10 kg", "2.20€/kg", "27/08", R.drawable.berenjena));
+        stockList.add(new FarmerProduct("Pepino", false, "8 kg", "1.00€/kg", "28/08", R.drawable.pepino));
 
         // Adaptadores
         stockAdapter = new FarmerStockAdapter(stockList);

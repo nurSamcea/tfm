@@ -108,7 +108,7 @@ public class FarmerStockAdapter extends RecyclerView.Adapter<FarmerStockAdapter.
         }
 
         // Puedes cambiar esto por Glide/Picasso si tienes imágenes reales
-        holder.imageFood.setImageResource(R.drawable.icon_profile); // o cualquier imagen temporal
+        holder.imageFood.setImageResource(product.getImageResId());
 
     }
 
