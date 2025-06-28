@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -80,16 +81,15 @@ public class ConsumerProductsFragment extends Fragment {
         filterEco = view.findViewById(R.id.filter_eco);
         filterCategory = view.findViewById(R.id.filter_category);
 
-        Button btnToggleFilters = view.findViewById(R.id.btn_toggle_filters);
+        ImageButton btnToggleFilters = view.findViewById(R.id.btn_toggle_filters);
         HorizontalScrollView filtersScroll = view.findViewById(R.id.filters_scroll);
+        final boolean[] filtersVisible = {false};
+
         btnToggleFilters.setOnClickListener(v -> {
-            if (filtersScroll.getVisibility() == View.GONE) {
-                filtersScroll.setVisibility(View.VISIBLE);
-                btnToggleFilters.setText("Ocultar filtros");
-            } else {
-                filtersScroll.setVisibility(View.GONE);
-                btnToggleFilters.setText("Filtros");
-            }
+            filtersVisible[0] = !filtersVisible[0];
+            filtersScroll.setVisibility(filtersVisible[0] ? View.VISIBLE : View.GONE);
+            // Opcional: mostrar un mensaje
+            Toast.makeText(getContext(), filtersVisible[0] ? "Filtros visibles" : "Filtros ocultos", Toast.LENGTH_SHORT).show();
         });
 
         // Cargar estado guardado
@@ -157,7 +157,7 @@ public class ConsumerProductsFragment extends Fragment {
 
         // Productos
         recyclerView = view.findViewById(R.id.products_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         products = new ArrayList<>();
         adapter = new ProductAdapter(product -> {
             ConsumerOrder.OrderItem item = buscarEnCarrito(product.getId());

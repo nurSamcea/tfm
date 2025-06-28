@@ -4,29 +4,55 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Búsqueda + Botón de filtros en una misma fila -->
     <LinearLayout
+        android:id="@+id/search_bar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:padding="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#FFFFFF"> <!-- Color morado del fondo -->
 
-        <EditText
-            android:id="@+id/search_bar"
+        <!-- Campo de búsqueda -->
+        <LinearLayout
+            android:id="@+id/search_input"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/search_bar_bg"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:hint="Buscar productos..."
-            android:inputType="text"
-            android:padding="12dp" />
+            android:background="@drawable/bg_search_field"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:gravity="center_vertical">
 
-        <Button
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"
+                android:tint="@android:color/white" />
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="Search"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- Botón de filtros -->
+        <ImageButton
             android:id="@+id/btn_toggle_filters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filtros"
-            android:layout_marginStart="8dp"/>
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_filters"
+            android:background="@drawable/bg_search_field"
+            android:tint="@android:color/white"
+            android:contentDescription="Stats" />
+
     </LinearLayout>
 
     <!-- Filtros ocultos/desplegables -->
@@ -90,9 +116,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/products_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="8dp" />
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:scrollbars="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
