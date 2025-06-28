@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,12 +29,24 @@ public class ConsumerProfileFragment extends Fragment {
 
         // Nombre de usuario (puedes cambiarlo por el nombre real del usuario)
         TextView profileName = view.findViewById(R.id.profileName);
-        profileName.setText("Consumidor Demo");
+        profileName.setText("Laura Sanz");
+
+        View personalInfo = view.findViewById(R.id.optionPersonalInfo);
+        ImageView persIcon = personalInfo.findViewById(R.id.optionIcon);
+        TextView persText = personalInfo.findViewById(R.id.optionText);
+        persIcon.setImageResource(R.drawable.ic_user);
+        persText.setText("Personal information");
+
+        View histOrders = view.findViewById(R.id.optionOrders);
+        ImageView orderIcon = histOrders.findViewById(R.id.optionIcon);
+        TextView orderText = histOrders.findViewById(R.id.optionText);
+        orderIcon.setImageResource(R.drawable.ic_orders);
+        orderText.setText("Historical orders");
+
 
         // Botón de volver
-        ImageButton btnBack = view.findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
-
+        Button buttonBack = view.findViewById(R.id.buttonBackConsumerToMain);
+        buttonBack.setOnClickListener(v -> requireActivity().recreate());
         // Puedes añadir aquí listeners para las opciones del perfil si lo deseas
 
         return view;

@@ -21,6 +21,7 @@
             android:layout_marginStart="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
+            android:visibility="gone"
             android:contentDescription="Volver"
             android:tint="@android:color/black"/>
 
@@ -32,10 +33,11 @@
             android:text="Perfil"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="40dp"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif"/>
+            android:fontFamily="@font/manrope_regular"/>
+
 
         <!-- Foto y nombre -->
         <LinearLayout
@@ -49,39 +51,44 @@
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:src="@drawable/ic_user"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/bg_circle"
-                android:scaleType="centerCrop"/>
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/img_profile"
+                android:background="@drawable/circle_background"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true" />
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="16dp">
 
                 <TextView
                     android:id="@+id/profileName"
                     android:text="Nombre Apellido"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/manrope_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/profileView"
                     android:text="Ver perfil"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/gray"
                     android:textSize="14sp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/manrope_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right" />
         </LinearLayout>
 
-        <!-- Tarjeta informativa (opcional) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +96,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -100,7 +107,7 @@
                 <TextView
                     android:text="Invita a tus amigos y gana puntos"
                     android:textSize="16sp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/manrope_bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
@@ -117,7 +124,7 @@
             android:text="Ajustes"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/manrope_bold"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
@@ -130,20 +137,20 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white">
 
-            <!-- Opción: Información personal -->
             <include layout="@layout/item_profile_option" android:id="@+id/optionPersonalInfo"/>
-            <!-- Opción: Mis pedidos -->
             <include layout="@layout/item_profile_option" android:id="@+id/optionOrders"/>
-            <!-- Opción: Métodos de pago -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionPayments"/>
-            <!-- Opción: Direcciones -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionAddresses"/>
-            <!-- Opción: Seguridad y acceso -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionSecurity"/>
-            <!-- Opción: Preferencias -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionPreferences"/>
-            <!-- Opción: Accesibilidad -->
-            <include layout="@layout/item_profile_option" android:id="@+id/optionAccessibility"/>
+
+            <Button
+                android:id="@+id/buttonBackConsumerToMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Volver a inicio"
+                android:layout_marginTop="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView> 
