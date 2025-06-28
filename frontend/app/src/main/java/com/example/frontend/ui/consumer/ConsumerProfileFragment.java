@@ -20,12 +20,12 @@ public class ConsumerProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: Iniciando la aplicación");
+        Log.d(TAG, "onCreate: Iniciando la aplicación ConsumerProfileFragment");
         View view = inflater.inflate(R.layout.fragment_consumer_profile, container, false);
 
         // Título
         TextView profileTitle = view.findViewById(R.id.profileTitle);
-        profileTitle.setText("Perfil");
+        profileTitle.setText("Consumidor");
 
         // Nombre de usuario (puedes cambiarlo por el nombre real del usuario)
         TextView profileName = view.findViewById(R.id.profileName);
