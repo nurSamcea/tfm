@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,7 +52,7 @@ public class FarmerSensorAdapter extends RecyclerView.Adapter<FarmerSensorAdapte
 
     static class SensorViewHolder extends RecyclerView.ViewHolder {
         TextView name, value;
-        Button moreButton;
+        ImageButton moreButton;
 
         public SensorViewHolder(@NonNull View itemView) {
             super(itemView);

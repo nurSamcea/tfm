@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF6F2"
+        android:background="#FFFFFF"
         android:padding="0dp">
 
         <!-- Cards de sensores (horizontal) -->

@@ -54,9 +54,9 @@ public class FarmerStatisticsFragment extends Fragment {
     private void setupStatsList() {
         List<StatsItem> statsItems = new ArrayList<>();
         statsItems.add(StatsItem.createGraph());
-        statsItems.add(StatsItem.createKpi("🥇 Producto más vendido", "Tomate Cherry"));
-        statsItems.add(StatsItem.createKpi("📈 Ingresos esta semana", "134,50 €"));
-        statsItems.add(StatsItem.createKpi("📦 Pedidos entregados", "9"));
+        statsItems.add(StatsItem.createKpi("Producto más vendido", "Tomate Cherry"));
+        statsItems.add(StatsItem.createKpi("Ingresos esta semana", "134,50 €"));
+        statsItems.add(StatsItem.createKpi("Pedidos entregados", "9"));
 
         FarmerStatsAdapter statsAdapter = new FarmerStatsAdapter(statsItems);
         recyclerStats.setLayoutManager(new LinearLayoutManager(getContext()));
