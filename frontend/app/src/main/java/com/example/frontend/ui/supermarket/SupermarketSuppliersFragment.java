@@ -31,11 +31,8 @@ public class SupermarketSuppliersFragment extends Fragment {
     private static final String TAG = "SupermarketSuppliersFragment";
 
     private EditText searchView;
-    private RecyclerView recyclerSuggestions;
     private RecyclerView recyclerResults;
-    private SupplierProductAdapter suggestionsAdapter;
     private SupplierProductAdapter resultsAdapter;
-    private List<Product> suggestionList = new ArrayList<>();
     private List<Product> resultList = new ArrayList<>();
     private TextView filtersActive;
     private ImageButton btnFilters;
@@ -50,7 +47,6 @@ public class SupermarketSuppliersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_supermarket_suppliers, container, false);
 
         searchView = view.findViewById(R.id.searchView);
-        recyclerSuggestions = view.findViewById(R.id.recyclerSuggestions);
         recyclerResults = view.findViewById(R.id.recyclerResults);
         filtersActive = view.findViewById(R.id.textFiltersActive);
         btnFilters = view.findViewById(R.id.btnFilters);
@@ -58,20 +54,16 @@ public class SupermarketSuppliersFragment extends Fragment {
         Button btnViewFullOrder = view.findViewById(R.id.btn_view_full_order);
         Button btnConfirmOrder = view.findViewById(R.id.btn_confirm_order);
 
-        recyclerSuggestions.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerResults.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        suggestionsAdapter = new SupplierProductAdapter(suggestionList);
         resultsAdapter = new SupplierProductAdapter(resultList, product -> {
             cartItems.add(product);
             actualizarVistaCarrito();
             Toast.makeText(getContext(), product.getName() + " añadido al carrito", Toast.LENGTH_SHORT).show();
         });
 
-        recyclerSuggestions.setAdapter(suggestionsAdapter);
         recyclerResults.setAdapter(resultsAdapter);
 
-        mockSuggestions();
         mockResults();
 
         searchView.addTextChangedListener(new TextWatcher() {
@@ -104,11 +96,7 @@ public class SupermarketSuppliersFragment extends Fragment {
         resultsAdapter.updateData(filtrados);
     }
 
-    private void mockSuggestions() {
-        suggestionList.add(new Product("1", "Tomate cherry", "Sugerencia", 1.80, 3, 1));
-        suggestionList.add(new Product("2", "Lechuga romana", "Sugerencia", 0.95, 5, 2));
-        suggestionsAdapter.notifyDataSetChanged();
-    }
+
 
     private void mockResults() {
         resultList.add(new Product("3", "Tomate cherry · EcoHuerta", "", 1.80, 0, 1));

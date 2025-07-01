@@ -33,6 +33,28 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp" />
 
+        <!-- Título de sugerencias -->
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Productos con stock bajo"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="#222" />
+
+        <!-- Lista de sugerencias -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerSuggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:elevation="2dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:layout_marginBottom="16dp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
