@@ -6,7 +6,7 @@ import java.util.List;
 public class SupermarketOrder {
 
     private String id;
-    private String supplier;
+    private String clientName;
     private Date orderDate;
     private Date estimatedDeliveryDate;
     private double total;
@@ -14,10 +14,10 @@ public class SupermarketOrder {
     private List<OrderItem> items;
     private String address;
 
-    public SupermarketOrder(String id, String supplier, Date estimatedDeliveryDate, double total, String status, List<OrderItem> items, String address) {
+    public SupermarketOrder(String id, String clientName, Date estimatedDeliveryDate, double total, String status, List<OrderItem> items, String address) {
         this.id = id;
-        this.supplier = supplier;
-        this.orderDate = new Date(); // Se genera automáticamente
+        this.clientName = clientName;
+        this.orderDate = new Date(); // Se genera automáticamente al crear el pedido
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.total = total;
         this.status = status;
@@ -30,15 +30,15 @@ public class SupermarketOrder {
         return id;
     }
 
-    public String getSupplier() {
-        return supplier;
+    public String getClientName() {
+        return clientName;
     }
 
     public Date getOrderDate() {
         return orderDate;
     }
 
-    public Date getEstimatedDate() {
+    public Date getEstimatedDeliveryDate() {
         return estimatedDeliveryDate;
     }
 
@@ -58,7 +58,7 @@ public class SupermarketOrder {
         return address;
     }
 
-    // Setters (opcionalmente)
+    // Setters
     public void setStatus(String status) {
         this.status = status;
     }
@@ -71,7 +71,11 @@ public class SupermarketOrder {
         this.address = address;
     }
 
-    // Clase interna o externa
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    // Clase interna para representar cada producto del pedido
     public static class OrderItem {
         private String productId;
         private String productName;
@@ -85,6 +89,7 @@ public class SupermarketOrder {
             this.unitPrice = unitPrice;
         }
 
+        // Getters
         public String getProductId() {
             return productId;
         }

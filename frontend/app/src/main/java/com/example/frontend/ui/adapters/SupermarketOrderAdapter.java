@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.frontend.R;
 import com.example.frontend.model.SupermarketOrder;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrderAdapter.OrderViewHolder> {
 
@@ -22,7 +24,7 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
         void onViewDetail(SupermarketOrder order);
     }
 
-    private final List<SupermarketOrder> orders;
+    private List<SupermarketOrder> orders;
     private final OnOrderActionListener listener;
 
     public SupermarketOrderAdapter(List<SupermarketOrder> orders, OnOrderActionListener listener) {
@@ -41,13 +43,17 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         SupermarketOrder order = orders.get(position);
-        holder.txtCustomerName.setText(order.getSupplier());
+
+        holder.txtCustomerName.setText(order.getClientName());
         holder.txtOrderId.setText("(#" + order.getId() + ")");
-        String fecha = new java.text.SimpleDateFormat("dd/MM/yyyy").format(order.getOrderDate());
-        holder.txtDateTotal.setText(fecha + " · Total: " + String.format("%.2f €", order.getTotal()));
+
+        String fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(order.getOrderDate());
+        holder.txtDateTotal.setText(fecha + " · Total: " + String.format(Locale.getDefault(), "%.2f €", order.getTotal()));
+
         holder.txtAddress.setText(order.getAddress() != null ? order.getAddress() : "-");
         holder.txtStatus.setText(order.getStatus());
-        // Color e icono de estado
+
+        // Estado visual
         int color;
         int icon;
         switch (order.getStatus()) {
@@ -66,11 +72,15 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
             default:
                 color = holder.itemView.getResources().getColor(R.color.darker_gray);
                 icon = R.drawable.ic_status;
+                break;
         }
+
         holder.txtStatus.setTextColor(color);
         holder.imgStatus.setImageResource(icon);
+
         // Botones
         holder.btnViewDetail.setOnClickListener(v -> listener.onViewDetail(order));
+
         if ("Entregado".equals(order.getStatus())) {
             holder.btnChangeStatus.setVisibility(View.GONE);
         } else {
@@ -84,10 +94,16 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
         return orders.size();
     }
 
+    public void updateData(List<SupermarketOrder> newOrders) {
+        this.orders = newOrders;
+        notifyDataSetChanged();
+    }
+
     static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView txtCustomerName, txtOrderId, txtDateTotal, txtAddress, txtStatus;
         Button btnChangeStatus, btnViewDetail;
         ImageView imgStatus;
+
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             txtCustomerName = itemView.findViewById(R.id.txt_customer_name);

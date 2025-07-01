@@ -1,125 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:orientation="vertical"
+    android:background="#F8F9FA"
+    android:padding="16dp">
 
-    <LinearLayout
+    <!--  INVENTARIO - STOCK BAJO -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:text="Inventario actual"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#222"
+        android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/title_recent_orders"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"
+        android:layout_marginBottom="12dp" />
+
+    <!-- 🔵 PEDIDOS (UNA SOLA LISTA) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Historial de pedidos"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#222"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Filtro de búsqueda -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="#00C853"
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📦 Pedidos recientes de consumidores"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:layout_marginBottom="12dp"
-            android:textColor="#222" />
+            android:hint="🔍 Buscar por cliente, ID..."
+            android:background="@android:color/transparent"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="12dp" />
+    <!-- Chips de filtros -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:scrollbars="none">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_recent_orders"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
-
-        <!-- Título de sugerencias -->
-        <TextView
-            android:id="@+id/text_title"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_filters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Productos con stock bajo"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:textColor="#222" />
+            android:orientation="horizontal"
+            app:singleSelection="false"
+            app:selectionRequired="false">
 
-        <!-- Lista de sugerencias -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerSuggestions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:elevation="2dp"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:layout_marginBottom="16dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="12dp" />
-
-        <TextView
-            android:id="@+id/title_order_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📂 Historial de pedidos"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:layout_marginBottom="12dp"
-            android:textColor="#222" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="12dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusBottomEnd="16dp"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#00C853"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_order"
-                android:layout_width="match_parent"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_estado_pendiente"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="🔍 Buscar por nombre o ID..."
-                android:background="@android:color/transparent"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="Pendientes" />
 
-        <TextView
-            android:id="@+id/text_filters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📝 Filtros: [✓ Estado: En camino] [✓ Últimos 7 días]"
-            android:textSize="15sp"
-            android:textColor="#666"
-            android:layout_marginBottom="10dp" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_estado_entregado"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entregados" />
 
-        <TextView
-            android:id="@+id/text_kpis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📊 KPIs:\n- Pedidos entregados esta semana: 15\n- Pendientes de envío: 3\n- Tiempo promedio entrega: 1.2 días"
-            android:textSize="15sp"
-            android:layout_marginBottom="10dp"
-            android:textColor="#222" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_fecha_reciente"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Más recientes" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_order_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#F8F9FA" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_fecha_antigua"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Más antiguos" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
-    </LinearLayout>
-</ScrollView>
+    <!-- Recycler de pedidos (único listado) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_order_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:elevation="2dp"
+        android:clipToPadding="false" />
+</LinearLayout>
