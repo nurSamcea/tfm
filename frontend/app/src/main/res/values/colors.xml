@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_dark">#388E3C</color>
-    <color name="primary_light">#E3F2FD</color>
-    <color name="accent">#8BC34A</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
-    <color name="error">#F44336</color>
-    <color name="teal_700">#018786</color>
-    <color name="darker_gray">#B0B0B0</color>
-    <color name="orange">#E25F30</color>
-    <color name="red">#B61515</color>
-    <color name="green">#2E7D32</color>
-    <color name="primary">#FF6A4F</color>
-    <color name="purple">#7E61F6</color>
-    <color name="gray">#888888</color>
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
-    <color name="nav_item_color">#FF6A4F</color>
+    <!-- Paleta principal basada en estilo sostenible -->
+    <color name="colorPrimary">#2E7D32</color>           <!-- Verde bosque -->
+    <color name="colorPrimaryVariant">#1B5E20</color>    <!-- Verde oscuro -->
+    <color name="colorSecondary">#FF8F00</color>         <!-- Naranja vibrante -->
+    <color name="colorSecondaryVariant">#F57C00</color>  <!-- Naranja oscuro -->
+    
+    <!-- Colores de fondo -->
+    <color name="colorBackground">#FAFAFA</color>        <!-- Gris muy claro -->
+    <color name="colorSurface">#FFFFFF</color>           <!-- Blanco puro -->
+    <color name="colorOnPrimary">#FFFFFF</color>         <!-- Blanco sobre verde -->
+    <color name="colorOnSecondary">#000000</color>       <!-- Negro sobre naranja -->
+    <color name="colorOnBackground">#212121</color>      <!-- Gris oscuro sobre fondo -->
+    <color name="colorOnSurface">#212121</color>         <!-- Gris oscuro sobre superficie -->
+    
+    <!-- Colores de estado -->
+    <color name="colorError">#D32F2F</color>             <!-- Rojo error -->
+    <color name="colorSuccess">#388E3C</color>           <!-- Verde éxito -->
+    <color name="colorWarning">#F57C00</color>           <!-- Naranja advertencia -->
+    <color name="colorInfo">#1976D2</color>              <!-- Azul información -->
+    
+    <!-- Colores de texto -->
+    <color name="textPrimary">#212121</color>            <!-- Texto principal -->
+    <color name="textSecondary">#757575</color>          <!-- Texto secundario -->
+    <color name="textHint">#BDBDBD</color>               <!-- Texto placeholder -->
+    
+    <!-- Colores de componentes -->
+    <color name="colorDivider">#E0E0E0</color>           <!-- Divisores -->
+    <color name="colorCard">#FFFFFF</color>              <!-- Tarjetas -->
+    <color name="colorCardBorder">#E0E0E0</color>        <!-- Bordes de tarjetas -->
+    
+    <!-- Colores de eco/sostenibilidad -->
+    <color name="colorEco">#4CAF50</color>               <!-- Verde eco -->
+    <color name="colorLocal">#FF9800</color>             <!-- Naranja local -->
+    <color name="colorOrganic">#8BC34A</color>           <!-- Verde orgánico -->
+    
+    <!-- Colores de navegación -->
+    <color name="colorBottomNav">#FFFFFF</color>         <!-- Fondo navegación -->
+    <color name="colorBottomNavSelected">#2E7D32</color> <!-- Ítem seleccionado -->
+    <color name="colorBottomNavUnselected">#757575</color> <!-- Ítem no seleccionado -->
+    
+    <!-- Colores compatibilidad (referenciados en layouts existentes) -->
+    <color name="white">#FFFFFF</color>                  <!-- Blanco -->
+    <color name="primary">#2E7D32</color>                <!-- Color primario (alias) -->
+    <color name="primary_dark">#1B5E20</color>           <!-- Color primario oscuro (alias) -->
+    <color name="purple">#6200EE</color>                 <!-- Púrpura (para compatibilidad) -->
+    <color name="gray">#757575</color>                   <!-- Gris -->
+    <color name="error">#D32F2F</color>                  <!-- Error (alias) -->
+    
+    <!-- Colores adicionales para adaptadores Java -->
+    <color name="primary_light">#4CAF50</color>          <!-- Verde claro -->
+    <color name="orange">#FF9800</color>                 <!-- Naranja -->
+    <color name="teal_700">#00796B</color>               <!-- Verde azulado oscuro -->
+    <color name="green">#4CAF50</color>                  <!-- Verde -->
+    <color name="darker_gray">#424242</color>            <!-- Gris más oscuro -->
 </resources>

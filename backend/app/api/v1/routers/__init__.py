@@ -1,4 +1,5 @@
 from . import (
+    auth,
     users,
     products,
     shopping_lists,

@@ -13,3 +13,4 @@ web3
 eth-account==0.10.0
 eth-typing==4.0.0
 eth-utils==2.3.1
+email-validator

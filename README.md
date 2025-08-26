@@ -29,7 +29,7 @@ Sistema inteligente para la distribución eficiente, sostenible y trazable de pr
 
 ## Requisitos
 
-- Python 3.8+
+- Python 3.11+ (recomendado 3.11 para compatibilidad con dependencias)
 - PostgreSQL 13+
 - Android Studio
 - Docker y Docker Compose
@@ -42,20 +42,23 @@ Sistema inteligente para la distribución eficiente, sostenible y trazable de pr
 git clone [URL_DEL_REPOSITORIO]
 ```
 
-2. Configurar el entorno virtual:
+2. Configurar el entorno virtual con Python 3.11:
 ```bash
 python -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
-pip install -r requirements.txt
 ```
 
-3. Configurar la base de datos:
+3. Instalar dependencias:
 ```bash
-cd database
+pip install -r backend/requirements.txt
+```
+
+4. Configurar la base de datos (después de instalar dependencias):
+```bash
 alembic upgrade head
 ```
 
-4. Iniciar los servicios con Docker:
+5. Iniciar los servicios con Docker:
 ```bash
 docker-compose up -d
 ```
@@ -64,13 +67,14 @@ docker-compose up -d
 
 1. Iniciar el backend:
 ```bash
-cd backend
-uvicorn main:app --reload
+uvicorn backend.app.main:app --reload
 ```
 
 2. Compilar y ejecutar la aplicación Android desde Android Studio
 
-3. Configurar los sensores IoT según la documentación en `/iot/README.md`
+3. Configurar los sensores IoT según la documentación en `iot/`
+
+4. Documentación técnica actualizada en `docs/` (arquitectura, flujo, API, blockchain, sensores, tests)
 
 ## Documentación
 
