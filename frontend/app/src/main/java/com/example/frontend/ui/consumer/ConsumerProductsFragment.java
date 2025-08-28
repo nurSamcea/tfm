@@ -269,7 +269,7 @@ public class ConsumerProductsFragment extends Fragment {
 
     private void loadSampleProducts() {
         ProductFilterRequest req = construirRequest();
-        ApiService apiService = RetrofitClient.getInstance().getRetrofit().create(ApiService.class);
+        ApiService apiService = RetrofitClient.getInstance(requireContext()).getApiService();
         Call<List<Product>> call = apiService.getProductsOptimized(req);
         call.enqueue(new Callback<List<Product>>() {
             @Override

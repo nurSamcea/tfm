@@ -19,7 +19,7 @@ class TransactionRead(TransactionBase):
     confirmed_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TransactionOut(TransactionBase):
     id: int
@@ -27,4 +27,4 @@ class TransactionOut(TransactionBase):
     confirmed_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

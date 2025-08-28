@@ -15,7 +15,8 @@ class QRRead(QRBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class QrOut(QRRead):
-    pass
+    class Config:
+        from_attributes = True

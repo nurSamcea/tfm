@@ -1,113 +1,195 @@
 package com.example.frontend.ui.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import com.example.frontend.R;
-import com.example.frontend.api.ApiService;
-import com.example.frontend.databinding.FragmentRegisterBinding;
-import com.example.frontend.model.Location;
-import com.example.frontend.model.User;
-import com.example.frontend.model.RegisterRequest;
 
-import dagger.hilt.android.AndroidEntryPoint;
+import com.example.frontend.MainActivity;
+import com.example.frontend.R;
+import com.example.frontend.api.AuthService;
+import com.example.frontend.api.RegisterRequest;
+import com.example.frontend.api.RegisterResponse;
+import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.utils.SessionManager;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import javax.inject.Inject;
 
-@AndroidEntryPoint
 public class RegisterFragment extends Fragment {
-    private FragmentRegisterBinding binding;
+    private static final String TAG = "RegisterFragment";
     
-    @Inject
-    ApiService apiService;
+    private EditText nameInput;
+    private EditText emailInput;
+    private EditText passwordInput;
+    private EditText confirmPasswordInput;
+    private Spinner roleSpinner;
+    private Button registerButton;
+    private Button backToLoginButton;
+    private ProgressBar progressBar;
+    private TextView errorText;
+    
+    private AuthService authService;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        
+        // Inicializar servicios
+        authService = RetrofitClient.getInstance(requireContext()).getAuthService();
+        sessionManager = new SessionManager(requireContext());
+        
+        // Inicializar vistas
+        nameInput = view.findViewById(R.id.name_input);
+        emailInput = view.findViewById(R.id.email_input);
+        passwordInput = view.findViewById(R.id.password_input);
+        confirmPasswordInput = view.findViewById(R.id.confirm_password_input);
+        roleSpinner = view.findViewById(R.id.role_spinner);
+        registerButton = view.findViewById(R.id.register_button);
+        backToLoginButton = view.findViewById(R.id.back_to_login_button);
+        progressBar = view.findViewById(R.id.progress_bar);
+        errorText = view.findViewById(R.id.error_text);
+        
+        // Configurar spinner de roles
+        setupRoleSpinner();
+        
+        // Configurar listeners
+        registerButton.setOnClickListener(v -> performRegister());
+        backToLoginButton.setOnClickListener(v -> navigateToLogin());
+        
+        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        setupListeners();
-    }
-
-    private void setupListeners() {
-        binding.buttonRegister.setOnClickListener(v -> performRegister());
-        binding.buttonCancel.setOnClickListener(v -> 
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_register_to_login));
+    private void setupRoleSpinner() {
+        String[] roles = {"consumer", "farmer", "retailer", "supermarket"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            roles
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roleSpinner.setAdapter(adapter);
     }
 
     private void performRegister() {
-        String name = binding.editTextName.getText().toString();
-        String email = binding.editTextEmail.getText().toString();
-        String password = binding.editTextPassword.getText().toString();
-        String address = binding.editTextAddress.getText().toString();
-        String userType = getUserType();
-
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || address.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.error_empty_fields, Toast.LENGTH_SHORT).show();
+        String name = nameInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
+        String password = passwordInput.getText().toString();
+        String confirmPassword = confirmPasswordInput.getText().toString();
+        String role = roleSpinner.getSelectedItem().toString();
+        
+        // Validaciones
+        if (name.isEmpty()) {
+            showError("Por favor ingresa tu nombre");
             return;
         }
-
-        // Crear objeto Location con coordenadas por defecto (se actualizarán después)
-        Location location = new Location(0.0, 0.0, address);
-
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.buttonRegister.setEnabled(false);
-
-        apiService.register(new RegisterRequest(name, email, password, userType, location))
-                .enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.buttonRegister.setEnabled(true);
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            Toast.makeText(requireContext(), R.string.success_register, Toast.LENGTH_SHORT).show();
-                            Navigation.findNavController(requireView())
-                                    .navigate(R.id.action_register_to_login);
-                        } else {
-                            Toast.makeText(requireContext(), R.string.error_register, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.buttonRegister.setEnabled(true);
-                        Toast.makeText(requireContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private String getUserType() {
-        int selectedId = binding.radioGroupUserType.getCheckedRadioButtonId();
-        if (selectedId == R.id.radio_farmer) {
-            return "FARMER";
-        } else if (selectedId == R.id.radio_supermarket) {
-            return "SUPERMARKET";
-        } else {
-            return "CONSUMER";
+        
+        if (email.isEmpty()) {
+            showError("Por favor ingresa tu email");
+            return;
         }
+        
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError("Por favor ingresa un email válido");
+            return;
+        }
+        
+        if (password.isEmpty()) {
+            showError("Por favor ingresa una contraseña");
+            return;
+        }
+        
+        if (password.length() < 6) {
+            showError("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
+        
+        if (!password.equals(confirmPassword)) {
+            showError("Las contraseñas no coinciden");
+            return;
+        }
+        
+        // Mostrar loading
+        setLoading(true);
+        hideError();
+        
+        // Crear request
+        RegisterRequest registerRequest = new RegisterRequest(name, email, password, role);
+        
+        // Realizar petición
+        authService.register(registerRequest).enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                setLoading(false);
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RegisterResponse registerResponse = response.body();
+                    
+                    Toast.makeText(requireContext(), 
+                        "Registro exitoso. Ahora puedes iniciar sesión", 
+                        Toast.LENGTH_LONG).show();
+                    
+                    // Navegar al login
+                    navigateToLogin();
+                    
+                } else {
+                    String errorMessage = "Error en el registro";
+                    if (response.code() == 400) {
+                        errorMessage = "El email ya está registrado";
+                    } else if (response.code() >= 500) {
+                        errorMessage = "Error del servidor. Intenta más tarde";
+                    }
+                    showError(errorMessage);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                setLoading(false);
+                Log.e(TAG, "Register error", t);
+                showError("Error de conexión. Verifica tu internet");
+            }
+        });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void setLoading(boolean loading) {
+        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        registerButton.setEnabled(!loading);
+        backToLoginButton.setEnabled(!loading);
+        nameInput.setEnabled(!loading);
+        emailInput.setEnabled(!loading);
+        passwordInput.setEnabled(!loading);
+        confirmPasswordInput.setEnabled(!loading);
+        roleSpinner.setEnabled(!loading);
+    }
+
+    private void showError(String message) {
+        errorText.setText(message);
+        errorText.setVisibility(View.VISIBLE);
+    }
+
+    private void hideError() {
+        errorText.setVisibility(View.GONE);
+    }
+
+    private void navigateToLogin() {
+        // TODO: Implementar navegación al login
+        Toast.makeText(requireContext(), "Navegando al login...", Toast.LENGTH_SHORT).show();
     }
 } 

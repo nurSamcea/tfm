@@ -10,12 +10,13 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import javax.inject.Singleton;
+import com.example.frontend.utils.Constants;
 
 @Module
 @InstallIn(SingletonComponent.class)
 public class NetworkModule {
 
-    private static final String BASE_URL = "http://tu-api-url.com/"; // Reemplazar con tu URL base
+    private static final String BASE_URL = Constants.getBaseUrl(); // URL desde archivo .env
 
     @Provides
     @Singleton

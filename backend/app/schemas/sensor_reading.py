@@ -19,12 +19,12 @@ class SensorReadingRead(SensorReadingBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SensorReadingOut(SensorReadingRead):
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v,
             float: lambda v: round(v, 2) if isinstance(v, float) else v

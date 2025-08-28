@@ -72,7 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartItems.size();
     }
 
-    static class CartViewHolder extends RecyclerView.ViewHolder {
+            static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView productNameTextView;
         TextView quantityTextView;
         TextView priceTextView;
@@ -81,12 +81,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ImageButton decreaseButton;
         CartViewHolder(View itemView) {
             super(itemView);
-            productNameTextView = itemView.findViewById(R.id.textViewProductName);
-            quantityTextView = itemView.findViewById(R.id.textViewQuantity);
-            priceTextView = itemView.findViewById(R.id.textViewPrice);
-            removeButton = itemView.findViewById(R.id.buttonRemove);
-            increaseButton = itemView.findViewById(R.id.buttonIncrease);
-            decreaseButton = itemView.findViewById(R.id.buttonDecrease);
+            productNameTextView = itemView.findViewById(R.id.text_product_name);
+            quantityTextView = itemView.findViewById(R.id.text_quantity);
+            priceTextView = itemView.findViewById(R.id.text_total_price);
+            removeButton = itemView.findViewById(R.id.button_remove);
+            increaseButton = itemView.findViewById(R.id.button_increase);
+            decreaseButton = itemView.findViewById(R.id.button_decrease);
         }
     }
 } 

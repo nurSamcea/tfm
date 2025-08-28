@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 import dagger.hilt.android.HiltAndroidApp;
+import com.example.frontend.utils.Constants;
 
 @HiltAndroidApp
 public class EcoMarketApplication extends Application {
@@ -38,6 +39,9 @@ public class EcoMarketApplication extends Application {
                         .penaltyLog()
                         .build());
             }
+            
+            // Inicializar constantes del .env
+            Constants.init(this);
             
             // Inicializar otros componentes aquí
             Log.d(TAG, "initializeApp: Componentes inicializados correctamente");

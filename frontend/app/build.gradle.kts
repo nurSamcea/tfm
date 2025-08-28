@@ -73,4 +73,14 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.palette:palette:1.0.0")
+    
+    // ZXing para escáner QR
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    
+    // Glide para cargar imágenes
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    
+    // Dotenv para variables de entorno
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
 }

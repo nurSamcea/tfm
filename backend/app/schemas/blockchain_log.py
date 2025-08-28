@@ -18,12 +18,12 @@ class BlockchainLogRead(BlockchainLogBase):
     timestamp: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlockchainLogOut(BlockchainLogRead):
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v
         }
