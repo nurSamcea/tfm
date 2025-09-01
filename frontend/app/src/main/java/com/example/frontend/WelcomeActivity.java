@@ -43,10 +43,9 @@ public class WelcomeActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Implementar navegación a pantalla de login
-                Toast.makeText(WelcomeActivity.this, "Funcionalidad de Login en desarrollo", Toast.LENGTH_SHORT).show();
-                // Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                // startActivity(intent);
+                // Navegar a la pantalla de login
+                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -54,10 +53,9 @@ public class WelcomeActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Implementar navegación a pantalla de registro
-                Toast.makeText(WelcomeActivity.this, "Funcionalidad de Registro en desarrollo", Toast.LENGTH_SHORT).show();
-                // Intent intent = new Intent(WelcomeActivity.this, RegisterActivity.class);
-                // startActivity(intent);
+                // Navegar a la pantalla de registro
+                Intent intent = new Intent(WelcomeActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 

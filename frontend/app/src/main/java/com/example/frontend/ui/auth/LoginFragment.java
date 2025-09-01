@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.frontend.MainActivity;
 import com.example.frontend.R;
+import com.example.frontend.RegisterActivity;
 import com.example.frontend.api.AuthService;
 import com.example.frontend.api.LoginRequest;
 import com.example.frontend.api.LoginResponse;
@@ -168,7 +169,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void navigateToRegister() {
-        // TODO: Implementar navegación al registro
-        Toast.makeText(requireContext(), "Funcionalidad de registro próximamente", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(requireContext(), RegisterActivity.class);
+        startActivity(intent);
     }
 } 

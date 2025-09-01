@@ -35,6 +35,16 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+            
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EcoMarket.NoActionBar" />
+            
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EcoMarket.NoActionBar" />
     </application>
 
 </manifest>

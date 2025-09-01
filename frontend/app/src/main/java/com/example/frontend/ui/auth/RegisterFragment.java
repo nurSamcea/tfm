@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.frontend.MainActivity;
 import com.example.frontend.R;
+import com.example.frontend.LoginActivity;
 import com.example.frontend.api.AuthService;
 import com.example.frontend.api.RegisterRequest;
 import com.example.frontend.api.RegisterResponse;
@@ -37,7 +38,7 @@ public class RegisterFragment extends Fragment {
     private EditText emailInput;
     private EditText passwordInput;
     private EditText confirmPasswordInput;
-    private Spinner roleSpinner;
+    private AutoCompleteTextView roleSpinner;
     private Button registerButton;
     private Button backToLoginButton;
     private ProgressBar progressBar;
@@ -80,11 +81,11 @@ public class RegisterFragment extends Fragment {
         String[] roles = {"consumer", "farmer", "retailer", "supermarket"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            android.R.layout.simple_dropdown_item_1line,
             roles
         );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roleSpinner.setAdapter(adapter);
+        roleSpinner.setText(roles[0], false); // Establecer valor por defecto
     }
 
     private void performRegister() {
@@ -92,7 +93,7 @@ public class RegisterFragment extends Fragment {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString();
         String confirmPassword = confirmPasswordInput.getText().toString();
-        String role = roleSpinner.getSelectedItem().toString();
+        String role = roleSpinner.getText().toString();
         
         // Validaciones
         if (name.isEmpty()) {
@@ -189,7 +190,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private void navigateToLogin() {
-        // TODO: Implementar navegación al login
-        Toast.makeText(requireContext(), "Navegando al login...", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(requireContext(), LoginActivity.class);
+        startActivity(intent);
+        requireActivity().finish(); // Cerrar la actividad de registro
     }
 } 
