@@ -90,7 +90,11 @@ public class AddProductFragment extends Fragment {
             public void onFailure(@NonNull Call<Product> call, @NonNull Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.buttonSave.setEnabled(true);
-                Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                    });
+                }
             }
         });
     }

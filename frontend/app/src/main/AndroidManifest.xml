@@ -34,7 +34,8 @@
         
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EcoMarket.NoActionBar" />
             
         <activity
             android:name=".LoginActivity"

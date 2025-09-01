@@ -84,4 +84,8 @@
     <!-- Colores faltantes para layouts existentes -->
     <color name="purple">#6200EE</color>
     <color name="gray">#757575</color>
+    
+    <!-- Colores para el nuevo diseño del consumidor -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="chip_background">#F5F5F5</color>
 </resources>

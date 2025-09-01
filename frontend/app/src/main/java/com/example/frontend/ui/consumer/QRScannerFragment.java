@@ -3,6 +3,7 @@ package com.example.frontend.ui.consumer;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,20 +32,26 @@ import java.util.List;
 import com.google.zxing.ResultPoint;
 
 public class QRScannerFragment extends Fragment {
-
+    private static final String TAG = "QRScanner";
     private DecoratedBarcodeView barcodeView;
     private TextView traceabilityInfo;
     private static final int CAMERA_PERMISSION_REQUEST = 100;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "=== QR SCANNER FRAGMENT ===");
+        Log.d(TAG, "onCreateView iniciado");
         View root = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
+        Log.d(TAG, "Layout inflado correctamente");
 
         barcodeView = root.findViewById(R.id.barcode_scanner);
         traceabilityInfo = root.findViewById(R.id.text_traceability_info);
+        Log.d(TAG, "Componentes UI inicializados - barcodeView: " + (barcodeView != null ? "OK" : "NULL"));
 
         setupScanner();
+        Log.d(TAG, "Scanner configurado");
         checkCameraPermission();
+        Log.d(TAG, "Permisos de cámara verificados");
 
         return root;
     }
@@ -81,22 +88,31 @@ public class QRScannerFragment extends Fragment {
     }
 
     private void handleQRCode(String qrData) {
+        Log.d(TAG, "=== CÓDIGO QR DETECTADO ===");
+        Log.d(TAG, "QR Data: " + qrData);
+        
         // Pausar el scanner para evitar múltiples lecturas
         barcodeView.pause();
+        Log.d(TAG, "Scanner pausado");
         
         // Mostrar que se está procesando
         traceabilityInfo.setText("Procesando código QR...");
+        Log.d(TAG, "Texto de procesamiento mostrado");
         
         // Extraer el hash del QR (asumiendo formato: "product_hash_12345")
         String productHash = extractProductHash(qrData);
+        Log.d(TAG, "Hash extraído: " + productHash);
         
         if (productHash != null) {
+            Log.d(TAG, "Hash válido, buscando trazabilidad...");
             fetchProductTraceability(productHash);
         } else {
+            Log.w(TAG, "Hash no válido, código QR no reconocido");
             traceabilityInfo.setText("Código QR no válido");
             Toast.makeText(getContext(), "Código QR no reconocido", Toast.LENGTH_SHORT).show();
             // Reanudar scanner después de un delay
             barcodeView.postDelayed(() -> barcodeView.resume(), 2000);
+            Log.d(TAG, "Scanner se reanudará en 2 segundos");
         }
     }
 
@@ -129,7 +145,11 @@ public class QRScannerFragment extends Fragment {
             @Override
             public void onFailure(Call<ProductTraceability> call, Throwable t) {
                 traceabilityInfo.setText("Error de conexión");
-                Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }
                 // Reanudar scanner
                 barcodeView.postDelayed(() -> barcodeView.resume(), 3000);
             }

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api.v1.routers import (
     auth, users, products, shopping_lists, shopping_list_groups,
@@ -7,6 +8,15 @@ from backend.app.api.v1.routers import (
 )
 
 app = FastAPI(title="Zero Platform API", version="1.0.0")
+
+# Configurar CORS para permitir conexiones desde la aplicación Android
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En producción, especificar las IPs específicas
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Registrar rutas
 app.include_router(auth.router)

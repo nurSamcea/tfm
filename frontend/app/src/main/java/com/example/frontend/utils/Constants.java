@@ -35,7 +35,7 @@ public class Constants {
     
     // Configuración del backend
     public static String getBackendIP() {
-        return getEnvVar("BACKEND_IP", "192.168.201.237");
+        return getEnvVar("BACKEND_IP", "192.168.68.116");
     }
     
     public static String getBackendPort() {

@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 
 import com.example.frontend.R;
 import com.example.frontend.model.ConsumerOrder;
@@ -77,8 +78,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView quantityTextView;
         TextView priceTextView;
         ImageButton removeButton;
-        ImageButton increaseButton;
-        ImageButton decreaseButton;
+        MaterialButton increaseButton;
+        MaterialButton decreaseButton;
         CartViewHolder(View itemView) {
             super(itemView);
             productNameTextView = itemView.findViewById(R.id.text_product_name);
