@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Cabeza del agricultor -->
+    <path
+        android:fillColor="#8BC34A"
+        android:pathData="M24,8C26.2,8 28,9.8 28,12C28,14.2 26.2,16 24,16C21.8,16 20,14.2 20,12C20,9.8 21.8,8 24,8Z"/>
+    
+    <!-- Cuerpo -->
+    <path
+        android:fillColor="#8BC34A"
+        android:pathData="M24,18C28.4,18 32,21.6 32,26V32H16V26C16,21.6 19.6,18 24,18Z"/>
+    
+    <!-- Sombrero de agricultor -->
+    <path
+        android:fillColor="#8BC34A"
+        android:pathData="M16,6C16,6 18,4 24,4C30,4 32,6 32,6L30,8C30,8 28,6 24,6C20,6 18,8 18,8L16,6Z"/>
+    
+    <!-- Herramienta agrícola -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M20,28L28,28L28,30L20,30L20,28Z"/>
+    
+    <!-- Mango de la herramienta -->
+    <path
+        android:fillColor="#8D6E63"
+        android:pathData="M22,26L26,26L26,28L22,28L22,26Z"/>
+</vector>

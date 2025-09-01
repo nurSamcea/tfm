@@ -1,113 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Tema principal de la aplicación -->
-    <style name="Theme.Zero" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Colores principales -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+    <!-- Tema base para EcoMarket -->
+    <style name="Theme.EcoMarket" parent="Theme.Material3.DayNight">
+        <!-- Colores primarios -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <!-- Colores secundarios -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/accent_dark</item>
+        <item name="colorOnSecondary">@color/black</item>
         
         <!-- Colores de fondo -->
-        <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="colorSurface">@color/colorSurface</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-        <item name="colorOnBackground">@color/colorOnBackground</item>
-        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
         
         <!-- Colores de estado -->
-        <item name="colorError">@color/colorError</item>
-        <item name="colorOnError">@color/colorOnPrimary</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/white</item>
         
-        <!-- Barras del sistema -->
-        <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <!-- Colores de texto -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
         
-        <!-- Configuración de iconos de sistema -->
+        <!-- Barra de estado -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Barra de navegación -->
+        <item name="android:navigationBarColor">@color/primary_dark</item>
         <item name="android:windowLightNavigationBar">false</item>
         
+        <!-- Elevación de tarjetas -->
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        
         <!-- Tipografía -->
-        <item name="textAppearanceHeadline1">@style/TextAppearance.Zero.Headline1</item>
-        <item name="textAppearanceHeadline2">@style/TextAppearance.Zero.Headline2</item>
-        <item name="textAppearanceHeadline3">@style/TextAppearance.Zero.Headline3</item>
-        <item name="textAppearanceHeadline4">@style/TextAppearance.Zero.Headline4</item>
-        <item name="textAppearanceHeadline5">@style/TextAppearance.Zero.Headline5</item>
-        <item name="textAppearanceHeadline6">@style/TextAppearance.Zero.Headline6</item>
-        <item name="textAppearanceSubtitle1">@style/TextAppearance.Zero.Subtitle1</item>
-        <item name="textAppearanceSubtitle2">@style/TextAppearance.Zero.Subtitle2</item>
-        <item name="textAppearanceBody1">@style/TextAppearance.Zero.Body1</item>
-        <item name="textAppearanceBody2">@style/TextAppearance.Zero.Body2</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Zero.Button</item>
-        <item name="textAppearanceCaption">@style/TextAppearance.Zero.Caption</item>
-        <item name="textAppearanceOverline">@style/TextAppearance.Zero.Overline</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.EcoMarket.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.EcoMarket.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.EcoMarket.Headline3</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.EcoMarket.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.EcoMarket.Body2</item>
     </style>
-
-    <!-- Estilos de texto -->
-    <style name="TextAppearance.Zero.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">96sp</item>
+    
+    <!-- Tema sin ActionBar para pantalla de bienvenida -->
+    <style name="Theme.EcoMarket.NoActionBar" parent="Theme.EcoMarket">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
     </style>
-
-    <style name="TextAppearance.Zero.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">60sp</item>
+    
+    <!-- Tema para pantallas de splash -->
+    <style name="Theme.EcoMarket.Splash" parent="Theme.EcoMarket">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
     </style>
-
-    <style name="TextAppearance.Zero.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">48sp</item>
+    
+    <!-- Tema para diálogos -->
+    <style name="Theme.EcoMarket.Dialog" parent="Theme.EcoMarket">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
     </style>
-
-    <style name="TextAppearance.Zero.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">34sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Body1" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Body2" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Button" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textColor">@color/colorOnPrimary</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="TextAppearance.Zero.Overline" parent="TextAppearance.MaterialComponents.Overline">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">10sp</item>
+    
+    <!-- Tema de compatibilidad para layouts existentes -->
+    <style name="Theme.Zero" parent="Theme.EcoMarket">
+        <!-- Hereda todo de EcoMarket -->
     </style>
 </resources>

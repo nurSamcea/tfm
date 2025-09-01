@@ -1,57 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Paleta principal basada en estilo sostenible -->
-    <color name="colorPrimary">#2E7D32</color>           <!-- Verde bosque -->
-    <color name="colorPrimaryVariant">#1B5E20</color>    <!-- Verde oscuro -->
-    <color name="colorSecondary">#FF8F00</color>         <!-- Naranja vibrante -->
-    <color name="colorSecondaryVariant">#F57C00</color>  <!-- Naranja oscuro -->
+    <!-- Colores principales de EcoMarket -->
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="accent">#FF9800</color>
+    <color name="accent_dark">#E65100</color>
     
+    <!-- Colores secundarios -->
+    <color name="secondary">#8BC34A</color>
+    <color name="secondary_dark">#689F38</color>
+
     <!-- Colores de fondo -->
-    <color name="colorBackground">#FAFAFA</color>        <!-- Gris muy claro -->
-    <color name="colorSurface">#FFFFFF</color>           <!-- Blanco puro -->
-    <color name="colorOnPrimary">#FFFFFF</color>         <!-- Blanco sobre verde -->
-    <color name="colorOnSecondary">#000000</color>       <!-- Negro sobre naranja -->
-    <color name="colorOnBackground">#212121</color>      <!-- Gris oscuro sobre fondo -->
-    <color name="colorOnSurface">#212121</color>         <!-- Gris oscuro sobre superficie -->
-    
-    <!-- Colores de estado -->
-    <color name="colorError">#D32F2F</color>             <!-- Rojo error -->
-    <color name="colorSuccess">#388E3C</color>           <!-- Verde éxito -->
-    <color name="colorWarning">#F57C00</color>           <!-- Naranja advertencia -->
-    <color name="colorInfo">#1976D2</color>              <!-- Azul información -->
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#F5F5F5</color>
     
     <!-- Colores de texto -->
-    <color name="textPrimary">#212121</color>            <!-- Texto principal -->
-    <color name="textSecondary">#757575</color>          <!-- Texto secundario -->
-    <color name="textHint">#BDBDBD</color>               <!-- Texto placeholder -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
     
-    <!-- Colores de componentes -->
-    <color name="colorDivider">#E0E0E0</color>           <!-- Divisores -->
-    <color name="colorCard">#FFFFFF</color>              <!-- Tarjetas -->
-    <color name="colorCardBorder">#E0E0E0</color>        <!-- Bordes de tarjetas -->
+    <!-- Colores de estado -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
     
-    <!-- Colores de eco/sostenibilidad -->
-    <color name="colorEco">#4CAF50</color>               <!-- Verde eco -->
-    <color name="colorLocal">#FF9800</color>             <!-- Naranja local -->
-    <color name="colorOrganic">#8BC34A</color>           <!-- Verde orgánico -->
+    <!-- Colores del sistema -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
     
-    <!-- Colores de navegación -->
-    <color name="colorBottomNav">#FFFFFF</color>         <!-- Fondo navegación -->
-    <color name="colorBottomNavSelected">#2E7D32</color> <!-- Ítem seleccionado -->
-    <color name="colorBottomNavUnselected">#757575</color> <!-- Ítem no seleccionado -->
+    <!-- Colores de la marca -->
+    <color name="ecomarket_green">#4CAF50</color>
+    <color name="ecomarket_orange">#FF9800</color>
+    <color name="ecomarket_light_green">#8BC34A</color>
+    <color name="ecomarket_dark_green">#388E3C</color>
     
-    <!-- Colores compatibilidad (referenciados en layouts existentes) -->
-    <color name="white">#FFFFFF</color>                  <!-- Blanco -->
-    <color name="primary">#2E7D32</color>                <!-- Color primario (alias) -->
-    <color name="primary_dark">#1B5E20</color>           <!-- Color primario oscuro (alias) -->
-    <color name="purple">#6200EE</color>                 <!-- Púrpura (para compatibilidad) -->
-    <color name="gray">#757575</color>                   <!-- Gris -->
-    <color name="error">#D32F2F</color>                  <!-- Error (alias) -->
+    <!-- Colores adicionales para adaptadores -->
+    <color name="orange">#FF9800</color>
+    <color name="teal_700">#00796B</color>
+    <color name="green">#4CAF50</color>
+    <color name="darker_gray">#424242</color>
     
-    <!-- Colores adicionales para adaptadores Java -->
-    <color name="primary_light">#4CAF50</color>          <!-- Verde claro -->
-    <color name="orange">#FF9800</color>                 <!-- Naranja -->
-    <color name="teal_700">#00796B</color>               <!-- Verde azulado oscuro -->
-    <color name="green">#4CAF50</color>                  <!-- Verde -->
-    <color name="darker_gray">#424242</color>            <!-- Gris más oscuro -->
+    <!-- Colores de compatibilidad (para layouts existentes) -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryVariant">@color/primary_dark</color>
+    <color name="colorSecondary">@color/accent</color>
+    <color name="colorSecondaryVariant">@color/accent_dark</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <color name="colorOnSecondary">@color/black</color>
+    <color name="colorBackground">@color/background</color>
+    <color name="colorSurface">@color/surface</color>
+    <color name="colorOnBackground">@color/text_primary</color>
+    <color name="colorOnSurface">@color/text_primary</color>
+    <color name="colorError">@color/error</color>
+    <color name="colorOnError">@color/white</color>
+    <color name="colorSuccess">@color/success</color>
+    <color name="colorWarning">@color/warning</color>
+    <color name="colorInfo">@color/info</color>
+    <color name="colorCard">@color/card_background</color>
+    <color name="colorCardBorder">@color/card_background</color>
+    <color name="colorDivider">@color/card_background</color>
+    <color name="colorBottomNav">@color/white</color>
+    <color name="colorBottomNavSelected">@color/primary</color>
+    <color name="colorBottomNavUnselected">@color/text_secondary</color>
+    
+    <!-- Colores de texto de compatibilidad -->
+    <color name="textPrimary">@color/text_primary</color>
+    <color name="textSecondary">@color/text_secondary</color>
+    <color name="textHint">@color/text_hint</color>
+    
+    <!-- Colores específicos para chips -->
+    <color name="colorEco">@color/ecomarket_green</color>
+    <color name="colorLocal">@color/ecomarket_orange</color>
+    <color name="colorOrganic">@color/ecomarket_light_green</color>
+    
+    <!-- Colores adicionales para la pantalla de bienvenida -->
+    <color name="accent_light">#FFE0B2</color>
+    <color name="primary_light">#C8E6C9</color>
+    <color name="secondary_light">#DCEDC8</color>
+    
+    <!-- Colores faltantes para layouts existentes -->
+    <color name="purple">#6200EE</color>
+    <color name="gray">#757575</color>
 </resources>

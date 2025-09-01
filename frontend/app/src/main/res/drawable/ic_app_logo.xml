@@ -4,17 +4,29 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     
-    <!-- Hoja estilizada -->
+    <!-- Fondo circular con gradiente verde -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M54,54m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0"/>
+    
+    <!-- Círculo interno con borde -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,30C54,30 62,38 66,54C62,70 54,78 54,78C54,78 46,70 42,54C46,38 54,30 54,30Z"/>
+        android:strokeColor="#E8F5E8"
+        android:strokeWidth="2"
+        android:pathData="M54,54m-42,0a42,42 0,1 1,84 0a42,42 0,1 1,-84 0"/>
+    
+    <!-- Hoja estilizada y simplificada -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M54,28C54,28 62,36 66,54C62,72 54,80 54,80C54,80 46,72 42,54C46,36 54,28 54,28Z"/>
     
     <!-- Vena central de la hoja -->
     <path
-        android:fillColor="#E8F5E8"
-        android:pathData="M54,30L54,78"/>
+        android:fillColor="#388E3C"
+        android:pathData="M54,28L54,80"/>
     
-    <!-- Cesta de mercado -->
+    <!-- Cesta de mercado simplificada -->
     <path
         android:fillColor="#FF9800"
         android:pathData="M44,62C44,62 48,64 52,64C56,64 60,62 60,62L62,66C62,66 58,68 54,68C50,68 46,66 46,66L44,62Z"/>
@@ -26,7 +38,7 @@
         android:strokeWidth="2.5"
         android:pathData="M46,62C46,62 48,60 52,60C56,60 60,62 60,62"/>
     
-    <!-- Productos en la cesta -->
+    <!-- Productos representados como puntos -->
     <path
         android:fillColor="#8BC34A"
         android:pathData="M46,64m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0"/>

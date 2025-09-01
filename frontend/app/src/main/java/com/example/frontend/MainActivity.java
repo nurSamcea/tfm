@@ -36,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
         // Inicializar SessionManager
         sessionManager = new SessionManager(this);
         
+        // Obtener el tipo de usuario del Intent (si viene de WelcomeActivity)
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("userType")) {
+            userType = intent.getStringExtra("userType");
+            Log.d(TAG, "onCreate: User type from intent: " + userType);
+            showMainScreen();
+            return;
+        }
+        
         // Verificar si el usuario está logueado
         if (!sessionManager.isLoggedIn()) {
             showLoginScreen();

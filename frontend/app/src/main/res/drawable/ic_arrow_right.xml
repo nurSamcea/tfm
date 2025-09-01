@@ -3,7 +3,9 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    
+    <!-- Flecha hacia la derecha -->
     <path
-        android:fillColor="#FF000000"
-        android:pathData="M9.29,6.71 13.17,10.59 9.29,14.47 10.71,15.88 16.59,10 10.71,4.12z"/>
+        android:fillColor="#000000"
+        android:pathData="M8,5V19L19,12L8,5Z"/>
 </vector> 

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilos de texto para EcoMarket -->
+    
+    <!-- Títulos principales -->
+    <style name="TextAppearance.EcoMarket.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <style name="TextAppearance.EcoMarket.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <style name="TextAppearance.EcoMarket.Headline3" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Subtítulos -->
+    <style name="TextAppearance.EcoMarket.Subtitle1" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <style name="TextAppearance.EcoMarket.Subtitle2" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Cuerpo de texto -->
+    <style name="TextAppearance.EcoMarket.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+    
+    <style name="TextAppearance.EcoMarket.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+    
+    <!-- Botones -->
+    <style name="TextAppearance.EcoMarket.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Captiones y texto pequeño -->
+    <style name="TextAppearance.EcoMarket.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@color/text_hint</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    
+    <!-- Texto de precio -->
+    <style name="TextAppearance.EcoMarket.Price" parent="TextAppearance.EcoMarket.Subtitle1">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">sans-serif-bold</item>
+    </style>
+    
+                    <!-- Texto de etiqueta -->
+                <style name="TextAppearance.EcoMarket.Label" parent="TextAppearance.EcoMarket.Body2">
+                    <item name="android:textColor">@color/primary</item>
+                    <item name="android:fontFamily">sans-serif-medium</item>
+                    <item name="android:textSize">12sp</item>
+                </style>
+                
+                <!-- Estilos de compatibilidad para layouts existentes -->
+                <style name="TextAppearance.Zero.Headline1" parent="TextAppearance.EcoMarket.Headline1" />
+                <style name="TextAppearance.Zero.Headline2" parent="TextAppearance.EcoMarket.Headline2" />
+                <style name="TextAppearance.Zero.Headline3" parent="TextAppearance.EcoMarket.Headline3" />
+                <style name="TextAppearance.Zero.Headline4" parent="TextAppearance.EcoMarket.Headline3" />
+                <style name="TextAppearance.Zero.Headline5" parent="TextAppearance.EcoMarket.Subtitle1" />
+                <style name="TextAppearance.Zero.Headline6" parent="TextAppearance.EcoMarket.Subtitle2" />
+                <style name="TextAppearance.Zero.Subtitle1" parent="TextAppearance.EcoMarket.Subtitle1" />
+                <style name="TextAppearance.Zero.Subtitle2" parent="TextAppearance.EcoMarket.Subtitle2" />
+                <style name="TextAppearance.Zero.Body1" parent="TextAppearance.EcoMarket.Body1" />
+                <style name="TextAppearance.Zero.Body2" parent="TextAppearance.EcoMarket.Body2" />
+                <style name="TextAppearance.Zero.Button" parent="TextAppearance.EcoMarket.Button" />
+                <style name="TextAppearance.Zero.Caption" parent="TextAppearance.EcoMarket.Caption" />
+                <style name="TextAppearance.Zero.Overline" parent="TextAppearance.EcoMarket.Caption" />
+            </resources>
