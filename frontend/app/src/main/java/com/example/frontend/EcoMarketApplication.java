@@ -28,7 +28,10 @@ public class EcoMarketApplication extends Application {
 
     private void initializeApp() {
         try {
-            // Configurar el modo estricto para detectar problemas
+            // Inicializar constantes del .env PRIMERO
+            Constants.init(this);
+            
+            // Configurar el modo estricto DESPUÉS de la inicialización
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                         .detectAll()
@@ -39,9 +42,6 @@ public class EcoMarketApplication extends Application {
                         .penaltyLog()
                         .build());
             }
-            
-            // Inicializar constantes del .env
-            Constants.init(this);
             
             // Inicializar otros componentes aquí
             Log.d(TAG, "initializeApp: Componentes inicializados correctamente");
