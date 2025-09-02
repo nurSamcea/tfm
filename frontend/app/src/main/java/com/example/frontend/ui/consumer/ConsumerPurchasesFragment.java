@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.frontend.R;
 import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.utils.CartPreferences;
-import com.example.frontend.ui.adapters.CartAdapter;
+import com.example.frontend.ui.adapters.OrderItemCartAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ConsumerPurchasesFragment extends Fragment {
     private static final String TAG = "ConsumerPurchasesFragment";
     private RecyclerView recyclerView;
-    private CartAdapter cartAdapter;
+    private OrderItemCartAdapter cartAdapter;
     private CartPreferences cartPrefs;
     private List<ConsumerOrder.OrderItem> cartItems = new ArrayList<>();
     private Button btnTramitarPedido;
@@ -47,10 +47,10 @@ public class ConsumerPurchasesFragment extends Fragment {
         // Configurar RecyclerView
         recyclerView = view.findViewById(R.id.purchases_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        cartAdapter = new CartAdapter(cartItems);
+        cartAdapter = new OrderItemCartAdapter(cartItems);
         recyclerView.setAdapter(cartAdapter);
 
-        cartAdapter.setOnCartItemClickListener(new CartAdapter.OnCartItemClickListener() {
+        cartAdapter.setOnCartItemClickListener(new OrderItemCartAdapter.OnCartItemClickListener() {
             @Override
             public void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity) {
                 item.setQuantity(newQuantity);

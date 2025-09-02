@@ -10,22 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 
 import com.example.frontend.R;
-import com.example.frontend.models.CartItem;
+import com.example.frontend.model.ConsumerOrder;
 
 import java.util.List;
 import java.util.Locale;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<CartItem> cartItems;
-    private CartItemListener listener;
+public class OrderItemCartAdapter extends RecyclerView.Adapter<OrderItemCartAdapter.CartViewHolder> {
+    private List<ConsumerOrder.OrderItem> cartItems;
+    private OnCartItemClickListener listener;
 
-    public interface CartItemListener {
-        void onQuantityChanged(int position, int newQuantity);
-        void onItemRemoved(int position);
+    public interface OnCartItemClickListener {
+        void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity);
+        void onRemoveItem(ConsumerOrder.OrderItem item);
     }
 
-    public CartAdapter(List<CartItem> cartItems, CartItemListener listener) {
+    public OrderItemCartAdapter(List<ConsumerOrder.OrderItem> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public void setOnCartItemClickListener(OnCartItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -39,10 +42,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartItem item = cartItems.get(position);
+        ConsumerOrder.OrderItem item = cartItems.get(position);
         
         // Mostrar nombre del producto
-        String productName = item.getName();
+        String productName = item.getProductName();
         if (productName != null && !productName.trim().isEmpty()) {
             holder.productNameTextView.setText(productName);
         } else {
@@ -53,30 +56,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.quantityTextView.setText(String.valueOf(item.getQuantity()));
         
         // Mostrar precio unitario
-        holder.unitPriceTextView.setText(String.format(Locale.getDefault(), "%.2f €/ud", item.getPrice()));
+        holder.unitPriceTextView.setText(String.format(Locale.getDefault(), "%.2f €/ud", item.getUnitPrice()));
         
         // Mostrar precio total
-        double totalPrice = item.getPrice() * item.getQuantity();
+        double totalPrice = item.getUnitPrice() * item.getQuantity();
         holder.totalPriceTextView.setText(String.format(Locale.getDefault(), "%.2f €", totalPrice));
         
         // Botón para aumentar cantidad
         holder.increaseButton.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onQuantityChanged(position, item.getQuantity() + 1);
+                listener.onQuantityChanged(item, item.getQuantity() + 1);
             }
         });
         
         // Botón para disminuir cantidad
         holder.decreaseButton.setOnClickListener(v -> {
             if (listener != null && item.getQuantity() > 1) {
-                listener.onQuantityChanged(position, item.getQuantity() - 1);
+                listener.onQuantityChanged(item, item.getQuantity() - 1);
             }
         });
         
         // Botón para eliminar
         holder.removeButton.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onItemRemoved(position);
+                listener.onRemoveItem(item);
             }
         });
     }
@@ -86,7 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartItems != null ? cartItems.size() : 0;
     }
 
-    public void updateData(List<CartItem> newItems) {
+    public void updateData(List<ConsumerOrder.OrderItem> newItems) {
         this.cartItems = newItems;
         notifyDataSetChanged();
     }
@@ -111,4 +114,4 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             decreaseButton = itemView.findViewById(R.id.button_decrease);
         }
     }
-} 
+}

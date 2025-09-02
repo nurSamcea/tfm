@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.adapters.CartAdapter;
+import com.example.frontend.ui.adapters.CartAdapter;
 import com.example.frontend.models.CartItem;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.network.ApiClient;
@@ -73,7 +73,11 @@ public class ConsumerCheckoutFragment extends Fragment {
             @Override
             public void onQuantityChanged(int position, int newQuantity) {
                 Log.d("ConsumerCheckout", "Cantidad cambiada en posición " + position + " a " + newQuantity);
-                updateTotalPrice();
+                if (position >= 0 && position < cartItems.size()) {
+                    cartItems.get(position).setQuantity(newQuantity);
+                    adapter.notifyDataSetChanged();
+                    updateTotalPrice();
+                }
             }
 
             @Override

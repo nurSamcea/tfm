@@ -53,6 +53,9 @@ public class WelcomeActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        
+        // Asegurar que el status bar sea visible después de configurar la vista
+        ensureStatusBarVisible();
 
         // Inicializar SessionManager
         sessionManager = new SessionManager(this);
@@ -305,5 +308,29 @@ public class WelcomeActivity extends AppCompatActivity {
     public void logout() {
         sessionManager.logout();
         backToModeSelection();
+    }
+    
+    /**
+     * Asegura que el status bar sea visible y tenga el comportamiento correcto
+     */
+    private void ensureStatusBarVisible() {
+        try {
+            // Configurar colores del status bar y navigation bar
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary));
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.primary));
+            
+            // Asegurar que no esté en modo fullscreen
+            getWindow().getDecorView().setSystemUiVisibility(
+                getWindow().getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_FULLSCREEN
+            );
+            
+            // Configurar flags para layout estable
+            int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+            
+            Log.d(TAG, "Status bar configurado correctamente");
+        } catch (Exception e) {
+            Log.e(TAG, "Error al configurar status bar: " + e.getMessage());
+        }
     }
 }

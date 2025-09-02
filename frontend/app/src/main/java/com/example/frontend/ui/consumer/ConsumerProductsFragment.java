@@ -28,7 +28,7 @@ import com.example.frontend.model.Product;
 import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.utils.CartPreferences;
 import com.example.frontend.ui.adapters.ProductAdapter;
-import com.example.frontend.ui.adapters.CartAdapter;
+import com.example.frontend.ui.adapters.OrderItemCartAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.api.RetrofitClient;
@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 public class ConsumerProductsFragment extends Fragment {
     private static final String TAG = "ConsumerProductsFrag";
@@ -55,10 +58,10 @@ public class ConsumerProductsFragment extends Fragment {
     private ProductAdapter adapter;
     private List<Product> products;
     private RecyclerView cartRecyclerView;
-    private CartAdapter cartAdapter;
+    private OrderItemCartAdapter cartAdapter;
     private List<ConsumerOrder.OrderItem> cartItems = new ArrayList<>();
     private EditText searchBar;
-    private CheckBox filterDistance, filterPrice, filterGlutenFree, filterEco, filterCategory;
+    private Chip filterDistance, filterPrice, filterGlutenFree, filterEco, filterCategory;
     private double totalCarrito = 0.0;
     private TextView cartTotalText;
     private CartPreferences cartPrefs;
@@ -66,6 +69,7 @@ public class ConsumerProductsFragment extends Fragment {
     private Double userLat = null;
     private Double userLon = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private Call<List<Product>> pendingApiCall = null; // Para cancelar llamadas pendientes
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,17 +118,18 @@ public class ConsumerProductsFragment extends Fragment {
             filterCategory = view.findViewById(R.id.filter_category);
             Log.d(TAG, "onCreateView: UI básica inicializada");
 
-        ImageButton btnToggleFilters = view.findViewById(R.id.btn_toggle_filters);
+        // Configurar el toggle de filtros desde el icono de la barra de búsqueda
         HorizontalScrollView filtersScroll = view.findViewById(R.id.filters_scroll);
-        btnToggleFilters.setOnClickListener(v -> {
-            if (filtersScroll.getVisibility() == View.GONE) {
-                filtersScroll.setVisibility(View.VISIBLE);
-                btnToggleFilters.setContentDescription("Ocultar filtros");
-            } else {
-                filtersScroll.setVisibility(View.GONE);
-                btnToggleFilters.setContentDescription("Filtros");
-            }
-        });
+        com.google.android.material.textfield.TextInputLayout searchLayout = view.findViewById(R.id.search_layout);
+        if (searchLayout != null) {
+            searchLayout.setEndIconOnClickListener(v -> {
+                if (filtersScroll.getVisibility() == View.GONE) {
+                    filtersScroll.setVisibility(View.VISIBLE);
+                } else {
+                    filtersScroll.setVisibility(View.GONE);
+                }
+            });
+        }
 
         // Inicializar CartPreferences en segundo plano para evitar StrictMode
         initializeCartPreferencesAsync();
@@ -132,9 +137,9 @@ public class ConsumerProductsFragment extends Fragment {
         // Carrito
         cartRecyclerView = view.findViewById(R.id.cart_recycler_view);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        cartAdapter = new CartAdapter(cartItems);
+        cartAdapter = new OrderItemCartAdapter(cartItems);
         cartRecyclerView.setAdapter(cartAdapter);
-        cartAdapter.setOnCartItemClickListener(new CartAdapter.OnCartItemClickListener() {
+        cartAdapter.setOnCartItemClickListener(new OrderItemCartAdapter.OnCartItemClickListener() {
             public void onQuantityChanged(ConsumerOrder.OrderItem item, int newQuantity) {
                 item.setQuantity(newQuantity);
                 actualizarTotalCarrito();
@@ -163,7 +168,7 @@ public class ConsumerProductsFragment extends Fragment {
                 item = new ConsumerOrder.OrderItem(product.getId(), 1, product.getPrice());
                 item.setProductName(product.getName());
                 cartItems.add(item);
-                Toast.makeText(getContext(), "Añadido al carrito", Toast.LENGTH_SHORT).show();
+                showSafeToast("Añadido al carrito");
             } else {
                 item.setQuantity(item.getQuantity() + 1);
             }
@@ -191,7 +196,7 @@ public class ConsumerProductsFragment extends Fragment {
             cartAdapter.notifyDataSetChanged();
             actualizarTotalCarrito();
             // Mostrar mensaje de éxito
-            Toast.makeText(getContext(), "Carrito guardado correctamente", Toast.LENGTH_SHORT).show();
+            showSafeToast("Carrito guardado correctamente");
             // Intentar navegar de forma segura
             try {
                 BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
@@ -200,7 +205,7 @@ public class ConsumerProductsFragment extends Fragment {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error al navegar: " + e.getMessage());
-                Toast.makeText(getContext(), "Error al navegar al carrito", Toast.LENGTH_SHORT).show();
+                showSafeToast("Error al navegar al carrito");
             }
         });
 
@@ -220,12 +225,23 @@ public class ConsumerProductsFragment extends Fragment {
     }
 
     private void obtenerUbicacionUsuario() {
+        if (!isAdded() || getContext() == null) {
+            Log.w(TAG, "obtenerUbicacionUsuario: Fragmento no adjunto o contexto nulo, cancelando obtención de ubicación");
+            return;
+        }
+        
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
         fusedLocationClient.getLastLocation()
             .addOnSuccessListener(location -> {
+                // Verificar que el fragmento siga adjunto antes de procesar la ubicación
+                if (!isAdded() || getContext() == null) {
+                    Log.w(TAG, "obtenerUbicacionUsuario: Fragmento no adjunto en callback de ubicación, cancelando procesamiento");
+                    return;
+                }
+                
                 if (location != null) {
                     userLat = location.getLatitude();
                     userLon = location.getLongitude();
@@ -279,6 +295,12 @@ public class ConsumerProductsFragment extends Fragment {
     }
 
     private void loadSampleProducts() {
+        // Verificar que el fragmento esté adjunto antes de continuar
+        if (!isAdded() || getContext() == null) {
+            Log.w(TAG, "loadSampleProducts: Fragmento no adjunto o contexto nulo, cancelando carga");
+            return;
+        }
+        
         Log.d(TAG, "loadSampleProducts: Iniciando carga de productos");
         try {
             ProductFilterRequest req = construirRequest();
@@ -286,26 +308,45 @@ public class ConsumerProductsFragment extends Fragment {
             ApiService apiService = RetrofitClient.getInstance(requireContext()).getRetrofit().create(ApiService.class);
             Log.d(TAG, "loadSampleProducts: ApiService creado, haciendo llamada");
             Call<List<Product>> call = apiService.getProductsOptimized(req);
-        call.enqueue(new Callback<List<Product>>() {
+            pendingApiCall = call; // Almacenar la llamada pendiente
+            call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                // Verificar que el fragmento siga adjunto antes de actualizar la UI
+                if (!isAdded() || getContext() == null) {
+                    Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en onResponse, cancelando actualización");
+                    return;
+                }
+                
                 if (response.isSuccessful() && response.body() != null) {
                     products.clear();
                     products.addAll(response.body());
                     adapter.submitList(new ArrayList<>(products));
                 } else {
-                    Toast.makeText(getContext(), "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                    showSafeToast("Error al cargar productos");
                 }
             }
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
+                // Verificar que el fragmento siga adjunto antes de mostrar el error
+                if (!isAdded() || getContext() == null) {
+                    Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en onFailure, cancelando actualización");
+                    return;
+                }
+                
                 Log.e(TAG, "loadSampleProducts: Error de red: " + t.getMessage(), t);
-                Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showSafeToast("Error de red: " + t.getMessage());
             }
         });
         } catch (Exception e) {
+            // Verificar que el fragmento siga adjunto antes de mostrar el error
+            if (!isAdded() || getContext() == null) {
+                Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en catch, cancelando actualización");
+                return;
+            }
+            
             Log.e(TAG, "loadSampleProducts: Error general: " + e.getMessage(), e);
-            Toast.makeText(getContext(), "Error al cargar productos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            showSafeToast("Error al cargar productos: " + e.getMessage());
         }
     }
 
@@ -401,38 +442,38 @@ public class ConsumerProductsFragment extends Fragment {
             @Override public void afterTextChanged(Editable s) {}
         });
 
-        // Listeners de filtros
-        filterDistance.setOnCheckedChangeListener((b, v) -> {
+        // Listeners de filtros para chips
+        filterDistance.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cartPrefs != null) {
-                cartPrefs.saveFilterDistance(v);
+                cartPrefs.saveFilterDistance(isChecked);
                 loadSampleProducts();
             }
         });
         
-        filterPrice.setOnCheckedChangeListener((b, v) -> {
+        filterPrice.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cartPrefs != null) {
-                cartPrefs.saveFilterPrice(v);
+                cartPrefs.saveFilterPrice(isChecked);
                 loadSampleProducts();
             }
         });
         
-        filterGlutenFree.setOnCheckedChangeListener((b, v) -> {
+        filterGlutenFree.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cartPrefs != null) {
-                cartPrefs.saveFilterGlutenFree(v);
+                cartPrefs.saveFilterGlutenFree(isChecked);
                 loadSampleProducts();
             }
         });
         
-        filterEco.setOnCheckedChangeListener((b, v) -> {
+        filterEco.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cartPrefs != null) {
-                cartPrefs.saveFilterEco(v);
+                cartPrefs.saveFilterEco(isChecked);
                 loadSampleProducts();
             }
         });
         
-        filterCategory.setOnCheckedChangeListener((b, v) -> {
+        filterCategory.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cartPrefs != null) {
-                cartPrefs.saveFilterCategory(v);
+                cartPrefs.saveFilterCategory(isChecked);
                 loadSampleProducts();
             }
         });
@@ -456,6 +497,13 @@ public class ConsumerProductsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d(TAG, "onDestroyView: Vista del fragmento destruida");
+        
+        // Cancelar llamada de API pendiente si existe
+        if (pendingApiCall != null && !pendingApiCall.isCanceled()) {
+            pendingApiCall.cancel();
+            pendingApiCall = null;
+            Log.d(TAG, "onDestroyView: Llamada de API pendiente cancelada");
+        }
     }
 
     @Override
@@ -468,5 +516,48 @@ public class ConsumerProductsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "onDetach: Fragmento desvinculado del contexto");
+    }
+
+    /**
+     * Muestra un mensaje de manera segura y elegante, evitando violaciones de StrictMode
+     */
+    private void showSafeToast(String message) {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
+        
+        // Usar Snackbar personalizado para una experiencia más elegante
+        try {
+            View rootView = getView();
+            if (rootView != null) {
+                Snackbar snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT);
+                
+                // Personalizar el Snackbar para que sea más compacto y elegante
+                snackbar.setAction("OK", v -> snackbar.dismiss());
+
+                // Aplicar estilo personalizado
+                View snackbarView = snackbar.getView();
+                if (snackbarView != null) {
+                    // Hacer el Snackbar más compacto y elegante
+                    snackbarView.setMinimumHeight(0);
+                    snackbarView.setPadding(16, 12, 16, 12);
+
+                    // Aplicar esquinas redondeadas
+                    snackbarView.setBackgroundResource(R.drawable.snackbar_background);
+
+                    // Centrar el texto y hacerlo más pequeño
+                    TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+                    if (textView != null) {
+                        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        textView.setTextSize(12); // Texto más pequeño y elegante
+                        textView.setTextColor(getResources().getColor(R.color.white));
+                    }
+                }
+                
+                snackbar.show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error al mostrar Snackbar: " + e.getMessage());
+        }
     }
 }

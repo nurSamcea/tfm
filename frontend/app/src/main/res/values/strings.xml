@@ -113,4 +113,7 @@
 
     <string name="error_empty_fields">Por favor, completa todos los campos</string>
 
+    <!-- Strings para la interfaz moderna del consumidor -->
+    <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+
 </resources>
