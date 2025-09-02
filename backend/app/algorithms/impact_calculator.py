@@ -26,10 +26,9 @@ class ImpactCalculator:
 
     # Porcentaje de apoyo local por tipo de proveedor
     LOCAL_SUPPORT_FACTORS = {
-        "productor_local": 1.0,  # 100% del valor va al productor local
-        "cooperativa": 0.8,      # 80% del valor va a la cooperativa local
-        "tienda_local": 0.6,     # 60% del valor se queda en la economía local
-        "distribuidor": 0.3      # 30% del valor se queda en la economía local
+        "farmer": 1.0,      # 100% del valor va al productor local
+        "supermarket": 0.6, # 60% del valor se queda en la economía local
+        "consumer": 0.0     # 0% del valor se queda en la economía local
     }
 
     # Factores de prevención de desperdicio por tipo de producto
@@ -74,7 +73,7 @@ class ImpactCalculator:
         # Calcular apoyo local
         local_factor = ImpactCalculator.LOCAL_SUPPORT_FACTORS.get(
             provider_type, 
-            ImpactCalculator.LOCAL_SUPPORT_FACTORS["distribuidor"]
+            ImpactCalculator.LOCAL_SUPPORT_FACTORS["farmer"]
         )
         local_support = product["price"] * quantity * local_factor
         
@@ -155,7 +154,7 @@ class ImpactCalculator:
         product_impacts = []
         
         for item in basket:
-            provider_type = provider_types.get(item["provider_id"], "distribuidor")
+            provider_type = provider_types.get(item["provider_id"], "farmer")
             impact = ImpactCalculator.calculate_product_impact(
                 product=item,
                 quantity=item["quantity"],

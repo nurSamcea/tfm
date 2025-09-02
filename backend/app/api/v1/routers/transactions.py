@@ -106,7 +106,7 @@ def create_transaction(tx: schemas.TransactionCreate, db: Session = Depends(get_
                     },
                     quantity=float(quantity),
                     distance_km=distance_km,
-                    provider_type=str(getattr(product.provider, "role", "distribuidor"))
+                    provider_type=str(getattr(product.provider, "role", "farmer"))
                 )
                 total_co2_saved += impact.co2_saved_kg
                 total_local_support += impact.local_support_eur

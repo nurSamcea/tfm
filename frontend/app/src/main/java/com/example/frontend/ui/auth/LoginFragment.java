@@ -16,9 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.frontend.MainActivity;
+import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
-import com.example.frontend.RegisterActivity;
 import com.example.frontend.api.AuthService;
 import com.example.frontend.api.LoginRequest;
 import com.example.frontend.api.LoginResponse;
@@ -163,13 +162,15 @@ public class LoginFragment extends Fragment {
     }
 
     private void navigateToMainActivity() {
-        Intent intent = new Intent(requireContext(), MainActivity.class);
+        Intent intent = new Intent(requireContext(), WelcomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
     private void navigateToRegister() {
-        Intent intent = new Intent(requireContext(), RegisterActivity.class);
-        startActivity(intent);
+        // Mostrar fragmento de registro en WelcomeActivity
+        if (getActivity() instanceof WelcomeActivity) {
+            ((WelcomeActivity) getActivity()).showRegisterFragment();
+        }
     }
 } 

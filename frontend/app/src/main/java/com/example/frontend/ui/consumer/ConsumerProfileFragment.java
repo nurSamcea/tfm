@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.frontend.MainActivity;
+import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
 import com.example.frontend.utils.SessionManager;
 
@@ -86,6 +86,7 @@ public class ConsumerProfileFragment extends Fragment {
             ImageView orderIcon = histOrders.findViewById(R.id.optionIcon);
             TextView orderText = histOrders.findViewById(R.id.optionText);
             if (orderIcon != null) orderIcon.setImageResource(R.drawable.ic_orders);
+            if (orderIcon != null) orderIcon.setImageResource(R.drawable.ic_orders);
             if (orderText != null) orderText.setText("Historial de Pedidos");
             
             histOrders.setOnClickListener(v -> {
@@ -112,8 +113,8 @@ public class ConsumerProfileFragment extends Fragment {
         Toast.makeText(requireContext(), "Cerrando sesión...", Toast.LENGTH_SHORT).show();
         
         // Cerrar sesión
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).logout();
+        if (getActivity() instanceof WelcomeActivity) {
+            ((WelcomeActivity) getActivity()).logout();
         }
     }
 } 

@@ -18,9 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.frontend.MainActivity;
+import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
-import com.example.frontend.LoginActivity;
 import com.example.frontend.api.AuthService;
 import com.example.frontend.api.RegisterRequest;
 import com.example.frontend.api.RegisterResponse;
@@ -78,7 +77,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setupRoleSpinner() {
-        String[] roles = {"consumer", "farmer", "retailer", "supermarket"};
+        String[] roles = {"consumer", "farmer", "supermarket"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
@@ -190,8 +189,9 @@ public class RegisterFragment extends Fragment {
     }
 
     private void navigateToLogin() {
-        Intent intent = new Intent(requireContext(), LoginActivity.class);
-        startActivity(intent);
-        requireActivity().finish(); // Cerrar la actividad de registro
+        // Mostrar fragmento de login en WelcomeActivity
+        if (getActivity() instanceof WelcomeActivity) {
+            ((WelcomeActivity) getActivity()).showLoginFragment();
+        }
     }
 } 

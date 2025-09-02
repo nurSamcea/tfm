@@ -7,9 +7,7 @@ import enum
 class UserRoleEnum(enum.Enum):
     consumer = "consumer"
     farmer = "farmer"
-    retailer = "retailer"
     supermarket = "supermarket"
-    admin = "admin"
 
 class User(Base):
     """Modelo de usuario para productores, minoristas, supermercados y consumidores."""

@@ -114,7 +114,7 @@ def get_product_traceability(qr_hash: str, db: Session = Depends(get_db)):
             },
             "certifications": {
                 "eco_certified": product.is_eco,
-                "local_product": producer and producer.role in ["farmer", "local_producer"] if producer else False,
+                "local_product": producer and producer.role in ["farmer"] if producer else False,
                 "organic": product.certifications.get("organic", False) if product.certifications else False
             },
             "traceability_events": traceability_events,

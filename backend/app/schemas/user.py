@@ -6,7 +6,7 @@ from datetime import datetime
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    role: Literal['consumer', 'retailer', 'supermarket', 'admin']
+    role: Literal['consumer', 'farmer', 'supermarket']
     entity_name: Optional[str]
     location_lat: Optional[float]
     location_lon: Optional[float]
@@ -19,7 +19,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     name: Optional[str]
-    role: Optional[Literal['consumer', 'retailer', 'supermarket', 'admin']]
+    role: Optional[Literal['consumer', 'farmer', 'supermarket']]
     entity_name: Optional[str]
     location_lat: Optional[float]
     location_lon: Optional[float]
