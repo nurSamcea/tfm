@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="8dp"
         android:gravity="center_vertical">
 
         <!-- Imagen del producto -->
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="5dp">
 
             <!-- Precio prominente -->
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="€2.50"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textColor="@color/colorOrganic"
                 android:fontFamily="@font/manrope_bold"
                 android:layout_marginBottom="4dp" />
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tomates Cherry"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:fontFamily="@font/manrope_bold"
                 android:layout_marginBottom="4dp" />
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:text="Recolectado hoy"
                 android:textColor="#666666"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:fontFamily="@font/manrope_regular" />
 
         </LinearLayout>
