@@ -48,7 +48,7 @@
 
         </LinearLayout>
 
-        <!-- Botón de estadísticas -->
+        <!-- Botón de filtro -->
         <ImageButton
             android:id="@+id/filter_button"
             android:layout_width="48dp"

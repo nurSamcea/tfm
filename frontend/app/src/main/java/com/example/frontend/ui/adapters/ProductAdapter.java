@@ -57,9 +57,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.nameTextView.setText(product.getName());
-        holder.descriptionTextView.setText(product.getDescription());
         holder.priceTextView.setText(String.format("€%.2f", product.getPrice()));
         holder.stockTextView.setText(String.format("Stock: %d", product.getStock()));
+        
+        // Configurar descuento (ejemplo: 20% OFF)
+        holder.discountTextView.setText("20% OFF");
+        
         // Imagen de ejemplo
         holder.productImageView.setImageResource(R.drawable.ic_products);
         // Selección visual
@@ -97,18 +100,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
-        TextView descriptionTextView;
         TextView priceTextView;
         TextView stockTextView;
+        TextView discountTextView;
         Button addToCartButton;
         ImageView productImageView;
 
         ProductViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.productName);
-            descriptionTextView = itemView.findViewById(R.id.productDescription);
             priceTextView = itemView.findViewById(R.id.productPrice);
             stockTextView = itemView.findViewById(R.id.productStock);
+            discountTextView = itemView.findViewById(R.id.productDiscount);
             addToCartButton = itemView.findViewById(R.id.addToCartButton);
             productImageView = itemView.findViewById(R.id.imageViewProduct);
         }

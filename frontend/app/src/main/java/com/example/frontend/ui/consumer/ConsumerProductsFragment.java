@@ -120,9 +120,9 @@ public class ConsumerProductsFragment extends Fragment {
 
         // Configurar el toggle de filtros desde el icono de la barra de búsqueda
         HorizontalScrollView filtersScroll = view.findViewById(R.id.filters_scroll);
-        com.google.android.material.textfield.TextInputLayout searchLayout = view.findViewById(R.id.search_layout);
-        if (searchLayout != null) {
-            searchLayout.setEndIconOnClickListener(v -> {
+        ImageButton filterButton = view.findViewById(R.id.filter_button);
+        if (filterButton != null) {
+            filterButton.setOnClickListener(v -> {
                 if (filtersScroll.getVisibility() == View.GONE) {
                     filtersScroll.setVisibility(View.VISIBLE);
                 } else {

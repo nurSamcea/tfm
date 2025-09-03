@@ -77,35 +77,56 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:singleSelection="false"
-            app:selectionRequired="false">
+            app:selectionRequired="false"
+            android:padding="2dp">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_estado_pendiente"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pendientes" />
+                android:layout_height="32dp"
+                android:text="Pendientes"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_estado_entregado"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Entregados" />
+                android:layout_height="32dp"
+                android:text="Entregados"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_fecha_reciente"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Más recientes" />
+                android:layout_height="32dp"
+                android:text="Más recientes"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_fecha_antigua"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Más antiguos" />
+                android:layout_height="32dp"
+                android:text="Más antiguos"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 

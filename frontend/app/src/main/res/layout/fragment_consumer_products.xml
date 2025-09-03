@@ -1,16 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
 
-    <!-- Header elegante y compacto -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Barra de búsqueda al estilo farmer -->
+    <LinearLayout
+        android:id="@+id/search_bar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="2dp">
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/search_bar_background"
+        android:layout_marginBottom="8dp">
+
+        <!-- Campo de búsqueda -->
+        <LinearLayout
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_field"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"
+                android:tint="@android:color/white" />
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/manrope_regular"
+                android:hint="Buscar productos..."
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- Botón de filtros -->
+        <ImageButton
+            android:id="@+id/filter_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_filters"
+            android:background="@drawable/bg_search_field"
+            android:tint="@android:color/white"
+            android:contentDescription="Filtros" />
+
+    </LinearLayout>
+
+    <!-- Filtros elegantes con chips -->
+    <HorizontalScrollView
+        android:id="@+id/filters_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:scrollbars="none"
+        android:layout_marginBottom="20dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="false"
+            android:padding="2dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="📍 Distancia"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_price"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="💰 Precio"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_gluten_free"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="🌾 Sin gluten"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_eco"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="🌱 Ecológico"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_category"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="📂 Categoría"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                app:chipBackgroundColor="@android:color/white"
+                app:chipStrokeColor="#E0E0E0"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="16dp" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Lista de productos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/products_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:padding="4dp"
+        android:clipToPadding="false" />
+
+    <!-- Sección del carrito elegante -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,245 +164,68 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Barra de búsqueda refinada -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/search_layout"
+            <!-- Header del carrito compacto -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="@color/text_secondary"
-                app:endIconDrawable="@drawable/ic_filters"
-                app:endIconTint="@color/primary"
-                app:endIconMode="custom"
-                app:boxBackgroundColor="@color/surface"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
-                android:hint="Buscar productos...">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/search_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:textSize="14sp"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_cart"
+                    android:tint="@color/primary"
+                    android:layout_marginEnd="8dp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tu Carrito"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="@font/manrope_bold" />
 
-            <!-- Filtros elegantes con chips -->
-            <HorizontalScrollView
-                android:id="@+id/filters_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:scrollbars="none">
-
-                <com.google.android.material.chip.ChipGroup
+                <TextView
+                    android:id="@+id/cart_total_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleSelection="false"
-                    android:padding="2dp">
+                    android:text="Total: 0,00 €"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/manrope_bold" />
+            </LinearLayout>
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/filter_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="📍 Distancia"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/chip_background"
-                        app:chipStrokeColor="@color/primary"
-                        app:chipStrokeWidth="0.5dp"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/filter_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="💰 Precio"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/chip_background"
-                        app:chipStrokeColor="@color/primary"
-                        app:chipStrokeWidth="0.5dp"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/filter_gluten_free"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="🌾 Sin gluten"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/chip_background"
-                        app:chipStrokeColor="@color/primary"
-                        app:chipStrokeWidth="0.5dp"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/filter_eco"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="🌱 Ecológico"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/chip_background"
-                        app:chipStrokeColor="@color/primary"
-                        app:chipStrokeWidth="0.5dp"
-                        app:chipCornerRadius="16dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/filter_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="📂 Categoría"
-                        android:textSize="12sp"
-                        app:chipBackgroundColor="@color/chip_background"
-                        app:chipStrokeColor="@color/primary"
-                        app:chipStrokeWidth="0.5dp"
-                        app:chipCornerRadius="16dp" />
-
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Contenido principal con scroll elegante -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Sección de productos elegante -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Lista del carrito compacta -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cart_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
+                android:background="@drawable/modern_container_background"
+                android:padding="8dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🍎 Productos Disponibles"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/products_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="280dp"
-                        android:background="@drawable/modern_container_background"
-                        android:padding="8dp"
-                        android:clipToPadding="false" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Sección del carrito elegante -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Botón de finalizar compra elegante -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_finalize_cart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="3dp"
-                app:cardBackgroundColor="@color/white">
+                android:layout_height="48dp"
+                android:text="Finalizar Compra"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="24dp"
+                app:backgroundTint="@color/primary"
+                android:textColor="@android:color/white"
+                app:elevation="4dp"
+                app:icon="@drawable/ic_cart"
+                app:iconGravity="textStart"
+                android:fontFamily="@font/manrope_bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <!-- Header del carrito compacto -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_cart"
-                            android:tint="@color/primary"
-                            android:layout_marginEnd="6dp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="🛒 Tu Carrito"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/cart_total_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total: 0,00 €"
-                            android:textColor="@color/primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Lista del carrito compacta -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/cart_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="140dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/modern_container_background"
-                        android:padding="4dp" />
-
-                    <!-- Botón de finalizar compra elegante -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_finalize_cart"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:text="🛒 Finalizar Compra"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="22dp"
-                        app:backgroundTint="@color/primary"
-                        android:textColor="@color/white"
-                        app:elevation="3dp"
-                        app:icon="@drawable/ic_cart"
-                        app:iconGravity="textStart" />
-
-                    <!-- Botón de prueba elegante -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_test_cart"
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:text="🧪 Test: Añadir Producto de Prueba"
-                        android:textSize="11sp"
-                        android:layout_marginTop="6dp"
-                        app:cornerRadius="18dp"
-                        app:backgroundTint="@color/accent"
-                        android:textColor="@color/white"
-                        app:icon="@drawable/ic_test"
-                        app:iconGravity="textStart"
-                        style="@style/Widget.Material3.Button.OutlinedButton" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
