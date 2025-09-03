@@ -23,10 +23,6 @@ public class SupermarketProfileFragment extends Fragment {
         Log.d(TAG, "onCreate: Iniciando la aplicación");
         View view = inflater.inflate(R.layout.fragment_supermarket_profile, container, false);
 
-        // Título
-        TextView profileTitle = view.findViewById(R.id.profileTitle);
-        profileTitle.setText("Supermercado");
-
         // Nombre de usuario (puedes cambiarlo por el nombre real del usuario)
         TextView profileName = view.findViewById(R.id.profileName);
         profileName.setText("Ensigna");

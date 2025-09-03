@@ -32,10 +32,6 @@ public class ConsumerProfileFragment extends Fragment {
         // Inicializar SessionManager
         sessionManager = new SessionManager(requireContext());
 
-        // Título
-        TextView profileTitle = view.findViewById(R.id.profileTitle);
-        profileTitle.setText("Perfil de Usuario");
-
         // Información del usuario desde la sesión
         TextView profileName = view.findViewById(R.id.profileName);
         String userName = sessionManager.getUserName();

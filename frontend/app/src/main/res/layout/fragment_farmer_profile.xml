@@ -1,157 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="0dp"
+    android:paddingTop="24dp">
 
+    <!-- Botón volver -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        android:visibility="gone"
+        android:contentDescription="Volver"
+        android:tint="@android:color/black"/>
+
+    <!-- Foto y nombre -->
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="0dp">
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp">
 
-        <!-- Botón volver -->
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
-            android:visibility="gone"
-            android:contentDescription="Volver"
-            android:tint="@android:color/black"/>
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@drawable/img_profile_farmer"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            android:backgroundTint="@android:color/black" />
 
-        <!-- Título -->
-        <TextView
-            android:id="@+id/profileTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Perfil"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/manrope_regular"/>
-
-
-        <!-- Foto y nombre -->
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:paddingBottom="16dp">
-
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/img_profile_farmer"
-                android:background="@drawable/circle_background"
-                android:scaleType="centerCrop"
-                android:clipToOutline="true" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="16dp">
-
-                <TextView
-                    android:id="@+id/profileName"
-                    android:text="Nombre Apellido"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/manrope_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:id="@+id/profileView"
-                    android:text="Ver perfil"
-                    android:textColor="@color/gray"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/manrope_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:text="Invita a tus amigos y gana puntos"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/manrope_bold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:src="@drawable/ic_gift"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Ajustes -->
-        <TextView
-            android:text="Ajustes"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/manrope_bold"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- Opciones de ajustes -->
-        <LinearLayout
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:paddingStart="16dp">
 
-            <include layout="@layout/item_profile_option" android:id="@+id/optionPersonalInfo"/>
-            <include layout="@layout/item_profile_option" android:id="@+id/optionOrders"/>
-            <include layout="@layout/item_profile_option" android:id="@+id/optionCertifications"/>
+            <TextView
+                android:id="@+id/profileName"
+                android:text="Nombre Apellido"
+                android:textSize="20sp"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-            <Button
-                android:id="@+id/buttonBackFarmerToMain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Volver a inicio"
-                android:layout_marginTop="32dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/profileEmail"
+                android:text="agricultor@email.com"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:fontFamily="@font/manrope_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+    <!-- Ajustes -->
+    <TextView
+        android:text="Ajustes"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/manrope_bold"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Opciones de ajustes -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <include layout="@layout/item_profile_option" android:id="@+id/optionPersonalInfo"/>
+        <include layout="@layout/item_profile_option" android:id="@+id/optionOrders"/>
+        <include layout="@layout/item_profile_option" android:id="@+id/optionCertifications"/>
+
+    </LinearLayout>
+
+    <!-- Espaciador para empujar los botones hacia abajo -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="50dp" />
+
+    <!-- Botones en horizontal al final -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp">
+
+        <!-- Botón de logout -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_button"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Cerrar Sesión"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/teal_700"
+            android:layout_marginEnd="8dp"
+            app:cornerRadius="12dp"
+            android:fontFamily="@font/manrope_bold"
+            android:textSize="14sp" />
+
+        <!-- Botón de volver -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonBackFarmerToMain"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Volver a inicio"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorOrganic"
+            android:layout_marginStart="8dp"
+            app:cornerRadius="12dp"
+            android:fontFamily="@font/manrope_bold"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
