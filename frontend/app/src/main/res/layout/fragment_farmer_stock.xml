@@ -5,16 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+    <!-- Título de la sección -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mi Inventario"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/manrope_bold"
+        android:layout_marginBottom="20dp" />
 
     <LinearLayout
         android:id="@+id/search_bar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:padding="16dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="#FFFFFF"> <!-- Color morado del fondo -->
+        android:background="@drawable/search_bar_background"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
 
         <!-- Campo de búsqueda -->
         <LinearLayout
@@ -38,8 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:fontFamily="@font/roboto_regular"
-                android:text="Search"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Buscar productos..."
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
@@ -50,27 +65,29 @@
             android:id="@+id/filter_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:src="@drawable/ic_filters"
             android:background="@drawable/bg_search_field"
             android:tint="@android:color/white"
-            android:contentDescription="Stats" />
+            android:contentDescription="Filtros" />
 
-        <!-- Botón de tarjeta -->
+        <!-- Botón de agregar producto -->
         <ImageButton
             android:id="@+id/add_product_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:background="@drawable/bg_search_field"
             android:src="@drawable/ic_add"
             android:tint="@android:color/white"
-            android:contentDescription="Card" />
+            android:contentDescription="Agregar producto" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_stock"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
 
 </LinearLayout>

@@ -29,14 +29,16 @@ public class FarmerStockAdapter extends RecyclerView.Adapter<FarmerStockAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textTitle, textInfo, textPlus;
+        TextView textTitle, textPrice, textDate, textDiscount, textStatus;
         ImageView imageFood;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.text_title);
-            textInfo = itemView.findViewById(R.id.text_info);
-            textPlus = itemView.findViewById(R.id.text_plus);
+            textPrice = itemView.findViewById(R.id.text_price);
+            textDate = itemView.findViewById(R.id.text_date);
+            textDiscount = itemView.findViewById(R.id.text_discount);
+            textStatus = itemView.findViewById(R.id.text_status);
             imageFood = itemView.findViewById(R.id.image_food);
         }
     }
@@ -53,40 +55,66 @@ public class FarmerStockAdapter extends RecyclerView.Adapter<FarmerStockAdapter.
     public void onBindViewHolder(@NonNull FarmerStockAdapter.ViewHolder holder, int position) {
         FarmerProduct product = productList.get(position);
 
+        // Configurar nombre del producto
         holder.textTitle.setText(product.getName());
-        holder.textInfo.setText("Stock: " + product.getStock() + " · " + product.getPrice());
-
-        // Lógica de color y texto para la fecha de recolección
+        
+        // Configurar precio
+        holder.textPrice.setText("€" + product.getPrice());
+        
+        // Configurar fecha de recolección
         String harvestDate = product.getHarvestDate();
         String todayStr = sdf.format(new Date());
-        int color;
-        String plusText;
+        String dateText;
+        int statusColor;
+        String statusText;
+        
         try {
             Date date = sdf.parse(harvestDate);
             Date today = sdf.parse(todayStr);
             if (date != null && today != null) {
                 if (date.before(today)) {
-                    color = Color.parseColor("#2E7D32"); // verde
-                    plusText = "Recolectado " + harvestDate;
+                    dateText = "Recolectado " + harvestDate;
+                    statusColor = Color.parseColor("#4CAF50"); // verde
+                    statusText = "Disponible";
                 } else if (date.equals(today)) {
-                    color = Color.parseColor("#7B5EFF"); // morado
-                    plusText = "En recolección " + harvestDate;
+                    dateText = "En recolección " + harvestDate;
+                    statusColor = Color.parseColor("#2196F3"); // azul
+                    statusText = "Procesando";
                 } else {
-                    color = Color.parseColor("#FF9800"); // naranja
-                    plusText = "Pendiente de recolectar " + harvestDate;
+                    dateText = "Pendiente de recolectar " + harvestDate;
+                    statusColor = Color.parseColor("#FF9800"); // naranja
+                    statusText = "Pendiente";
                 }
             } else {
-                color = Color.GRAY;
-                plusText = "Fecha desconocida";
+                dateText = "Fecha desconocida";
+                statusColor = Color.GRAY;
+                statusText = "Indefinido";
             }
         } catch (ParseException e) {
-            color = Color.GRAY;
-            plusText = "Fecha inválida";
+            dateText = "Fecha inválida";
+            statusColor = Color.GRAY;
+            statusText = "Error";
         }
-        holder.textPlus.setText(plusText);
-        holder.textPlus.setTextColor(color);
-
-        // Lógica de color para el stock
+        
+        holder.textDate.setText(dateText);
+        holder.textStatus.setText(statusText);
+        holder.textStatus.setTextColor(Color.WHITE);
+        
+        // Configurar descuento (ejemplo: 20% OFF)
+        holder.textDiscount.setText("20% OFF");
+        
+        // Configurar color de fondo del estado
+        if (statusText.equals("Disponible")) {
+            holder.textStatus.setBackgroundResource(R.drawable.status_available_background);
+        } else if (statusText.equals("Procesando")) {
+            holder.textStatus.setBackgroundResource(R.drawable.status_processing_background);
+        } else if (statusText.equals("Pendiente")) {
+            holder.textStatus.setBackgroundResource(R.drawable.status_out_of_stock_background);
+        } else {
+            holder.textStatus.setBackgroundResource(R.drawable.status_out_of_stock_background);
+        }
+        
+        // Configurar color del precio según stock
         String stockStr = product.getStock().toLowerCase();
         boolean lowStock = false;
         if (stockStr.contains("kg")) {
@@ -94,22 +122,22 @@ public class FarmerStockAdapter extends RecyclerView.Adapter<FarmerStockAdapter.
                 float kg = Float.parseFloat(stockStr.replace("kg", "").replace(",", ".").trim());
                 if (kg < 5f) lowStock = true;
             } catch (Exception ignored) {}
-        } else if (stockStr.contains("caja")) {
-            try {
-                String num = stockStr.replace("cajas", "").replace("caja", "").trim();
-                int cajas = Integer.parseInt(num);
-                if (cajas < 5) lowStock = true;
-            } catch (Exception ignored) {}
-        }
+                    } else if (stockStr.contains("caja")) {
+                try {
+                    String num = stockStr.replace("cajas", "").replace("caja", "").trim();
+                    int cajas = Integer.parseInt(num);
+                    if (cajas < 5) lowStock = true;
+                } catch (Exception ignored) {}
+            }
+        
         if (lowStock) {
-            holder.textInfo.setTextColor(Color.parseColor("#B61515")); // rojo
+            holder.textPrice.setTextColor(Color.parseColor("#F44336")); // rojo para stock bajo
         } else {
-            holder.textInfo.setTextColor(Color.parseColor("#222222")); // color normal
+            holder.textPrice.setTextColor(Color.parseColor("#4CAF50")); // verde para stock normal
         }
 
-        // Puedes cambiar esto por Glide/Picasso si tienes imágenes reales
+        // Configurar imagen del producto
         holder.imageFood.setImageResource(product.getImageResId());
-
     }
 
     @Override
