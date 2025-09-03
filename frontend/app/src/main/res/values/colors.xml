@@ -75,6 +75,9 @@
     <color name="colorEco">@color/ecomarket_green</color>
     <color name="colorLocal">@color/ecomarket_orange</color>
     <color name="colorOrganic">@color/ecomarket_light_green</color>
+
+    <!-- Verde para chips (diferente al del buscador) -->
+    <color name="chip_green">#66BB6A</color>
     
     <!-- Colores adicionales para la pantalla de bienvenida -->
     <color name="accent_light">#FFE0B2</color>
