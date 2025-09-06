@@ -100,9 +100,15 @@ def get_product_categories():
 def get_all_products(
     db: Session = Depends(database.get_db),
     search: str = None,
-    provider_role: str = None
+    provider_role: str = None,
+    available_only: bool = True
 ):
     query = db.query(models.Product)
+    
+    # Filtrar solo productos disponibles (con stock > 0)
+    if available_only:
+        query = query.filter(models.Product.stock_available > 0)
+    
     if search:
         query = query.filter(
             (models.Product.name.ilike(f"%{search}%")) |
@@ -110,6 +116,7 @@ def get_all_products(
         )
     if provider_role:
         query = query.join(models.User).filter(models.User.role == provider_role)
+    
     return query.all()
 
 @router.get("/{product_id}", response_model=schemas.ProductRead)
@@ -234,8 +241,9 @@ def get_products_optimized(
     db: Session = Depends(database.get_db)
 ):
     # 1. Obtener productos base (join con User para tener coordenadas del proveedor)
-    # Solo productos visibles para consumidores (temporalmente comentado hasta añadir columna is_hidden)
+    # Solo productos visibles para consumidores y con stock disponible
     query = db.query(models.Product).join(models.User, models.Product.provider_id == models.User.id)
+    query = query.filter(models.Product.stock_available > 0)  # Solo productos con stock
     # query = query.filter(models.Product.is_hidden == False)  # Descomentar cuando se añada la columna
     
     if request.search:

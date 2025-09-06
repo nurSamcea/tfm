@@ -30,7 +30,6 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
     public interface OnProductActionListener {
         void onAddToCart(Product product);
         void onViewDetails(Product product);
-        void onContactFarmer(Product product);
     }
 
     public SupermarketProductAdapter(List<Product> products) {
@@ -67,9 +66,9 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView productImage;
-        private TextView productName, productPrice, productStock, productDistance, productFarmer;
-        private Chip chipEco, chipSustainable;
-        private MaterialButton btnAddToCart, btnViewDetails, btnContactFarmer;
+        private TextView productName, productPrice, productStock;
+        private Chip chipSustainable;
+        private MaterialButton btnAddToCart, btnViewDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,13 +76,9 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
             productStock = itemView.findViewById(R.id.product_stock);
-            productDistance = itemView.findViewById(R.id.product_distance);
-            productFarmer = itemView.findViewById(R.id.product_farmer);
-            chipEco = itemView.findViewById(R.id.chip_eco);
             chipSustainable = itemView.findViewById(R.id.chip_sustainable);
             btnAddToCart = itemView.findViewById(R.id.btn_add_to_cart);
             btnViewDetails = itemView.findViewById(R.id.btn_view_details);
-            btnContactFarmer = itemView.findViewById(R.id.btn_contact_farmer);
 
             // Configurar listeners
             btnAddToCart.setOnClickListener(v -> {
@@ -95,12 +90,6 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
             btnViewDetails.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onViewDetails(products.get(getAdapterPosition()));
-                }
-            });
-
-            btnContactFarmer.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onContactFarmer(products.get(getAdapterPosition()));
                 }
             });
         }
@@ -119,22 +108,6 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
                 stockValue = product.getStock();
             }
             productStock.setText("Stock: " + String.format("%.0f", stockValue));
-            
-            // Distancia
-            if (product.getDistance_km() != null) {
-                productDistance.setText(String.format("Distancia: %.1f km", product.getDistance_km()));
-            } else {
-                productDistance.setText("Distancia: -- km");
-            }
-            
-            // Información del agricultor
-            if (product.getProviderId() != null) {
-                productFarmer.setText("Agricultor ID: " + product.getProviderId());
-            } else if (product.getFarmerId() != null) {
-                productFarmer.setText("Agricultor ID: " + product.getFarmerId());
-            } else {
-                productFarmer.setText("Agricultor: --");
-            }
 
             // Mostrar imagen del producto si existe
             if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
@@ -160,24 +133,16 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
                 productImage.setImageResource(R.drawable.ic_product_placeholder);
             }
 
-            // Configurar chips de sostenibilidad
-            if (product.getIsEco() != null && product.getIsEco()) {
-                chipEco.setVisibility(View.VISIBLE);
-                chipEco.setText("Ecológico");
-            } else {
-                chipEco.setVisibility(View.GONE);
-            }
-
+            // Configurar chip de sostenibilidad
             if (product.isSustainable() || (product.getScore() != null && product.getScore() > 70)) {
                 chipSustainable.setVisibility(View.VISIBLE);
-                chipSustainable.setText("Sostenible");
+                if (product.getScore() != null) {
+                    chipSustainable.setText("Sostenible (" + String.format("%.0f", product.getScore()) + "%)");
+                } else {
+                    chipSustainable.setText("Sostenible");
+                }
             } else {
                 chipSustainable.setVisibility(View.GONE);
-            }
-
-            // Mostrar score de sostenibilidad si está disponible
-            if (product.getScore() != null) {
-                chipSustainable.setText("Sostenible (" + String.format("%.0f", product.getScore()) + "%)");
             }
         }
     }

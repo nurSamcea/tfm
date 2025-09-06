@@ -1,4 +1,4 @@
-package com.example.frontend.ui.farmer;
+package com.example.frontend.ui.consumer;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,15 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.model.FarmerOrder;
+import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.models.Transaction;
-import com.example.frontend.ui.adapters.FarmerOrderAdapter;
+import com.example.frontend.ui.adapters.ConsumerOrderAdapter;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.network.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,13 +30,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FarmerOrdersFragment extends Fragment {
-    private static final String TAG = "FarmerOrdersFragment";
+public class ConsumerOrdersFragment extends Fragment {
+    private static final String TAG = "ConsumerOrdersFragment";
 
     private RecyclerView recyclerView;
-    private FarmerOrderAdapter adapter;
-    private List<FarmerOrder> orderList;
-    private List<FarmerOrder> allOrders;
+    private ConsumerOrderAdapter adapter;
+    private List<ConsumerOrder> orderList;
+    private List<ConsumerOrder> allOrders;
     private SessionManager sessionManager;
     
     // Botones de filtro de estado
@@ -48,8 +47,8 @@ public class FarmerOrdersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: Iniciando FarmerOrdersFragment");
-        View view = inflater.inflate(R.layout.fragment_farmer_orders, container, false);
+        Log.d(TAG, "onCreateView: Iniciando ConsumerOrdersFragment");
+        View view = inflater.inflate(R.layout.fragment_consumer_orders, container, false);
 
         initializeViews(view);
         setupRecyclerView();
@@ -71,13 +70,13 @@ public class FarmerOrdersFragment extends Fragment {
         filterInProgress = view.findViewById(R.id.filter_in_progress);
         filterDelivered = view.findViewById(R.id.filter_delivered);
         filterCancelled = view.findViewById(R.id.filter_cancelled);
-
+        
         orderList = new ArrayList<>();
         allOrders = new ArrayList<>();
     }
 
     private void setupRecyclerView() {
-        adapter = new FarmerOrderAdapter(orderList, this::showOrderDetails);
+        adapter = new ConsumerOrderAdapter(orderList, this::showOrderDetails);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -99,8 +98,8 @@ public class FarmerOrdersFragment extends Fragment {
         if ("all".equals(status)) {
             orderList.addAll(allOrders);
         } else {
-            for (FarmerOrder order : allOrders) {
-                if (order.getStatus().toLowerCase().contains(status.toLowerCase())) {
+            for (ConsumerOrder order : allOrders) {
+                if (order.getStatus().name().toLowerCase().contains(status.toLowerCase())) {
                     orderList.add(order);
                 }
             }
@@ -149,21 +148,21 @@ public class FarmerOrdersFragment extends Fragment {
     }
 
     private void loadOrders() {
-        Log.d(TAG, "loadOrders: Cargando pedidos del agricultor");
+        Log.d(TAG, "loadOrders: Cargando pedidos del consumidor");
         
         allOrders.clear();
         
-        // Obtener ID del agricultor desde la sesión
-        Integer farmerId = sessionManager.getUserId();
-        if (farmerId == null) {
-            Log.e(TAG, "No se pudo obtener el ID del agricultor");
-            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del agricultor", Toast.LENGTH_SHORT).show();
+        // Obtener ID del consumidor desde la sesión
+        Integer consumerId = sessionManager.getUserId();
+        if (consumerId == null) {
+            Log.e(TAG, "No se pudo obtener el ID del consumidor");
+            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del consumidor", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Cargar pedidos reales desde la API
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        Call<List<Transaction>> call = api.getSellerOrders(farmerId, "farmer");
+        Call<List<Transaction>> call = api.getConsumerOrders(consumerId);
         
         call.enqueue(new Callback<List<Transaction>>() {
             @Override
@@ -172,24 +171,33 @@ public class FarmerOrdersFragment extends Fragment {
                     allOrders.clear();
                     
                     for (Transaction transaction : response.body()) {
-                        // Convertir Transaction a FarmerOrder
-                        List<String> products = new ArrayList<>();
-                        // orderDetails es un String JSON, por ahora usamos datos básicos
-                        products.add("Productos del pedido");
-                        
-                        FarmerOrder order = new FarmerOrder(
-                            transaction.getBuyerName() != null ? transaction.getBuyerName() : "Comprador " + transaction.getBuyerId(),
-                            products,
-                            transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
-                            String.format("%.2f €", transaction.getTotalPrice()),
-                            transaction.getStatus()
+                        // Convertir Transaction a ConsumerOrder
+                        ConsumerOrder order = new ConsumerOrder(
+                            String.valueOf(transaction.getId()),
+                            String.valueOf(transaction.getBuyerId()),
+                            String.valueOf(transaction.getSellerId())
                         );
+                        
+                        // Configurar detalles del pedido
+                        order.setOrderDate(transaction.getCreatedAt());
+                        order.setTotalAmount(transaction.getTotalPrice());
+                        order.setDeliveryAddress(transaction.getDeliveryAddress());
+                        order.setPaymentMethod(transaction.getPaymentMethod());
+                        
+                        // Convertir estado
+                        ConsumerOrder.OrderStatus status = convertTransactionStatus(transaction.getStatus());
+                        order.setStatus(status);
+                        
+                        // Convertir items del pedido
+                        // orderDetails es un String JSON, por ahora lo omitimos
+                        // TODO: Implementar parsing de JSON si es necesario
+                        
                         allOrders.add(order);
                     }
                     
                     // Aplicar filtro actual
                     filterByStatus(currentStatusFilter);
-                    Log.d(TAG, "Pedidos del agricultor cargados: " + allOrders.size());
+                    Log.d(TAG, "Pedidos del consumidor cargados: " + allOrders.size());
                 } else {
                     Log.e(TAG, "Error al cargar pedidos: " + response.code());
                     Toast.makeText(getContext(), "Error al cargar pedidos", Toast.LENGTH_SHORT).show();
@@ -204,7 +212,32 @@ public class FarmerOrdersFragment extends Fragment {
         });
     }
 
-    private void showOrderDetails(FarmerOrder order) {
-        new FarmerOrderDetailsDialogFragment(order).show(getParentFragmentManager(), "details");
+    private ConsumerOrder.OrderStatus convertTransactionStatus(String status) {
+        if (status == null) return ConsumerOrder.OrderStatus.PENDING;
+        
+        switch (status.toLowerCase()) {
+            case "pending":
+                return ConsumerOrder.OrderStatus.PENDING;
+            case "in_progress":
+                return ConsumerOrder.OrderStatus.IN_TRANSIT;
+            case "delivered":
+                return ConsumerOrder.OrderStatus.DELIVERED;
+            case "cancelled":
+                return ConsumerOrder.OrderStatus.CANCELLED;
+            case "completed":
+                return ConsumerOrder.OrderStatus.DELIVERED; // Mapear completed a delivered
+            default:
+                return ConsumerOrder.OrderStatus.PENDING;
+        }
+    }
+
+    private void showOrderDetails(ConsumerOrder order) {
+        Toast.makeText(getContext(), 
+            "Pedido #" + order.getId() + "\n" +
+            "Vendedor: " + order.getSellerId() + "\n" +
+            "Fecha: " + order.getOrderDate() + "\n" +
+            "Total: " + String.format("%.2f €", order.getTotalAmount()) + "\n" +
+            "Estado: " + order.getStatus().name(),
+            Toast.LENGTH_LONG).show();
     }
 }

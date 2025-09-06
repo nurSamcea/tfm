@@ -159,17 +159,6 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Productos disponibles"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:fontFamily="@font/manrope_bold"
-            android:padding="8dp"
-            android:background="@color/background_light" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_products"
             android:layout_width="match_parent"
@@ -213,7 +202,7 @@
                 android:text="Carrito de compras"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/colorPrimaryVariant"
                 android:fontFamily="@font/manrope_bold" />
 
             <TextView

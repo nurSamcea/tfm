@@ -17,11 +17,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
 import com.example.frontend.model.SupermarketOrder;
+import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.SupermarketOrderAdapter;
+import com.example.frontend.api.ApiService;
+import com.example.frontend.network.ApiClient;
+import com.example.frontend.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SupermarketOrdersFragment extends Fragment {
     private static final String TAG = "SupermarketOrdersFragment";
@@ -30,6 +39,7 @@ public class SupermarketOrdersFragment extends Fragment {
     private SupermarketOrderAdapter adapter;
     private List<SupermarketOrder> orderList;
     private List<SupermarketOrder> allOrders;
+    private SessionManager sessionManager;
     
     // Tabs
     private Button tabSuppliers, tabClients;
@@ -57,6 +67,9 @@ public class SupermarketOrdersFragment extends Fragment {
 
     private void initializeViews(View view) {
         recyclerView = view.findViewById(R.id.recycler_orders);
+        
+        // Inicializar SessionManager
+        sessionManager = new SessionManager(requireContext());
         
         // Tabs
         tabSuppliers = view.findViewById(R.id.tab_suppliers);
@@ -198,81 +211,112 @@ public class SupermarketOrdersFragment extends Fragment {
     }
 
     private void loadSupplierOrders() {
-        // Pedidos realizados a proveedores (agricultores) desde la pestaña de búsqueda
-        allOrders.add(new SupermarketOrder(
-            "Agricultor Juan Pérez",
-            Arrays.asList("Tomates Ecológicos (50kg)", "Lechuga Romana (30uds)"),
-            "2024-01-15",
-            "125,50 €",
-            "pending",
-            "TO_SUPPLIER"
-        ));
+        // Obtener ID del supermercado desde la sesión
+        Integer supermarketId = sessionManager.getUserId();
+        if (supermarketId == null) {
+            Log.e(TAG, "No se pudo obtener el ID del supermercado");
+            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del supermercado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Cargar pedidos reales desde la API
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<List<Transaction>> call = api.getBuyerOrders(supermarketId, "supermarket");
         
-        allOrders.add(new SupermarketOrder(
-            "Granja Ecológica María",
-            Arrays.asList("Manzanas Rojas (25kg)", "Peras Verdes (20kg)"),
-            "2024-01-16",
-            "98,80 €",
-            "in_progress",
-            "TO_SUPPLIER"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Huerto Familiar Los Pinos",
-            Arrays.asList("Espinacas (15kg)", "Acelgas (10kg)", "Rábanos (8kg)"),
-            "2024-01-12",
-            "67,30 €",
-            "delivered",
-            "TO_SUPPLIER"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Cultivos Sostenibles S.L.",
-            Arrays.asList("Brócoli (20kg)", "Coliflor (15kg)"),
-            "2024-01-18",
-            "85,40 €",
-            "cancelled",
-            "TO_SUPPLIER"
-        ));
+        call.enqueue(new Callback<List<Transaction>>() {
+            @Override
+            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    allOrders.clear();
+                    
+                    for (Transaction transaction : response.body()) {
+                        // Convertir Transaction a SupermarketOrder
+                        List<String> products = new ArrayList<>();
+                        // orderDetails es un String JSON, por ahora usamos datos básicos
+                        products.add("Productos del pedido");
+                        
+                        SupermarketOrder order = new SupermarketOrder(
+                            transaction.getSellerName() != null ? transaction.getSellerName() : "Vendedor " + transaction.getSellerId(),
+                            products,
+                            transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
+                            String.format("%.2f €", transaction.getTotalPrice()),
+                            transaction.getStatus(),
+                            "TO_SUPPLIER"
+                        );
+                        allOrders.add(order);
+                    }
+                    
+                    // Aplicar filtro actual
+                    filterByStatus(currentStatusFilter);
+                    Log.d(TAG, "Pedidos de proveedores cargados: " + allOrders.size());
+                } else {
+                    Log.e(TAG, "Error al cargar pedidos: " + response.code());
+                    Toast.makeText(getContext(), "Error al cargar pedidos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                Log.e(TAG, "Error de conexión: " + t.getMessage());
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadClientOrders() {
-        // Pedidos realizados por clientes (consumidores) de los productos del stock
-        allOrders.add(new SupermarketOrder(
-            "Cliente Ana García",
-            Arrays.asList("Tomates Ecológicos (2kg)", "Lechuga Romana (1ud)"),
-            "2024-01-14",
-            "8,50 €",
-            "delivered",
-            "FROM_CLIENT"
-        ));
+        // Obtener ID del supermercado desde la sesión
+        Integer supermarketId = sessionManager.getUserId();
+        if (supermarketId == null) {
+            Log.e(TAG, "No se pudo obtener el ID del supermercado");
+            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del supermercado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Cargar pedidos de clientes desde la API
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        Call<List<Transaction>> call = api.getSellerOrders(supermarketId, "supermarket");
         
-        allOrders.add(new SupermarketOrder(
-            "Cliente Carlos López",
-            Arrays.asList("Zanahorias Orgánicas (1kg)", "Manzanas Rojas (3kg)"),
-            "2024-01-17",
-            "6,20 €",
-            "pending",
-            "FROM_CLIENT"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Cliente María Rodríguez",
-            Arrays.asList("Espinacas (500g)", "Acelgas (500g)"),
-            "2024-01-13",
-            "4,80 €",
-            "in_progress",
-            "FROM_CLIENT"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Cliente Pedro Martín",
-            Arrays.asList("Brócoli (1kg)", "Coliflor (1kg)"),
-            "2024-01-19",
-            "7,60 €",
-            "cancelled",
-            "FROM_CLIENT"
-        ));
+        call.enqueue(new Callback<List<Transaction>>() {
+            @Override
+            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    allOrders.clear();
+                    
+                    for (Transaction transaction : response.body()) {
+                        // Solo mostrar pedidos de consumidores
+                        if ("consumer".equalsIgnoreCase(transaction.getBuyerType())) {
+                            // Convertir Transaction a SupermarketOrder
+                            List<String> products = new ArrayList<>();
+                            // orderDetails es un String JSON, por ahora usamos datos básicos
+                            products.add("Productos del pedido");
+                            
+                            SupermarketOrder order = new SupermarketOrder(
+                                transaction.getBuyerName() != null ? transaction.getBuyerName() : "Cliente " + transaction.getBuyerId(),
+                                products,
+                                transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
+                                String.format("%.2f €", transaction.getTotalPrice()),
+                                transaction.getStatus(),
+                                "FROM_CLIENT"
+                            );
+                            allOrders.add(order);
+                        }
+                    }
+                    
+                    // Aplicar filtro actual
+                    filterByStatus(currentStatusFilter);
+                    Log.d(TAG, "Pedidos de clientes cargados: " + allOrders.size());
+                } else {
+                    Log.e(TAG, "Error al cargar pedidos de clientes: " + response.code());
+                    Toast.makeText(getContext(), "Error al cargar pedidos de clientes", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                Log.e(TAG, "Error de conexión: " + t.getMessage());
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showOrderDetails(SupermarketOrder order) {

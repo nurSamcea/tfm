@@ -99,7 +99,7 @@ public class OrderItemCartAdapter extends RecyclerView.Adapter<OrderItemCartAdap
         TextView quantityTextView;
         TextView unitPriceTextView;
         TextView totalPriceTextView;
-        ImageButton removeButton;
+        MaterialButton removeButton;
         MaterialButton increaseButton;
         MaterialButton decreaseButton;
         

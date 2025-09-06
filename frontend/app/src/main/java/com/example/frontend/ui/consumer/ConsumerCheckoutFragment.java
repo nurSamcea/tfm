@@ -18,9 +18,13 @@ import com.example.frontend.R;
 import com.example.frontend.ui.adapters.CartAdapter;
 import com.example.frontend.model.CartItem;
 import com.example.frontend.model.Product;
+import com.example.frontend.model.OrderItem;
+import com.example.frontend.model.OrderRequest;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.network.ApiClient;
-import com.example.frontend.network.ApiService;
+import com.example.frontend.api.ApiService;
+import com.example.frontend.utils.SessionManager;
+import com.example.frontend.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,19 +179,55 @@ public class ConsumerCheckoutFragment extends Fragment {
         confirmPurchaseButton.setText("Procesando...");
         Log.d("ConsumerCheckout", "Botón deshabilitado y texto cambiado a 'Procesando...'");
 
-        // Crear la transacción
-        Transaction transaction = new Transaction();
-        transaction.setUserId(1); // ID del usuario actual
-        transaction.setShoppingListId(1); // ID de la lista de compra
-        transaction.setTotalPrice(totalPrice);
-        transaction.setCurrency("EUR");
-        transaction.setStatus("pending");
-        Log.d("ConsumerCheckout", "Transacción creada - UserID: 1, ShoppingListID: 1, Total: " + totalPrice + " EUR, Status: pending");
-
+        // Verificar conectividad del backend
+        NetworkUtils.testBackendConnection();
+        
+        // Crear la transacción usando el nuevo método
         Log.d("ConsumerCheckout", "Creando llamada a la API...");
+        Log.d("ConsumerCheckout", "URL Base: " + ApiClient.getBaseUrl());
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
-        Call<Transaction> call = apiService.createTransaction(transaction);
+        Log.d("ConsumerCheckout", "ApiService creado correctamente");
+        
+        // Obtener ID del consumidor desde la sesión
+        SessionManager sessionManager = new SessionManager(requireContext());
+        Integer consumerId = sessionManager.getUserId();
+        if (consumerId == null) {
+            Log.e("ConsumerCheckout", "No se pudo obtener el ID del consumidor");
+            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del consumidor", Toast.LENGTH_SHORT).show();
+            confirmPurchaseButton.setEnabled(true);
+            confirmPurchaseButton.setText("Confirmar Compra");
+            return;
+        }
+        
+        // Crear lista de OrderItems
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderItem = new OrderItem(
+                Integer.parseInt(cartItem.getProduct().getId()),
+                cartItem.getProduct().getName(),
+                cartItem.getQuantity(),
+                cartItem.getProduct().getPrice()
+            );
+            orderItems.add(orderItem);
+        }
+        
+        // Crear OrderRequest
+        OrderRequest orderRequest = new OrderRequest(
+            1, // TODO: Obtener seller_id del carrito
+            "farmer", // TODO: Determinar seller_type según el carrito
+            orderItems,
+            totalPrice
+        );
+        
+        Log.d("ConsumerCheckout", "OrderRequest creado:");
+        Log.d("ConsumerCheckout", "- seller_id: " + orderRequest.seller_id);
+        Log.d("ConsumerCheckout", "- seller_type: " + orderRequest.seller_type);
+        Log.d("ConsumerCheckout", "- total_price: " + orderRequest.total_price);
+        Log.d("ConsumerCheckout", "- order_items count: " + orderRequest.order_details.size());
+        
+        Call<Transaction> call = apiService.createOrderFromCart(consumerId.intValue(), "consumer", orderRequest);
         Log.d("ConsumerCheckout", "Llamada a la API creada, enviando...");
+        Log.d("ConsumerCheckout", "URL completa: " + ApiClient.getBaseUrl() + "transactions/create-order");
 
         call.enqueue(new Callback<Transaction>() {
             @Override
@@ -196,6 +236,15 @@ public class ConsumerCheckoutFragment extends Fragment {
                 Log.d("ConsumerCheckout", "Código de respuesta: " + response.code());
                 Log.d("ConsumerCheckout", "Respuesta exitosa: " + response.isSuccessful());
                 Log.d("ConsumerCheckout", "Cuerpo de respuesta: " + (response.body() != null ? "OK" : "NULL"));
+                
+                // Log detallado del response body
+                if (response.body() != null) {
+                    Log.d("ConsumerCheckout", "Transaction ID: " + response.body().getId());
+                    Log.d("ConsumerCheckout", "Transaction Status: " + response.body().getStatus());
+                    Log.d("ConsumerCheckout", "Transaction Total: " + response.body().getTotalPrice());
+                } else {
+                    Log.e("ConsumerCheckout", "Response body es NULL - problema de deserialización");
+                }
                 
                 confirmPurchaseButton.setEnabled(true);
                 confirmPurchaseButton.setText("Confirmar Compra");
@@ -216,6 +265,9 @@ public class ConsumerCheckoutFragment extends Fragment {
                     navigateToConfirmation(response.body());
                 } else {
                     Log.e("ConsumerCheckout", "Error en la respuesta de la API");
+                    Log.e("ConsumerCheckout", "isSuccessful: " + response.isSuccessful());
+                    Log.e("ConsumerCheckout", "body is null: " + (response.body() == null));
+                    
                     String errorMessage = "Error al procesar la compra";
                     if (response.errorBody() != null) {
                         try {
@@ -234,6 +286,19 @@ public class ConsumerCheckoutFragment extends Fragment {
             public void onFailure(Call<Transaction> call, Throwable t) {
                 Log.e("ConsumerCheckout", "=== FALLO EN LA LLAMADA A LA API ===");
                 Log.e("ConsumerCheckout", "Error: " + t.getMessage(), t);
+                Log.e("ConsumerCheckout", "Tipo de error: " + t.getClass().getSimpleName());
+                Log.e("ConsumerCheckout", "URL de la llamada: " + call.request().url());
+                Log.e("ConsumerCheckout", "Método: " + call.request().method());
+                
+                if (t instanceof java.net.UnknownHostException) {
+                    Log.e("ConsumerCheckout", "ERROR: No se puede resolver el host. Verificar IP del backend.");
+                } else if (t instanceof java.net.ConnectException) {
+                    Log.e("ConsumerCheckout", "ERROR: No se puede conectar al servidor. Verificar que el backend esté ejecutándose.");
+                } else if (t instanceof java.net.SocketTimeoutException) {
+                    Log.e("ConsumerCheckout", "ERROR: Timeout de conexión. El servidor no responde.");
+                } else if (t instanceof java.io.IOException) {
+                    Log.e("ConsumerCheckout", "ERROR: Error de I/O. Problema de red o servidor.");
+                }
                 
                 confirmPurchaseButton.setEnabled(true);
                 confirmPurchaseButton.setText("Confirmar Compra");

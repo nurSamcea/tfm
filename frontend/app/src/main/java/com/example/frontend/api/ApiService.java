@@ -12,6 +12,9 @@ import java.util.Map;
 
 import com.example.frontend.model.RegisterRequest;
 import com.example.frontend.model.LoginRequest;
+import com.example.frontend.model.OrderItem;
+import com.example.frontend.model.OrderRequest;
+import com.example.frontend.models.Transaction;
 
 public interface ApiService {
     @POST("auth/login")
@@ -141,6 +144,29 @@ public interface ApiService {
     @POST("transactions/")
     Call<Transaction> createTransaction(@Body Transaction transaction);
     
+    // Nuevos endpoints para el flujo de pedidos
+    @POST("transactions/create-order")
+    Call<Transaction> createOrderFromCart(@Query("buyer_id") int buyerId, @Query("buyer_type") String buyerType, @Body OrderRequest orderRequest);
+    
+    @GET("transactions/buyer/{buyerId}/{buyerType}")
+    Call<List<Transaction>> getBuyerOrders(@Path("buyerId") int buyerId, @Path("buyerType") String buyerType);
+    
+    @GET("transactions/seller/{sellerId}/{sellerType}")
+    Call<List<Transaction>> getSellerOrders(@Path("sellerId") int sellerId, @Path("sellerType") String sellerType);
+    
+    // Endpoints específicos para mantener compatibilidad
+    @GET("transactions/supermarket/{supermarketId}")
+    Call<List<Transaction>> getSupermarketOrders(@Path("supermarketId") int supermarketId);
+    
+    @GET("transactions/farmer/{farmerId}")
+    Call<List<Transaction>> getFarmerOrders(@Path("farmerId") int farmerId);
+    
+    @GET("transactions/consumer/{consumerId}")
+    Call<List<Transaction>> getConsumerOrders(@Path("consumerId") int consumerId);
+    
+    @PATCH("transactions/{transactionId}/status")
+    Call<Transaction> updateTransactionStatus(@Path("transactionId") int transactionId, @Body StatusUpdateRequest statusUpdate);
+    
     // ===== TRAZABILIDAD =====
     @GET("traceability/product/{qr_hash}")
     Call<ProductTraceability> getProductTraceability(@Path("qr_hash") String qrHash);
@@ -216,6 +242,16 @@ public interface ApiService {
     }
     
     // Shopping List classes
+    
+    // Order Request classes - ahora están en archivos separados
+    
+    public static class StatusUpdateRequest {
+        public String status;
+        
+        public StatusUpdateRequest(String status) {
+            this.status = status;
+        }
+    }
 }
 
 

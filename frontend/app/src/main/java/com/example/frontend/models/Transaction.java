@@ -4,16 +4,29 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import com.example.frontend.model.OrderItem;
 
 public class Transaction implements Serializable {
     @SerializedName("id")
     private Integer id;
     
-    @SerializedName("user_id")
-    private Integer userId;
+    @SerializedName("buyer_id")
+    private Integer buyerId;
     
-    @SerializedName("shopping_list_id")
-    private Integer shoppingListId;
+    @SerializedName("seller_id")
+    private Integer sellerId;
+    
+    @SerializedName("buyer_type")
+    private String buyerType;
+    
+    @SerializedName("seller_type")
+    private String sellerType;
+    
+    @SerializedName("buyer_name")
+    private String buyerName;
+    
+    @SerializedName("seller_name")
+    private String sellerName;
     
     @SerializedName("total_price")
     private Double totalPrice;
@@ -39,15 +52,23 @@ public class Transaction implements Serializable {
     @SerializedName("confirmed_at")
     private Date confirmedAt;
     
+    @SerializedName("delivered_at")
+    private Date deliveredAt;
+    
+    @SerializedName("order_details")
+    private List<OrderItem> orderDetails;
+    
     @SerializedName("items")
     private List<CartItem> items;
 
     public Transaction() {
     }
 
-    public Transaction(Integer userId, Integer shoppingListId, Double totalPrice, String currency, String status) {
-        this.userId = userId;
-        this.shoppingListId = shoppingListId;
+    public Transaction(Integer buyerId, Integer sellerId, String buyerType, String sellerType, Double totalPrice, String currency, String status) {
+        this.buyerId = buyerId;
+        this.sellerId = sellerId;
+        this.buyerType = buyerType;
+        this.sellerType = sellerType;
         this.totalPrice = totalPrice;
         this.currency = currency;
         this.status = status;
@@ -58,12 +79,28 @@ public class Transaction implements Serializable {
         return id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getBuyerId() {
+        return buyerId;
     }
 
-    public Integer getShoppingListId() {
-        return shoppingListId;
+    public Integer getSellerId() {
+        return sellerId;
+    }
+
+    public String getBuyerType() {
+        return buyerType;
+    }
+
+    public String getSellerType() {
+        return sellerType;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public String getSellerName() {
+        return sellerName;
     }
 
     public Double getTotalPrice() {
@@ -98,6 +135,14 @@ public class Transaction implements Serializable {
         return confirmedAt;
     }
 
+    public Date getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public List<OrderItem> getOrderDetails() {
+        return orderDetails;
+    }
+
     public List<CartItem> getItems() {
         return items;
     }
@@ -107,12 +152,28 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setBuyerId(Integer buyerId) {
+        this.buyerId = buyerId;
     }
 
-    public void setShoppingListId(Integer shoppingListId) {
-        this.shoppingListId = shoppingListId;
+    public void setSellerId(Integer sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public void setBuyerType(String buyerType) {
+        this.buyerType = buyerType;
+    }
+
+    public void setSellerType(String sellerType) {
+        this.sellerType = sellerType;
+    }
+
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 
     public void setTotalPrice(Double totalPrice) {
@@ -147,6 +208,14 @@ public class Transaction implements Serializable {
         this.confirmedAt = confirmedAt;
     }
 
+    public void setDeliveredAt(Date deliveredAt) {
+        this.deliveredAt = deliveredAt;
+    }
+
+    public void setOrderDetails(List<OrderItem> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
     public void setItems(List<CartItem> items) {
         this.items = items;
     }
@@ -165,14 +234,14 @@ public class Transaction implements Serializable {
         switch (status.toLowerCase()) {
             case "pending":
                 return "Pendiente";
-            case "confirmed":
-                return "Confirmado";
-            case "shipped":
-                return "Enviado";
+            case "in_progress":
+                return "En curso";
             case "delivered":
                 return "Entregado";
             case "cancelled":
                 return "Cancelado";
+            case "completed":
+                return "Completado";
             default:
                 return status;
         }
@@ -182,12 +251,8 @@ public class Transaction implements Serializable {
         return "pending".equalsIgnoreCase(status);
     }
 
-    public boolean isConfirmed() {
-        return "confirmed".equalsIgnoreCase(status);
-    }
-
-    public boolean isShipped() {
-        return "shipped".equalsIgnoreCase(status);
+    public boolean isInProgress() {
+        return "in_progress".equalsIgnoreCase(status);
     }
 
     public boolean isDelivered() {
@@ -198,12 +263,61 @@ public class Transaction implements Serializable {
         return "cancelled".equalsIgnoreCase(status);
     }
 
+    public boolean isCompleted() {
+        return "completed".equalsIgnoreCase(status);
+    }
+
+    // Métodos de utilidad para tipos de usuario
+    public boolean isBuyerConsumer() {
+        return "consumer".equalsIgnoreCase(buyerType);
+    }
+
+    public boolean isBuyerSupermarket() {
+        return "supermarket".equalsIgnoreCase(buyerType);
+    }
+
+    public boolean isSellerFarmer() {
+        return "farmer".equalsIgnoreCase(sellerType);
+    }
+
+    public boolean isSellerSupermarket() {
+        return "supermarket".equalsIgnoreCase(sellerType);
+    }
+
+    public String getBuyerTypeDisplayName() {
+        if (buyerType == null) return "Desconocido";
+        
+        switch (buyerType.toLowerCase()) {
+            case "consumer":
+                return "Consumidor";
+            case "supermarket":
+                return "Supermercado";
+            default:
+                return buyerType;
+        }
+    }
+
+    public String getSellerTypeDisplayName() {
+        if (sellerType == null) return "Desconocido";
+        
+        switch (sellerType.toLowerCase()) {
+            case "farmer":
+                return "Agricultor";
+            case "supermarket":
+                return "Supermercado";
+            default:
+                return sellerType;
+        }
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", shoppingListId=" + shoppingListId +
+                ", buyerId=" + buyerId +
+                ", sellerId=" + sellerId +
+                ", buyerType='" + buyerType + '\'' +
+                ", sellerType='" + sellerType + '\'' +
                 ", totalPrice=" + totalPrice +
                 ", currency='" + currency + '\'' +
                 ", status='" + status + '\'' +

@@ -6,31 +6,56 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 import com.example.frontend.utils.Constants;
+import com.example.frontend.utils.DateDeserializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.util.Date;
 
 public class ApiClient {
-    private static final String BASE_URL = Constants.getBaseUrl(); // URL desde archivo .env
+    private static final String BASE_URL = getBaseUrlSafely(); // URL desde archivo .env
     private static Retrofit retrofit = null;
+    
+    private static String getBaseUrlSafely() {
+        try {
+            String baseUrl = Constants.getBaseUrl();
+            // Asegurar que la URL termine con /
+            if (!baseUrl.endsWith("/")) {
+                baseUrl += "/";
+            }
+            return baseUrl;
+        } catch (Exception e) {
+            // Fallback a URL por defecto si hay problemas
+            return "http://192.168.68.116:8000/";
+        }
+    }
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-            // Configurar interceptor para logging
+            // Configurar interceptor para logging detallado
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             // Configurar cliente OkHttp
             OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new DebugInterceptor()) // Interceptor de debug personalizado
                     .addInterceptor(loggingInterceptor)
-                    .addInterceptor(new AuthInterceptor()) // Interceptor para JWT
+                    // Remover AuthInterceptor temporalmente para evitar IllegalStateException
+                    // .addInterceptor(new AuthInterceptor()) 
                     .connectTimeout(Constants.getConnectTimeout(), TimeUnit.SECONDS)
                     .readTimeout(Constants.getReadTimeout(), TimeUnit.SECONDS)
                     .writeTimeout(Constants.getWriteTimeout(), TimeUnit.SECONDS)
                     .build();
 
+            // Configurar Gson con deserializador personalizado para fechas
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Date.class, new DateDeserializer())
+                    .create();
+
             // Configurar Retrofit
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit;
@@ -38,6 +63,11 @@ public class ApiClient {
 
     public static void resetClient() {
         retrofit = null;
+    }
+    
+    public static void resetClientAndRecreate() {
+        retrofit = null;
+        getClient(); // Forzar recreación
     }
 
     public static String getBaseUrl() {

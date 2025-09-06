@@ -8,17 +8,6 @@
     android:background="@drawable/gradient_background"
     android:padding="8dp">
 
-    <!-- Título principal -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pedidos"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:fontFamily="@font/manrope_bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
-
     <!-- Tabs para Proveedores y Clientes -->
     <LinearLayout
         android:layout_width="match_parent"

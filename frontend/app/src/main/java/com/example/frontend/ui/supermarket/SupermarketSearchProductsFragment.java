@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.frontend.R;
 import com.example.frontend.model.Product;
 import com.example.frontend.model.CartItem;
+import com.example.frontend.model.OrderItem;
+import com.example.frontend.model.OrderRequest;
+import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.SupermarketProductAdapter;
 import com.example.frontend.ui.adapters.CartAdapter;
 import com.example.frontend.api.ApiService;
@@ -34,7 +37,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -354,11 +359,6 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
         // TODO: Implementar vista de detalles del producto
     }
 
-    @Override
-    public void onContactFarmer(Product product) {
-        Toast.makeText(getContext(), "Contactando agricultor de " + product.getName(), Toast.LENGTH_SHORT).show();
-        // TODO: Implementar funcionalidad de contacto con agricultor
-    }
 
     // Métodos del carrito de compras
     private void addProductToCart(Product product) {
@@ -424,18 +424,99 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
             return;
         }
 
+        // Agrupar productos por agricultor
+        Map<Integer, List<CartItem>> ordersByFarmer = new HashMap<>();
+        for (CartItem item : cartItems) {
+            Integer farmerId = item.getProduct().getProviderId();
+            if (farmerId == null) {
+                Toast.makeText(getContext(), "Error: Producto sin agricultor asignado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            if (!ordersByFarmer.containsKey(farmerId)) {
+                ordersByFarmer.put(farmerId, new ArrayList<>());
+            }
+            ordersByFarmer.get(farmerId).add(item);
+        }
+
         // Mostrar diálogo de confirmación
+        StringBuilder message = new StringBuilder("¿Desea realizar " + ordersByFarmer.size() + " pedido(s) a diferentes agricultores?\n\n");
+        for (Map.Entry<Integer, List<CartItem>> entry : ordersByFarmer.entrySet()) {
+            double total = 0;
+            for (CartItem item : entry.getValue()) {
+                total += item.getTotalPrice();
+            }
+            message.append("• Agricultor ").append(entry.getKey()).append(": ").append(entry.getValue().size()).append(" productos - ").append(String.format("%.2f €", total)).append("\n");
+        }
+
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder.setTitle("Confirmar pedido")
-                .setMessage("¿Desea realizar el pedido con " + cartItems.size() + " productos diferentes?")
+        builder.setTitle("Confirmar pedidos")
+                .setMessage(message.toString())
                 .setPositiveButton("Confirmar", (dialog, which) -> {
-                    // TODO: Implementar lógica para enviar pedido al backend
-                    Toast.makeText(getContext(), "Pedido realizado correctamente", Toast.LENGTH_SHORT).show();
-                    cartItems.clear();
-                    updateCartUI();
+                    createOrders(ordersByFarmer);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    private void createOrders(Map<Integer, List<CartItem>> ordersByFarmer) {
+        // Obtener ID del supermercado desde la sesión
+        Integer supermarketId = sessionManager.getUserId();
+        if (supermarketId == null) {
+            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del supermercado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Crear pedidos para cada agricultor
+        for (Map.Entry<Integer, List<CartItem>> entry : ordersByFarmer.entrySet()) {
+            Integer farmerId = entry.getKey();
+            List<CartItem> farmerItems = entry.getValue();
+
+            // Crear lista de OrderItems
+            List<OrderItem> orderItems = new ArrayList<>();
+            double totalPrice = 0;
+
+            for (CartItem cartItem : farmerItems) {
+                OrderItem orderItem = new OrderItem(
+                    Integer.parseInt(cartItem.getProduct().getId()),
+                    cartItem.getProduct().getName(),
+                    cartItem.getQuantity(),
+                    cartItem.getProduct().getPrice()
+                );
+                orderItems.add(orderItem);
+                totalPrice += orderItem.total_price;
+            }
+
+            // Crear OrderRequest con seller_type
+            OrderRequest orderRequest = new OrderRequest(farmerId, "farmer", orderItems, totalPrice);
+
+            // Enviar pedido al backend
+            ApiService api = ApiClient.getClient().create(ApiService.class);
+            Call<Transaction> call = api.createOrderFromCart(supermarketId, "supermarket", orderRequest);
+            
+            call.enqueue(new Callback<Transaction>() {
+                @Override
+                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Pedido creado exitosamente para agricultor " + farmerId);
+                    } else {
+                        Log.e(TAG, "Error al crear pedido: " + response.code());
+                        Toast.makeText(getContext(), "Error al crear pedido para agricultor " + farmerId, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Transaction> call, Throwable t) {
+                    Log.e(TAG, "Error de conexión al crear pedido: " + t.getMessage());
+                    Toast.makeText(getContext(), "Error de conexión al crear pedido", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // Limpiar carrito y mostrar mensaje de éxito
+        cartItems.clear();
+        updateCartUI();
+        Toast.makeText(getContext(), "Pedidos realizados correctamente", Toast.LENGTH_SHORT).show();
     }
 
     // Implementación de OnCartItemActionListener

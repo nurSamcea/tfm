@@ -51,16 +51,6 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="4dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_eco"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:text="Ecológico"
-                    android:textSize="10sp"
-                    android:textColor="@android:color/white"
-                    app:chipBackgroundColor="@color/success"
-                    app:chipCornerRadius="12dp"
-                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_sustainable"
@@ -111,25 +101,6 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="4dp">
 
-                <TextView
-                    android:id="@+id/product_distance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Distancia: -- km"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular" />
-
-                <TextView
-                    android:id="@+id/product_farmer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agricultor: --"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular" />
-
             </LinearLayout>
 
         </LinearLayout>
@@ -167,22 +138,6 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 app:backgroundTint="@color/secondary"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/ic_info"
-                app:iconSize="12dp"
-                app:iconTint="@android:color/white" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_contact_farmer"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="4dp"
-                android:text="Contactar"
-                android:textSize="10sp"
-                android:minWidth="0dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                app:backgroundTint="@color/accent"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/ic_info"
                 app:iconSize="12dp"

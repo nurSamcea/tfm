@@ -26,12 +26,17 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import com.example.frontend.R;
 import com.example.frontend.model.Product;
 import com.example.frontend.model.ConsumerOrder;
+import com.example.frontend.model.OrderItem;
+import com.example.frontend.model.OrderRequest;
+import com.example.frontend.models.Transaction;
 import com.example.frontend.utils.CartPreferences;
+import com.example.frontend.utils.SessionManager;
 import com.example.frontend.ui.adapters.ProductAdapter;
 import com.example.frontend.ui.adapters.OrderItemCartAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.network.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,6 +70,7 @@ public class ConsumerProductsFragment extends Fragment {
     private double totalCarrito = 0.0;
     private TextView cartTotalText;
     private CartPreferences cartPrefs;
+    private SessionManager sessionManager;
     private FusedLocationProviderClient fusedLocationClient;
     private Double userLat = null;
     private Double userLon = null;
@@ -131,6 +137,9 @@ public class ConsumerProductsFragment extends Fragment {
             });
         }
 
+        // Inicializar SessionManager
+        sessionManager = new SessionManager(requireContext());
+        
         // Inicializar CartPreferences en segundo plano para evitar StrictMode
         initializeCartPreferencesAsync();
 
@@ -187,26 +196,13 @@ public class ConsumerProductsFragment extends Fragment {
 
         Button btnFinalizeCart = view.findViewById(R.id.btn_finalize_cart);
         btnFinalizeCart.setOnClickListener(v -> {
-            // Guardar carrito actual
-            if (cartPrefs != null) {
-                cartPrefs.saveCartItems(cartItems);
+            if (cartItems.isEmpty()) {
+                showSafeToast("El carrito está vacío");
+                return;
             }
-            // Resetear carrito local de la pantalla 1
-            cartItems.clear();
-            cartAdapter.notifyDataSetChanged();
-            actualizarTotalCarrito();
-            // Mostrar mensaje de éxito
-            showSafeToast("Carrito guardado correctamente");
-            // Intentar navegar de forma segura
-            try {
-                BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
-                if (bottomNav != null) {
-                    bottomNav.setSelectedItemId(R.id.navigation_consumer_purchases);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error al navegar: " + e.getMessage());
-                showSafeToast("Error al navegar al carrito");
-            }
+            
+            // Crear transacciones reales
+            createConsumerOrders();
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -516,6 +512,124 @@ public class ConsumerProductsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "onDetach: Fragmento desvinculado del contexto");
+    }
+
+    /**
+     * Crea transacciones reales para el consumidor
+     */
+    private void createConsumerOrders() {
+        // Obtener ID del consumidor desde la sesión
+        Integer consumerId = sessionManager.getUserId();
+        if (consumerId == null) {
+            showSafeToast("Error: No se pudo obtener el ID del consumidor");
+            return;
+        }
+
+        // Agrupar productos por vendedor (agricultor o supermercado)
+        Map<String, List<ConsumerOrder.OrderItem>> ordersBySeller = new HashMap<>();
+        
+        for (ConsumerOrder.OrderItem item : cartItems) {
+            // Buscar el producto para obtener información del vendedor
+            Product product = findProductById(item.getProductId());
+            if (product == null) continue;
+            
+            String sellerKey = product.getProviderId() + "_" + getSellerType(product);
+            if (!ordersBySeller.containsKey(sellerKey)) {
+                ordersBySeller.put(sellerKey, new ArrayList<>());
+            }
+            ordersBySeller.get(sellerKey).add(item);
+        }
+
+        // Crear pedidos para cada vendedor
+        for (Map.Entry<String, List<ConsumerOrder.OrderItem>> entry : ordersBySeller.entrySet()) {
+            String[] sellerInfo = entry.getKey().split("_");
+            int sellerId = Integer.parseInt(sellerInfo[0]);
+            String sellerType = sellerInfo[1];
+            List<ConsumerOrder.OrderItem> sellerItems = entry.getValue();
+
+            // Crear lista de OrderItems
+            List<OrderItem> orderItems = new ArrayList<>();
+            double totalPrice = 0;
+
+            for (ConsumerOrder.OrderItem cartItem : sellerItems) {
+                OrderItem orderItem = new OrderItem(
+                    Integer.parseInt(cartItem.getProductId()),
+                    cartItem.getProductName(),
+                    cartItem.getQuantity(),
+                    cartItem.getUnitPrice()
+                );
+                orderItems.add(orderItem);
+                totalPrice += orderItem.total_price;
+            }
+
+            // Crear OrderRequest
+            OrderRequest orderRequest = new OrderRequest(sellerId, sellerType, orderItems, totalPrice);
+
+            // Enviar pedido al backend
+            ApiService api = ApiClient.getClient().create(ApiService.class);
+            Call<Transaction> call = api.createOrderFromCart(consumerId, "consumer", orderRequest);
+            
+            call.enqueue(new Callback<Transaction>() {
+                @Override
+                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Pedido creado exitosamente para " + sellerType + " " + sellerId);
+                    } else {
+                        Log.e(TAG, "Error al crear pedido: " + response.code());
+                        showSafeToast("Error al crear pedido para " + sellerType + " " + sellerId);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Transaction> call, Throwable t) {
+                    Log.e(TAG, "Error de conexión al crear pedido: " + t.getMessage());
+                    showSafeToast("Error de conexión al crear pedido");
+                }
+            });
+        }
+
+        // Limpiar carrito y mostrar mensaje de éxito
+        cartItems.clear();
+        cartAdapter.notifyDataSetChanged();
+        actualizarTotalCarrito();
+        
+        // Guardar carrito vacío
+        if (cartPrefs != null) {
+            cartPrefs.saveCartItems(cartItems);
+        }
+        
+        showSafeToast("Pedidos realizados correctamente");
+        
+        // Navegar a la pantalla de compras
+        try {
+            BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
+            if (bottomNav != null) {
+                bottomNav.setSelectedItemId(R.id.navigation_consumer_purchases);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error al navegar: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Busca un producto por ID en la lista de productos cargados
+     */
+    private Product findProductById(String productId) {
+        for (Product product : products) {
+            if (product.getId().equals(productId)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Determina el tipo de vendedor basado en el producto
+     */
+    private String getSellerType(Product product) {
+        // Por ahora, asumimos que si el producto tiene provider_id, es de un agricultor
+        // En el futuro, podríamos tener un campo específico para el tipo de vendedor
+        return "farmer"; // Por defecto, asumimos agricultor
     }
 
     /**
