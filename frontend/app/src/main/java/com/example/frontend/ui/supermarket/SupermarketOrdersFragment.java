@@ -87,7 +87,12 @@ public class SupermarketOrdersFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new SupermarketOrderAdapter(orderList, this::showOrderDetails);
+        adapter = new SupermarketOrderAdapter(orderList, this::showOrderDetails, new SupermarketOrderAdapter.OnOrderActionListener() {
+            @Override
+            public void onCancelOrder(SupermarketOrder order) {
+                cancelOrder(order);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -219,6 +224,8 @@ public class SupermarketOrdersFragment extends Fragment {
             return;
         }
 
+        Log.d(TAG, "loadSupplierOrders: Cargando transacciones donde el supermercado es comprador");
+
         // Cargar pedidos reales desde la API
         ApiService api = ApiClient.getClient().create(ApiService.class);
         Call<List<Transaction>> call = api.getBuyerOrders(supermarketId, "supermarket");
@@ -229,13 +236,41 @@ public class SupermarketOrdersFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     allOrders.clear();
                     
+                    Log.d(TAG, "Respuesta recibida con " + response.body().size() + " transacciones");
+                    
                     for (Transaction transaction : response.body()) {
                         // Convertir Transaction a SupermarketOrder
                         List<String> products = new ArrayList<>();
-                        // orderDetails es un String JSON, por ahora usamos datos básicos
-                        products.add("Productos del pedido");
+                        
+                        // Intentar extraer información de productos del order_details
+                        if (transaction.getOrderDetails() != null && !transaction.getOrderDetails().isEmpty()) {
+                            try {
+                                // orderDetails puede ser una lista de objetos o un string JSON
+                                if (transaction.getOrderDetails() instanceof List) {
+                                    List<?> details = (List<?>) transaction.getOrderDetails();
+                                    for (Object detail : details) {
+                                        if (detail instanceof Map) {
+                                            Map<?, ?> detailMap = (Map<?, ?>) detail;
+                                            String productName = (String) detailMap.get("product_name");
+                                            Integer quantity = (Integer) detailMap.get("quantity");
+                                            if (productName != null && quantity != null) {
+                                                products.add(productName + " (" + quantity + ")");
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.w(TAG, "Error al procesar order_details: " + e.getMessage());
+                            }
+                        }
+                        
+                        // Si no se pudieron extraer productos, usar texto genérico
+                        if (products.isEmpty()) {
+                            products.add("Productos del pedido");
+                        }
                         
                         SupermarketOrder order = new SupermarketOrder(
+                            transaction.getId(),
                             transaction.getSellerName() != null ? transaction.getSellerName() : "Vendedor " + transaction.getSellerId(),
                             products,
                             transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
@@ -244,6 +279,8 @@ public class SupermarketOrdersFragment extends Fragment {
                             "TO_SUPPLIER"
                         );
                         allOrders.add(order);
+                        
+                        Log.d(TAG, "Agregada transacción de proveedor: " + transaction.getSellerName() + " - " + transaction.getTotalPrice() + "€");
                     }
                     
                     // Aplicar filtro actual
@@ -272,6 +309,8 @@ public class SupermarketOrdersFragment extends Fragment {
             return;
         }
 
+        Log.d(TAG, "loadClientOrders: Cargando transacciones donde el supermercado es vendedor");
+
         // Cargar pedidos de clientes desde la API
         ApiService api = ApiClient.getClient().create(ApiService.class);
         Call<List<Transaction>> call = api.getSellerOrders(supermarketId, "supermarket");
@@ -282,15 +321,43 @@ public class SupermarketOrdersFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     allOrders.clear();
                     
+                    Log.d(TAG, "Respuesta recibida con " + response.body().size() + " transacciones");
+                    
                     for (Transaction transaction : response.body()) {
                         // Solo mostrar pedidos de consumidores
                         if ("consumer".equalsIgnoreCase(transaction.getBuyerType())) {
                             // Convertir Transaction a SupermarketOrder
                             List<String> products = new ArrayList<>();
-                            // orderDetails es un String JSON, por ahora usamos datos básicos
-                            products.add("Productos del pedido");
+                            
+                            // Intentar extraer información de productos del order_details
+                            if (transaction.getOrderDetails() != null && !transaction.getOrderDetails().isEmpty()) {
+                                try {
+                                    // orderDetails puede ser una lista de objetos o un string JSON
+                                    if (transaction.getOrderDetails() instanceof List) {
+                                        List<?> details = (List<?>) transaction.getOrderDetails();
+                                        for (Object detail : details) {
+                                            if (detail instanceof Map) {
+                                                Map<?, ?> detailMap = (Map<?, ?>) detail;
+                                                String productName = (String) detailMap.get("product_name");
+                                                Integer quantity = (Integer) detailMap.get("quantity");
+                                                if (productName != null && quantity != null) {
+                                                    products.add(productName + " (" + quantity + ")");
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.w(TAG, "Error al procesar order_details: " + e.getMessage());
+                                }
+                            }
+                            
+                            // Si no se pudieron extraer productos, usar texto genérico
+                            if (products.isEmpty()) {
+                                products.add("Productos del pedido");
+                            }
                             
                             SupermarketOrder order = new SupermarketOrder(
+                                transaction.getId(),
                                 transaction.getBuyerName() != null ? transaction.getBuyerName() : "Cliente " + transaction.getBuyerId(),
                                 products,
                                 transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
@@ -299,6 +366,8 @@ public class SupermarketOrdersFragment extends Fragment {
                                 "FROM_CLIENT"
                             );
                             allOrders.add(order);
+                            
+                            Log.d(TAG, "Agregada transacción de cliente: " + transaction.getBuyerName() + " - " + transaction.getTotalPrice() + "€");
                         }
                     }
                     
@@ -322,15 +391,57 @@ public class SupermarketOrdersFragment extends Fragment {
     private void showOrderDetails(SupermarketOrder order) {
         Log.d(TAG, "showOrderDetails: " + order.getClientOrSupplier());
         
-        String orderTypeText = "TO_SUPPLIER".equals(order.getOrderType()) ? "Pedido a Proveedor" : "Pedido de Cliente";
+        String orderTypeText;
+        String participantLabel;
+        
+        if ("TO_SUPPLIER".equals(order.getOrderType())) {
+            orderTypeText = "Pedido a Proveedor";
+            participantLabel = "Proveedor";
+        } else {
+            orderTypeText = "Venta a Cliente";
+            participantLabel = "Cliente";
+        }
         
         Toast.makeText(getContext(), 
             orderTypeText + "\n" +
-            "Cliente/Proveedor: " + order.getClientOrSupplier() + "\n" +
+            participantLabel + ": " + order.getClientOrSupplier() + "\n" +
             "Productos: " + String.join(", ", order.getProducts()) + "\n" +
             "Fecha: " + order.getDeliveryDate() + "\n" +
             "Total: " + order.getTotal() + "\n" +
             "Estado: " + order.getStatus(),
             Toast.LENGTH_LONG).show();
+    }
+
+    private void cancelOrder(SupermarketOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Cancelar Pedido")
+                .setMessage("¿Estás seguro de que quieres cancelar este pedido? El stock se restaurará al vendedor.")
+                .setPositiveButton("Sí, cancelar", (dialog, which) -> {
+                    cancelOrderTransaction(order.getTransactionId());
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void cancelOrderTransaction(int transactionId) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado al vendedor.", Toast.LENGTH_LONG).show();
+                    loadOrders(); // Recargar la lista
+                } else {
+                    Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

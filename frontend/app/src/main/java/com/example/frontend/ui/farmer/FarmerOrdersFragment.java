@@ -77,7 +77,22 @@ public class FarmerOrdersFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new FarmerOrderAdapter(orderList, this::showOrderDetails);
+        adapter = new FarmerOrderAdapter(orderList, this::showOrderDetails, new FarmerOrderAdapter.OnOrderActionListener() {
+            @Override
+            public void onAcceptOrder(FarmerOrder order) {
+                acceptOrder(order);
+            }
+
+            @Override
+            public void onDeliverOrder(FarmerOrder order) {
+                deliverOrder(order);
+            }
+
+            @Override
+            public void onCancelOrder(FarmerOrder order) {
+                cancelOrder(order);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -178,6 +193,7 @@ public class FarmerOrdersFragment extends Fragment {
                         products.add("Productos del pedido");
                         
                         FarmerOrder order = new FarmerOrder(
+                            transaction.getId(),
                             transaction.getBuyerName() != null ? transaction.getBuyerName() : "Comprador " + transaction.getBuyerId(),
                             products,
                             transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
@@ -206,5 +222,107 @@ public class FarmerOrdersFragment extends Fragment {
 
     private void showOrderDetails(FarmerOrder order) {
         new FarmerOrderDetailsDialogFragment(order).show(getParentFragmentManager(), "details");
+    }
+
+    private void acceptOrder(FarmerOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Aceptar Pedido")
+                .setMessage("¿Estás seguro de que quieres aceptar este pedido? El stock se reservará.")
+                .setPositiveButton("Sí, aceptar", (dialog, which) -> {
+                    updateOrderStatus(order.getTransactionId(), "in_progress");
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void deliverOrder(FarmerOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Entregar Pedido")
+                .setMessage("¿Estás seguro de que quieres marcar este pedido como entregado? El stock se transferirá al comprador.")
+                .setPositiveButton("Sí, entregar", (dialog, which) -> {
+                    deliverOrderToBuyer(order.getTransactionId());
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void cancelOrder(FarmerOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Cancelar Pedido")
+                .setMessage("¿Estás seguro de que quieres cancelar este pedido? El stock se restaurará.")
+                .setPositiveButton("Sí, cancelar", (dialog, which) -> {
+                    cancelOrderTransaction(order.getTransactionId());
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void updateOrderStatus(int transactionId, String status) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        // Crear el objeto de actualización de estado
+        ApiService.StatusUpdateRequest statusUpdate = new ApiService.StatusUpdateRequest(status);
+        
+        Call<com.example.frontend.models.Transaction> call = api.updateTransactionStatus(transactionId, statusUpdate);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Pedido actualizado correctamente", Toast.LENGTH_SHORT).show();
+                    loadOrders(); // Recargar la lista
+                } else {
+                    Toast.makeText(getContext(), "Error al actualizar el pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void deliverOrderToBuyer(int transactionId) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        Call<com.example.frontend.models.Transaction> call = api.deliverTransaction(transactionId);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Pedido entregado correctamente. Stock transferido al comprador.", Toast.LENGTH_LONG).show();
+                    loadOrders(); // Recargar la lista
+                } else {
+                    Toast.makeText(getContext(), "Error al entregar el pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void cancelOrderTransaction(int transactionId) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado.", Toast.LENGTH_LONG).show();
+                    loadOrders(); // Recargar la lista
+                } else {
+                    Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

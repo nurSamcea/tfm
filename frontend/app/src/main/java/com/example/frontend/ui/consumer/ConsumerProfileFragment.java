@@ -38,13 +38,7 @@ public class ConsumerProfileFragment extends Fragment {
         String userEmail = sessionManager.getUserEmail();
         String userRole = sessionManager.getUserRole();
         
-        profileName.setText(userName != null ? userName : "Usuario");
-        
-        // Mostrar email del usuario
-        TextView profileEmail = view.findViewById(R.id.profileEmail);
-        if (profileEmail != null) {
-            profileEmail.setText(userEmail != null ? userEmail : "usuario@email.com");
-        }
+        profileName.setText(userName != null ? userName : "Consumidor");
 
         // Configurar opciones del perfil
         setupProfileOptions(view);
@@ -78,7 +72,6 @@ public class ConsumerProfileFragment extends Fragment {
             ImageView orderIcon = histOrders.findViewById(R.id.optionIcon);
             TextView orderText = histOrders.findViewById(R.id.optionText);
             if (orderIcon != null) orderIcon.setImageResource(R.drawable.ic_orders);
-            if (orderIcon != null) orderIcon.setImageResource(R.drawable.ic_orders);
             if (orderText != null) orderText.setText("Historial de Pedidos");
             
             histOrders.setOnClickListener(v -> {
@@ -96,6 +89,19 @@ public class ConsumerProfileFragment extends Fragment {
             
             preferences.setOnClickListener(v -> {
                 Toast.makeText(requireContext(), "Preferencias próximamente", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        // Favoritos
+        View favorites = view.findViewById(R.id.optionFavorites);
+        if (favorites != null) {
+            ImageView favIcon = favorites.findViewById(R.id.optionIcon);
+            TextView favText = favorites.findViewById(R.id.optionText);
+            if (favIcon != null) favIcon.setImageResource(R.drawable.ic_favorite);
+            if (favText != null) favText.setText("Productos Favoritos");
+            
+            favorites.setOnClickListener(v -> {
+                Toast.makeText(requireContext(), "Productos favoritos próximamente", Toast.LENGTH_SHORT).show();
             });
         }
     }

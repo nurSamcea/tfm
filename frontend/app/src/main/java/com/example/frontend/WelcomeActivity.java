@@ -18,8 +18,10 @@ import android.widget.Toast;
 import com.example.frontend.ui.auth.LoginFragment;
 import com.example.frontend.ui.auth.RegisterFragment;
 import com.example.frontend.ui.consumer.ConsumerProductsFragment;
+import com.example.frontend.ui.consumer.ConsumerSearchProductsFragment;
 import com.example.frontend.ui.consumer.ConsumerProfileFragment;
 import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
+import com.example.frontend.ui.consumer.ConsumerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
 import com.example.frontend.ui.farmer.FarmerStatisticsFragment;
@@ -242,10 +244,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
             switch (userType) {
                 case "consumer":
-                    if (itemId == R.id.navigation_consumer_products) {
-                        selectedFragment = new ConsumerProductsFragment();
-                    } else if (itemId == R.id.navigation_consumer_purchases) {
-                        selectedFragment = new ConsumerPurchasesFragment();
+                    if (itemId == R.id.navigation_consumer_search) {
+                        selectedFragment = new ConsumerSearchProductsFragment();
+                    } else if (itemId == R.id.navigation_consumer_orders) {
+                        selectedFragment = new ConsumerOrdersFragment();
                     } else if (itemId == R.id.navigation_consumer_profile) {
                         selectedFragment = new ConsumerProfileFragment();
                     }
@@ -286,7 +288,7 @@ public class WelcomeActivity extends AppCompatActivity {
         
         switch (userType) {
             case "consumer":
-                initialFragment = new ConsumerProductsFragment();
+                initialFragment = new ConsumerSearchProductsFragment();
                 break;
             case "farmer":
                 initialFragment = new FarmerStockFragment();

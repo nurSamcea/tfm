@@ -31,6 +31,7 @@
     <string name="title_stock">Stock</string>
     <string name="title_orders">Pedidos</string>
     <string name="title_search">Buscar</string>
+    <string name="title_sales">Ventas</string>
     <string name="title_purchases">Compras</string>
     
     <!-- Mensajes de error -->

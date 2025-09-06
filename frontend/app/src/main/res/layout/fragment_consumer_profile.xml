@@ -93,6 +93,7 @@
         <include layout="@layout/item_profile_option" android:id="@+id/optionPersonalInfo"/>
         <include layout="@layout/item_profile_option" android:id="@+id/optionOrders"/>
         <include layout="@layout/item_profile_option" android:id="@+id/optionPreferences"/>
+        <include layout="@layout/item_profile_option" android:id="@+id/optionFavorites"/>
 
     </LinearLayout>
 

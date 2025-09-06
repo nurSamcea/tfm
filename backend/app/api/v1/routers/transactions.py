@@ -354,6 +354,153 @@ def _restore_seller_stock(transaction, db):
             product.stock_available += item_data['quantity']
 
 
+@router.patch("/{transaction_id}/cancel", response_model=schemas.TransactionOut)
+def cancel_transaction(
+    transaction_id: int,
+    db: Session = Depends(get_db)
+):
+    """Cancelar una transacción y restaurar el stock del vendedor"""
+    try:
+        # 1. Buscar la transacción
+        transaction = db.query(models.Transaction).filter(
+            models.Transaction.id == transaction_id
+        ).first()
+        
+        if not transaction:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Transacción no encontrada"
+            )
+
+        # 2. Validar que se puede cancelar
+        if transaction.status in [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"No se puede cancelar una transacción con estado: {transaction.status.value}"
+            )
+
+        # 3. Cancelar y restaurar stock
+        transaction.status = TransactionStatusEnum.cancelled
+        _restore_seller_stock(transaction, db)
+
+        db.commit()
+        db.refresh(transaction)
+
+        # 4. Preparar respuesta
+        seller = db.query(models.User).filter(models.User.id == transaction.seller_id).first()
+        buyer = db.query(models.User).filter(models.User.id == transaction.buyer_id).first()
+        
+        # Asegurar que order_details sea siempre una lista
+        order_details = transaction.order_details
+        if isinstance(order_details, dict):
+            order_details = [] if not order_details else [order_details]
+        elif not isinstance(order_details, list):
+            order_details = []
+        
+        response_data = {
+            'id': transaction.id,
+            'buyer_id': transaction.buyer_id,
+            'seller_id': transaction.seller_id,
+            'buyer_type': transaction.buyer_type,
+            'seller_type': transaction.seller_type,
+            'total_price': float(transaction.total_price) if transaction.total_price else 0.0,
+            'currency': transaction.currency,
+            'status': transaction.status,
+            'created_at': transaction.created_at,
+            'confirmed_at': transaction.confirmed_at,
+            'delivered_at': transaction.delivered_at,
+            'order_details': order_details,
+            'seller_name': seller.name if seller else None,
+            'buyer_name': buyer.name if buyer else None
+        }
+
+        return response_data
+
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error interno del servidor: {str(e)}"
+        )
+
+
+@router.patch("/{transaction_id}/deliver", response_model=schemas.TransactionOut)
+def deliver_transaction(
+    transaction_id: int,
+    db: Session = Depends(get_db)
+):
+    """Marcar una transacción como entregada y transferir stock al comprador"""
+    try:
+        # 1. Buscar la transacción
+        transaction = db.query(models.Transaction).filter(
+            models.Transaction.id == transaction_id
+        ).first()
+        
+        if not transaction:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Transacción no encontrada"
+            )
+
+        # 2. Validar que se puede entregar
+        if transaction.status != TransactionStatusEnum.in_progress:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Solo se pueden entregar transacciones en estado 'in_progress'. Estado actual: {transaction.status.value}"
+            )
+
+        # 3. Marcar como entregado y transferir stock
+        transaction.status = TransactionStatusEnum.delivered
+        transaction.delivered_at = datetime.utcnow()
+        _create_buyer_products(transaction, db)
+
+        db.commit()
+        db.refresh(transaction)
+
+        # 4. Preparar respuesta
+        seller = db.query(models.User).filter(models.User.id == transaction.seller_id).first()
+        buyer = db.query(models.User).filter(models.User.id == transaction.buyer_id).first()
+        
+        # Asegurar que order_details sea siempre una lista
+        order_details = transaction.order_details
+        if isinstance(order_details, dict):
+            order_details = [] if not order_details else [order_details]
+        elif not isinstance(order_details, list):
+            order_details = []
+        
+        response_data = {
+            'id': transaction.id,
+            'buyer_id': transaction.buyer_id,
+            'seller_id': transaction.seller_id,
+            'buyer_type': transaction.buyer_type,
+            'seller_type': transaction.seller_type,
+            'total_price': float(transaction.total_price) if transaction.total_price else 0.0,
+            'currency': transaction.currency,
+            'status': transaction.status,
+            'created_at': transaction.created_at,
+            'confirmed_at': transaction.confirmed_at,
+            'delivered_at': transaction.delivered_at,
+            'order_details': order_details,
+            'seller_name': seller.name if seller else None,
+            'buyer_name': buyer.name if buyer else None
+        }
+
+        return response_data
+
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error interno del servidor: {str(e)}"
+        )
+
+
 @router.get("/", response_model=List[schemas.TransactionOut])
 def read_transactions(db: Session = Depends(get_db)):
     """Obtener todas las transacciones"""

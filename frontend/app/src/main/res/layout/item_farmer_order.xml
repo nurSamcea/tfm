@@ -91,5 +91,48 @@
                 android:layout_marginStart="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
+
+        <!-- Botones de acción según el estado -->
+        <LinearLayout
+            android:id="@+id/action_buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_accept_order"
+                android:text="Aceptar"
+                android:textAllCaps="false"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/colorOrganic"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <Button
+                android:id="@+id/btn_deliver_order"
+                android:text="Entregar"
+                android:textAllCaps="false"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/colorOrganic"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <Button
+                android:id="@+id/btn_cancel_order"
+                android:text="Cancelar"
+                android:textAllCaps="false"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/holo_red_dark"
+                style="@style/Widget.MaterialComponents.Button" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

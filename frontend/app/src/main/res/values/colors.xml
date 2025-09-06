@@ -2,6 +2,7 @@
 <resources>
     <!-- Colores principales de EcoMarket -->
     <color name="primary">#4CAF50</color>
+    <color name="primary_color">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="accent">#FF9800</color>
     <color name="accent_dark">#E65100</color>

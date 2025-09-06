@@ -167,6 +167,12 @@ public interface ApiService {
     @PATCH("transactions/{transactionId}/status")
     Call<Transaction> updateTransactionStatus(@Path("transactionId") int transactionId, @Body StatusUpdateRequest statusUpdate);
     
+    @PATCH("transactions/{transactionId}/cancel")
+    Call<Transaction> cancelTransaction(@Path("transactionId") int transactionId);
+    
+    @PATCH("transactions/{transactionId}/deliver")
+    Call<Transaction> deliverTransaction(@Path("transactionId") int transactionId);
+    
     // ===== TRAZABILIDAD =====
     @GET("traceability/product/{qr_hash}")
     Call<ProductTraceability> getProductTraceability(@Path("qr_hash") String qrHash);

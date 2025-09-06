@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_consumer_products"
-        android:icon="@drawable/ic_products"
-        android:title="@string/title_products" />
+        android:id="@+id/navigation_consumer_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/title_search" />
 
     <item
-        android:id="@+id/navigation_consumer_purchases"
-        android:icon="@drawable/ic_purchases"
-        android:title="@string/title_purchases" />
+        android:id="@+id/navigation_consumer_orders"
+        android:icon="@drawable/ic_orders"
+        android:title="@string/title_orders" />
 
     <item
         android:id="@+id/navigation_consumer_profile"

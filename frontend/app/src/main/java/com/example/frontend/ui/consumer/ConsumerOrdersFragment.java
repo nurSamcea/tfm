@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
 import com.example.frontend.model.ConsumerOrder;
+import com.example.frontend.model.SupermarketOrder;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.ConsumerOrderAdapter;
+import com.example.frontend.ui.adapters.SupermarketOrderAdapter;
 import com.example.frontend.ui.dialogs.OrderDetailsDialog;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.network.ApiClient;
@@ -35,9 +37,9 @@ public class ConsumerOrdersFragment extends Fragment {
     private static final String TAG = "ConsumerOrdersFragment";
 
     private RecyclerView recyclerView;
-    private ConsumerOrderAdapter adapter;
-    private List<ConsumerOrder> orderList;
-    private List<ConsumerOrder> allOrders;
+    private SupermarketOrderAdapter adapter;
+    private List<SupermarketOrder> orderList;
+    private List<SupermarketOrder> allOrders;
     private SessionManager sessionManager;
     
     // Botones de filtro de estado
@@ -77,7 +79,12 @@ public class ConsumerOrdersFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new ConsumerOrderAdapter(orderList, this::showOrderDetails);
+        adapter = new SupermarketOrderAdapter(orderList, this::showOrderDetails, new SupermarketOrderAdapter.OnOrderActionListener() {
+            @Override
+            public void onCancelOrder(SupermarketOrder order) {
+                cancelOrder(order);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -99,8 +106,8 @@ public class ConsumerOrdersFragment extends Fragment {
         if ("all".equals(status)) {
             orderList.addAll(allOrders);
         } else {
-            for (ConsumerOrder order : allOrders) {
-                if (order.getStatus().name().toLowerCase().contains(status.toLowerCase())) {
+            for (SupermarketOrder order : allOrders) {
+                if (order.getStatus().toLowerCase().contains(status.toLowerCase())) {
                     orderList.add(order);
                 }
             }
@@ -163,7 +170,7 @@ public class ConsumerOrdersFragment extends Fragment {
 
         // Cargar pedidos reales desde la API
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        Call<List<Transaction>> call = api.getConsumerOrders(consumerId);
+        Call<List<Transaction>> call = api.getBuyerOrders(consumerId, "consumer");
         
         call.enqueue(new Callback<List<Transaction>>() {
             @Override
@@ -172,38 +179,20 @@ public class ConsumerOrdersFragment extends Fragment {
                     allOrders.clear();
                     
                     for (Transaction transaction : response.body()) {
-                        // Convertir Transaction a ConsumerOrder
-                        ConsumerOrder order = new ConsumerOrder(
-                            String.valueOf(transaction.getId()),
-                            String.valueOf(transaction.getBuyerId()),
-                            String.valueOf(transaction.getSellerId())
+                        // Convertir Transaction a SupermarketOrder
+                        List<String> products = new ArrayList<>();
+                        // orderDetails es un String JSON, por ahora usamos datos básicos
+                        products.add("Productos del pedido");
+                        
+                        SupermarketOrder order = new SupermarketOrder(
+                            transaction.getId(),
+                            transaction.getSellerName() != null ? transaction.getSellerName() : "Vendedor " + transaction.getSellerId(),
+                            products,
+                            transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
+                            String.format("%.2f €", transaction.getTotalPrice()),
+                            transaction.getStatus(),
+                            "FROM_SELLER"
                         );
-                        
-                        // Configurar detalles del pedido
-                        order.setOrderDate(transaction.getCreatedAt());
-                        order.setTotalAmount(transaction.getTotalPrice());
-                        order.setDeliveryAddress(transaction.getDeliveryAddress());
-                        order.setPaymentMethod(transaction.getPaymentMethod());
-                        
-                        // Convertir estado
-                        ConsumerOrder.OrderStatus status = convertTransactionStatus(transaction.getStatus());
-                        order.setStatus(status);
-                        
-                        // Convertir items del pedido
-                        if (transaction.getOrderDetails() != null && !transaction.getOrderDetails().isEmpty()) {
-                            List<ConsumerOrder.OrderItem> orderItems = new ArrayList<>();
-                            for (com.example.frontend.model.OrderItem item : transaction.getOrderDetails()) {
-                                ConsumerOrder.OrderItem orderItem = new ConsumerOrder.OrderItem(
-                                    String.valueOf(item.product_id),
-                                    (int) item.quantity,
-                                    item.unit_price
-                                );
-                                orderItem.setProductName(item.product_name);
-                                orderItems.add(orderItem);
-                            }
-                            order.setItems(orderItems);
-                        }
-                        
                         allOrders.add(order);
                     }
                     
@@ -224,119 +213,50 @@ public class ConsumerOrdersFragment extends Fragment {
         });
     }
 
-    private ConsumerOrder.OrderStatus convertTransactionStatus(String status) {
-        if (status == null) return ConsumerOrder.OrderStatus.PENDING;
+    private void showOrderDetails(SupermarketOrder order) {
+        Log.d(TAG, "showOrderDetails: " + order.getClientOrSupplier());
         
-        switch (status.toLowerCase()) {
-            case "pending":
-                return ConsumerOrder.OrderStatus.PENDING;
-            case "in_progress":
-                return ConsumerOrder.OrderStatus.IN_TRANSIT;
-            case "delivered":
-                return ConsumerOrder.OrderStatus.DELIVERED;
-            case "cancelled":
-                return ConsumerOrder.OrderStatus.CANCELLED;
-            case "completed":
-                return ConsumerOrder.OrderStatus.DELIVERED; // Mapear completed a delivered
-            default:
-                return ConsumerOrder.OrderStatus.PENDING;
-        }
+        String orderTypeText = "FROM_SELLER".equals(order.getOrderType()) ? "Pedido de Vendedor" : "Pedido";
+        
+        Toast.makeText(getContext(), 
+            orderTypeText + "\n" +
+            "Vendedor: " + order.getClientOrSupplier() + "\n" +
+            "Productos: " + String.join(", ", order.getProducts()) + "\n" +
+            "Fecha: " + order.getDeliveryDate() + "\n" +
+            "Total: " + order.getTotal() + "\n" +
+            "Estado: " + order.getStatus(),
+            Toast.LENGTH_LONG).show();
     }
 
-    private void showOrderDetails(ConsumerOrder order) {
-        // Convertir ConsumerOrder a Transaction para el popup
-        Transaction transaction = convertConsumerOrderToTransaction(order);
-        
-        // Obtener información del usuario actual
-        int userId = sessionManager.getUserId();
-        String userType = "consumer"; // Este fragment es para consumidores
-        
-        // Crear y mostrar el dialog
-        OrderDetailsDialog dialog = OrderDetailsDialog.newInstance(transaction, userType, userId);
-        dialog.setOnOrderActionListener(new OrderDetailsDialog.OnOrderActionListener() {
-            @Override
-            public void onDeliverOrder(Transaction transaction) {
-                updateOrderStatus(transaction.getId(), "delivered");
-            }
-            
-            @Override
-            public void onCancelOrder(Transaction transaction) {
-                updateOrderStatus(transaction.getId(), "cancelled");
-            }
-        });
-        
-        if (getFragmentManager() != null) {
-            dialog.show(getFragmentManager(), "OrderDetailsDialog");
-        }
+    private void cancelOrder(SupermarketOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Cancelar Pedido")
+                .setMessage("¿Estás seguro de que quieres cancelar este pedido?")
+                .setPositiveButton("Sí, cancelar", (dialog, which) -> {
+                    cancelOrderTransaction(order.getTransactionId());
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
-    
-    private Transaction convertConsumerOrderToTransaction(ConsumerOrder order) {
-        Transaction transaction = new Transaction();
-        transaction.setId(Integer.parseInt(order.getId()));
-        transaction.setBuyerId(sessionManager.getUserId());
-        transaction.setSellerId(Integer.parseInt(order.getSellerId()));
-        transaction.setBuyerType("consumer");
-        transaction.setSellerType("farmer"); // Asumimos que es farmer por ahora
-        transaction.setTotalPrice(order.getTotalAmount());
-        transaction.setCurrency("EUR");
-        transaction.setStatus(convertStatus(order.getStatus()));
-        transaction.setCreatedAt(order.getOrderDate());
-        transaction.setBuyerName("Consumidor"); // Podríamos obtener el nombre real
-        transaction.setSellerName("Vendedor " + order.getSellerId());
-        
-        // Convertir items
-        List<com.example.frontend.model.OrderItem> orderItems = new ArrayList<>();
-        if (order.getItems() != null) {
-            for (ConsumerOrder.OrderItem item : order.getItems()) {
-                com.example.frontend.model.OrderItem orderItem = new com.example.frontend.model.OrderItem();
-                orderItem.product_id = Integer.parseInt(item.getProductId());
-                orderItem.product_name = item.getProductName();
-                orderItem.quantity = item.getQuantity();
-                orderItem.unit_price = item.getUnitPrice();
-                orderItem.total_price = item.getTotalPrice();
-                orderItems.add(orderItem);
-            }
-        }
-        transaction.setOrderDetails(orderItems);
-        
-        return transaction;
-    }
-    
-    private String convertStatus(ConsumerOrder.OrderStatus status) {
-        if (status == null) return "pending";
-        
-        switch (status) {
-            case PENDING: return "pending";
-            case CONFIRMED:
-            case IN_TRANSIT: return "in_progress";
-            case DELIVERED: return "delivered";
-            case CANCELLED: return "cancelled";
-            default: return "pending";
-        }
-    }
-    
-    private void updateOrderStatus(int transactionId, String newStatus) {
+
+    private void cancelOrderTransaction(int transactionId) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
         
-        // Crear el objeto de actualización
-        ApiService.StatusUpdateRequest statusUpdate = new ApiService.StatusUpdateRequest(newStatus);
-        
-        Call<Transaction> call = api.updateTransactionStatus(transactionId, statusUpdate);
-        call.enqueue(new Callback<Transaction>() {
+        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
             @Override
-            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Estado actualizado correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Pedido cancelado correctamente.", Toast.LENGTH_LONG).show();
                     loadOrders(); // Recargar la lista
                 } else {
-                    Toast.makeText(getContext(), "Error al actualizar el estado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
                 }
             }
-            
+
             @Override
-            public void onFailure(Call<Transaction> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error updating order status", t);
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
