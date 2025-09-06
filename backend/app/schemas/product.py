@@ -14,6 +14,7 @@ class ProductBase(BaseModel):
     is_eco: Optional[bool]
     image_url: Optional[str]
     provider_id: int
+    is_hidden: Optional[bool] = False
 
 class ProductCreate(ProductBase):
     pass

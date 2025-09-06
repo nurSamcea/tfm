@@ -6,6 +6,14 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class Constants {
     private static Dotenv dotenv;
     
+    // ========================================
+    // CONFIGURACIÓN CENTRALIZADA
+    // ========================================
+    // Para cambiar la IP del backend, modifica únicamente el archivo .env en la raíz del proyecto
+    private static final String DEFAULT_BACKEND_IP = "192.168.68.116"; // Esta IP se lee desde .env
+    private static final String DEFAULT_BACKEND_PORT = "8000";
+    private static final String DEFAULT_BACKEND_PROTOCOL = "http";
+    
     // Inicializar dotenv
     public static void init(Context context) {
         if (dotenv == null) {
@@ -35,15 +43,15 @@ public class Constants {
     
     // Configuración del backend
     public static String getBackendIP() {
-        return getEnvVar("BACKEND_IP", "192.168.68.116");
+        return getEnvVar("BACKEND_IP", DEFAULT_BACKEND_IP);
     }
     
     public static String getBackendPort() {
-        return getEnvVar("BACKEND_PORT", "8000");
+        return getEnvVar("BACKEND_PORT", DEFAULT_BACKEND_PORT);
     }
     
     public static String getBackendProtocol() {
-        return getEnvVar("BACKEND_PROTOCOL", "http");
+        return getEnvVar("BACKEND_PROTOCOL", DEFAULT_BACKEND_PROTOCOL);
     }
     
     public static String getBaseUrl() {
@@ -62,25 +70,25 @@ public class Constants {
     // Timeouts
     public static int getConnectTimeout() {
         try {
-            return Integer.parseInt(getEnvVar("CONNECT_TIMEOUT", "30"));
+            return Integer.parseInt(getEnvVar("CONNECT_TIMEOUT", "60"));
         } catch (NumberFormatException e) {
-            return 30;
+            return 60;
         }
     }
     
     public static int getReadTimeout() {
         try {
-            return Integer.parseInt(getEnvVar("READ_TIMEOUT", "30"));
+            return Integer.parseInt(getEnvVar("READ_TIMEOUT", "60"));
         } catch (NumberFormatException e) {
-            return 30;
+            return 60;
         }
     }
     
     public static int getWriteTimeout() {
         try {
-            return Integer.parseInt(getEnvVar("WRITE_TIMEOUT", "30"));
+            return Integer.parseInt(getEnvVar("WRITE_TIMEOUT", "60"));
         } catch (NumberFormatException e) {
-            return 30;
+            return 60;
         }
     }
 }

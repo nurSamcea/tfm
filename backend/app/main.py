@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+import os
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api.v1.routers import (
@@ -36,3 +38,8 @@ app.include_router(traceability.router)
 @app.get("/")
 def root():
     return {"message": "Welcome to the Zero Platform API 🚀"}
+
+# Montar archivos estáticos para servir imágenes subidas
+# Asegurar que el directorio existe para evitar errores en el arranque
+os.makedirs("media", exist_ok=True)
+app.mount("/media", StaticFiles(directory="media"), name="media")

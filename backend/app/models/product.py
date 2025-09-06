@@ -19,6 +19,7 @@ class Product(Base):
     is_eco = Column(Boolean)
     image_url = Column(Text)
     provider_id = Column(Integer, ForeignKey("users.id"))
+    is_hidden = Column(Boolean, default=False)  # Nuevo campo para ocultar productos
     certifications = Column(JSON)  # Ejemplo: eco, local, etc.
     created_at = Column(DateTime, default=datetime.utcnow)
 

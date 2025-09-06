@@ -19,11 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
 import com.example.frontend.api.AuthService;
-import com.example.frontend.api.LoginRequest;
-import com.example.frontend.api.LoginResponse;
+import com.example.frontend.api.ApiService;
 import com.example.frontend.api.RetrofitClient;
 import com.example.frontend.utils.SessionManager;
-import com.example.frontend.utils.JwtDecoder;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,16 +43,21 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "LoginFragment onCreateView() llamado");
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         
         // Inicializar servicios
         authService = RetrofitClient.getInstance(requireContext()).getAuthService();
         sessionManager = new SessionManager(requireContext());
         
-        // Verificar si ya está logueado
+        // No verificar automáticamente si está logueado
+        // Permitir que el usuario siempre pueda acceder al formulario de login
+        
+        // Si ya está logueado, mostrar un mensaje informativo
         if (sessionManager.isLoggedIn()) {
-            navigateToMainActivity();
-            return view;
+            Toast.makeText(requireContext(), 
+                "Ya tienes una sesión activa. Puedes hacer login con otra cuenta.", 
+                Toast.LENGTH_LONG).show();
         }
         
         // Inicializar vistas
@@ -97,32 +100,39 @@ public class LoginFragment extends Fragment {
         hideError();
         
         // Crear request
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        ApiService.LoginRequest loginRequest = new ApiService.LoginRequest(email, password);
         
         // Realizar petición
-        authService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
+        authService.login(loginRequest).enqueue(new Callback<ApiService.LoginResponse>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(Call<ApiService.LoginResponse> call, Response<ApiService.LoginResponse> response) {
                 setLoading(false);
                 
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse loginResponse = response.body();
+                    ApiService.LoginResponse loginResponse = response.body();
                     
-                    // Decodificar token JWT para obtener información del usuario
-                    String token = loginResponse.getAccessToken();
-                    JwtDecoder.JwtPayload payload = JwtDecoder.decode(token);
+                    // Si ya había una sesión activa, cerrarla primero
+                    if (sessionManager.isLoggedIn()) {
+                        sessionManager.logout();
+                    }
                     
-                    // Guardar sesión con información del token
+                    // Guardar nueva sesión con información del usuario
                     sessionManager.createLoginSession(
-                        token,
-                        payload != null ? payload.userId : 0,
-                        email,
-                        payload != null ? payload.role : "consumer",
-                        payload != null ? payload.name : email.split("@")[0]
+                        loginResponse.access_token,
+                        loginResponse.user_id,
+                        loginResponse.user_email,
+                        loginResponse.user_role,
+                        loginResponse.user_name
                     );
                     
-                    // Navegar a la actividad principal
-                    navigateToMainActivity();
+                    Toast.makeText(requireContext(), 
+                        "¡Bienvenido, " + loginResponse.user_name + "!", 
+                        Toast.LENGTH_SHORT).show();
+                    
+                    // Navegar directamente al modo correspondiente según el rol
+                    if (getActivity() instanceof WelcomeActivity) {
+                        ((WelcomeActivity) getActivity()).switchToMode(loginResponse.user_role);
+                    }
                     
                 } else {
                     String errorMessage = "Credenciales inválidas";
@@ -136,7 +146,7 @@ public class LoginFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(Call<ApiService.LoginResponse> call, Throwable t) {
                 setLoading(false);
                 Log.e(TAG, "Login error", t);
                 showError("Error de conexión. Verifica tu internet");
@@ -161,16 +171,10 @@ public class LoginFragment extends Fragment {
         errorText.setVisibility(View.GONE);
     }
 
-    private void navigateToMainActivity() {
-        Intent intent = new Intent(requireContext(), WelcomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
     private void navigateToRegister() {
         // Mostrar fragmento de registro en WelcomeActivity
         if (getActivity() instanceof WelcomeActivity) {
             ((WelcomeActivity) getActivity()).showRegisterFragment();
         }
     }
-} 
+}

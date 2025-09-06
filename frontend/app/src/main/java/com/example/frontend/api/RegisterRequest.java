@@ -1,56 +1,30 @@
 package com.example.frontend.api;
 
-import com.google.gson.annotations.SerializedName;
-
 public class RegisterRequest {
-    @SerializedName("name")
-    private String name;
-
-    @SerializedName("email")
-    private String email;
-
-    @SerializedName("password")
-    private String password;
-
-    @SerializedName("role")
-    private String role;
-
+    public String name;
+    public String email;
+    public String password;
+    public String role;
+    public String entity_name;
+    public Double location_lat;
+    public Double location_lon;
+    
     public RegisterRequest(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    
+    public RegisterRequest(String name, String email, String password, String role, 
+                         String entity_name, Double location_lat, Double location_lon) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
         this.role = role;
+        this.entity_name = entity_name;
+        this.location_lat = location_lat;
+        this.location_lon = location_lon;
     }
 }
+

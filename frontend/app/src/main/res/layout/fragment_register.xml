@@ -1,164 +1,290 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center">
+        android:padding="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp">
 
-        <!-- Logo o título -->
+        <!-- Título -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🌱 EcoMarket"
-            android:textSize="32sp"
+            android:text="Crear Cuenta"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="@color/primary"
-            android:layout_marginBottom="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Crear nueva cuenta"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="32dp" />
-
-        <!-- Campo de nombre -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Nombre completo"
-            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Campo de email -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Email"
-            app:startIconDrawable="@android:drawable/ic_dialog_email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Campo de contraseña -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Contraseña"
-            app:startIconDrawable="@android:drawable/ic_lock_lock"
-            app:endIconMode="password_toggle"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Campo de confirmar contraseña -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Confirmar contraseña"
-            app:startIconDrawable="@android:drawable/ic_lock_lock"
-            app:endIconMode="password_toggle"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/confirm_password_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Spinner de rol -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:hint="Tipo de usuario"
-            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-            <AutoCompleteTextView
-                android:id="@+id/role_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Mensaje de error -->
-        <TextView
-            android:id="@+id/error_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="14sp"
             android:gravity="center"
-            android:visibility="gone"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Nombre completo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre completo *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Ingresa tu nombre completo"
+            android:inputType="textPersonName"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             android:layout_marginBottom="16dp" />
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="tu@email.com"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Contraseña -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contraseña *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Mínimo 6 caracteres"
+            android:inputType="textPassword"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Confirmar contraseña -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmar contraseña *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/confirm_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Repite tu contraseña"
+            android:inputType="textPassword"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tipo de usuario -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de usuario *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/role_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Selecciona tu rol"
+            android:inputType="none"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Nombre de la entidad (para agricultores y supermercados) -->
+        <TextView
+            android:id="@+id/entity_name_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la empresa/entidad"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/entity_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Nombre de tu empresa o entidad"
+            android:inputType="text"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Ubicación -->
+        <TextView
+            android:id="@+id/location_title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubicación *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Campo de búsqueda de dirección -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/address_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Buscar dirección (ej: Calle Mayor 123, Madrid)"
+                    android:inputType="text"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/search_address_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:text="Buscar"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_primary"
+                    android:minWidth="80dp" />
+
+            </LinearLayout>
+
+            <!-- Coordenadas (solo lectura) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/location_lat_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Latitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginEnd="8dp"
+                    android:focusable="false"
+                    android:clickable="false" />
+
+                <EditText
+                    android:id="@+id/location_lon_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Longitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginStart="8dp"
+                    android:focusable="false"
+                    android:clickable="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <!-- Botón de registro -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Registrarse"
+            android:text="Crear Cuenta"
             android:textSize="16sp"
-            android:layout_marginBottom="16dp"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/white"
+            android:background="@drawable/btn_primary"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- Progress Bar -->
+        <!-- Botón para volver al login -->
+        <Button
+            android:id="@+id/back_to_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Ya tengo cuenta"
+            android:textSize="16sp"
+            android:textColor="@color/primary"
+            android:background="@drawable/btn_outline" />
+
+        <!-- Barra de progreso -->
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:visibility="gone"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="16dp" />
 
-        <!-- Botón de volver al login -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/back_to_login_button"
+        <!-- Texto de error -->
+        <TextView
+            android:id="@+id/error_text"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="¿Ya tienes cuenta? Inicia sesión"
+            android:layout_height="wrap_content"
+            android:text=""
             android:textSize="14sp"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/error"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="16dp" />
 
     </LinearLayout>
 

@@ -1,6 +1,5 @@
 package com.example.frontend;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +10,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.frontend.ui.auth.LoginFragment;
 import com.example.frontend.ui.auth.RegisterFragment;
@@ -29,15 +29,15 @@ import com.example.frontend.ui.supermarket.SupermarketProfileFragment;
 import com.example.frontend.ui.supermarket.SupermarketSuppliersFragment;
 import com.example.frontend.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.frontend.ui.UserSelectionFragment;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = "WelcomeActivityApp";
     
     private Button btnLogin;
     private Button btnRegister;
-    private LinearLayout cardConsumer;
-    private LinearLayout cardFarmer;
-    private LinearLayout cardSupermarket;
+    private Button btnExistingUsers;
+    private TextView footerText;
     
     // Componentes para el modo principal
     private String currentUserType = null;
@@ -60,18 +60,24 @@ public class WelcomeActivity extends AppCompatActivity {
         // Inicializar SessionManager
         sessionManager = new SessionManager(this);
 
+        // Inicializar vistas primero
         btnLogin = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
-        cardConsumer = findViewById(R.id.card_consumer);
-        cardFarmer = findViewById(R.id.card_farmer);
-        cardSupermarket = findViewById(R.id.card_supermarket);
+        btnExistingUsers = findViewById(R.id.btn_existing_users);
+        footerText = findViewById(R.id.footer_text);
         fragmentContainer = findViewById(R.id.fragment_container);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Verificar si hay una sesión activa al iniciar (después de inicializar las vistas)
+        if (checkActiveSession()) {
+            return; // Si hay sesión activa, no continuar con la configuración normal
+        }
         
         // Botón de Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Botón de login clickeado");
                 showLoginFragment();
             }
         });
@@ -84,30 +90,14 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
-        // Modo Consumidor
-        cardConsumer.setOnClickListener(new View.OnClickListener() {
+        // Botón de Usuarios Existentes (Demo)
+        btnExistingUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToMode("consumer");
+                showUserSelectionFragment();
             }
         });
 
-        // Modo Agricultor
-        cardFarmer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchToMode("farmer");
-            }
-        });
-
-        // Modo Supermercado
-        cardSupermarket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchToMode("supermarket");
-            }
-        });
-        
         // Configurar el manejo del botón atrás
         setupBackPressHandler();
         
@@ -117,16 +107,39 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void setupBackPressHandler() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            private long lastBackPressTime = 0;
+            private static final long DOUBLE_BACK_PRESS_INTERVAL = 2000; // 2 segundos
+            
             @Override
             public void handleOnBackPressed() {
-                if (currentUserType != null) {
-                    // Si estamos en un modo específico, volver a la selección
+                // Si hay una sesión activa, nunca volver a WelcomeActivity
+                if (sessionManager.isLoggedIn() && currentUserType != null) {
+                    long currentTime = System.currentTimeMillis();
+                    
+                    // Si es el primer retroceso o han pasado más de 2 segundos
+                    if (lastBackPressTime == 0 || (currentTime - lastBackPressTime) > DOUBLE_BACK_PRESS_INTERVAL) {
+                        lastBackPressTime = currentTime;
+                        Toast.makeText(WelcomeActivity.this, "Presiona retroceso nuevamente para salir", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Segundo retroceso en menos de 2 segundos - confirmar salida
+                        new AlertDialog.Builder(WelcomeActivity.this)
+                                .setTitle("Salir de EcoMarket")
+                                .setMessage("¿Estás seguro de que quieres salir de la aplicación?")
+                                .setPositiveButton("Sí", (dialog, which) -> {
+                                    finish();
+                                    System.exit(0);
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+                    }
+                } else if (currentUserType != null) {
+                    // Si estamos en un modo específico pero sin sesión, volver a la selección
                     backToModeSelection();
                 } else if (currentFragment instanceof LoginFragment || currentFragment instanceof RegisterFragment) {
                     // Si estamos en login/registro, volver a la selección de modo
                     backToModeSelection();
                 } else {
-                    // Confirmar salida de la aplicación
+                    // Confirmar salida de la aplicación (sin sesión activa)
                     new AlertDialog.Builder(WelcomeActivity.this)
                             .setTitle("Salir de EcoMarket")
                             .setMessage("¿Estás seguro de que quieres salir de la aplicación?")
@@ -141,6 +154,26 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Verifica si hay una sesión activa y navega automáticamente al modo correspondiente
+     * @return true si hay sesión activa y se navegó automáticamente, false en caso contrario
+     */
+    private boolean checkActiveSession() {
+        if (sessionManager.isLoggedIn()) {
+            String userRole = sessionManager.getUserRole();
+            String userName = sessionManager.getUserName();
+            
+            Log.d(TAG, "Sesión activa encontrada para usuario: " + userName + " con rol: " + userRole);
+            
+            if (userRole != null) {
+                // Navegar directamente al modo correspondiente
+                switchToMode(userRole);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void checkCurrentMode() {
         // Verificar si ya estamos en un modo específico
         if (currentUserType != null) {
@@ -148,7 +181,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    private void switchToMode(String userType) {
+    public void switchToMode(String userType) {
         Log.d(TAG, "Cambiando a modo: " + userType);
         currentUserType = userType;
 
@@ -168,10 +201,18 @@ public class WelcomeActivity extends AppCompatActivity {
         // Mostrar contenedor de fragmentos
         fragmentContainer.setVisibility(View.VISIBLE);
         bottomNavigationView.setVisibility(View.VISIBLE);
+        // Ocultar footer cuando se está en un modo específico (la bottom navigation lo reemplaza)
+        if (footerText != null) {
+            footerText.setVisibility(View.GONE);
+        }
     }
 
     private void showModeNavigation(String userType) {
         bottomNavigationView.setVisibility(View.VISIBLE);
+        
+        // Limpiar el menú anterior antes de cargar el nuevo
+        bottomNavigationView.getMenu().clear();
+        Log.d(TAG, "Menú limpiado, cargando menú para: " + userType);
         
         // Configurar el menú según el tipo de usuario
         int menuResId;
@@ -270,6 +311,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void showLoginFragment() {
+        Log.d(TAG, "showLoginFragment() llamado");
         // Mostrar fragmento de login
         LoginFragment loginFragment = new LoginFragment();
         switchFragment(loginFragment);
@@ -278,6 +320,11 @@ public class WelcomeActivity extends AppCompatActivity {
         findViewById(R.id.mode_selection_container).setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
         bottomNavigationView.setVisibility(View.GONE);
+        // Mostrar footer en el fragmento de login
+        if (footerText != null) {
+            footerText.setVisibility(View.VISIBLE);
+        }
+        Log.d(TAG, "Fragmento de login mostrado");
     }
 
     public void showRegisterFragment() {
@@ -289,6 +336,10 @@ public class WelcomeActivity extends AppCompatActivity {
         findViewById(R.id.mode_selection_container).setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
         bottomNavigationView.setVisibility(View.GONE);
+        // Mostrar footer en el fragmento de registro
+        if (footerText != null) {
+            footerText.setVisibility(View.VISIBLE);
+        }
     }
 
     private void backToModeSelection() {
@@ -299,15 +350,65 @@ public class WelcomeActivity extends AppCompatActivity {
         findViewById(R.id.mode_selection_container).setVisibility(View.VISIBLE);
         fragmentContainer.setVisibility(View.GONE);
         bottomNavigationView.setVisibility(View.GONE);
+        // Mostrar footer cuando se está en la pantalla principal
+        if (footerText != null) {
+            footerText.setVisibility(View.VISIBLE);
+        }
         
         // Limpiar fragmentos
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    public void showUserSelectionFragment() {
+        // Mostrar fragmento de selección de usuarios
+        UserSelectionFragment userSelectionFragment = new UserSelectionFragment();
+        switchFragment(userSelectionFragment);
+        
+        // Ocultar elementos de selección
+        findViewById(R.id.mode_selection_container).setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+        bottomNavigationView.setVisibility(View.GONE);
+        // Mostrar footer en el fragmento de selección de usuarios
+        if (footerText != null) {
+            footerText.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void logout() {
+        // Cerrar sesión
         sessionManager.logout();
-        backToModeSelection();
+        
+        // Limpiar estado
+        currentUserType = null;
+        currentFragment = null;
+        
+        // Mostrar menú principal (WelcomeActivity)
+        showMainMenu();
+        
+        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        
+        Log.d(TAG, "Sesión cerrada, regresando a WelcomeActivity");
+    }
+
+    public void showMainMenu() {
+        // Mostrar selección de modo
+        findViewById(R.id.mode_selection_container).setVisibility(View.VISIBLE);
+        fragmentContainer.setVisibility(View.GONE);
+        bottomNavigationView.setVisibility(View.GONE);
+        // Mostrar footer cuando se está en el menú principal
+        if (footerText != null) {
+            footerText.setVisibility(View.VISIBLE);
+        }
+        
+        // Limpiar fragmento actual
+        if (currentFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.remove(currentFragment);
+            transaction.commit();
+            currentFragment = null;
+        }
     }
     
     /**

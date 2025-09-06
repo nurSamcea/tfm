@@ -91,4 +91,7 @@
     <!-- Colores para el nuevo diseño del consumidor -->
     <color name="background_light">#F8F9FA</color>
     <color name="chip_background">#F5F5F5</color>
+    
+    <!-- Color azul faltante -->
+    <color name="blue">#2196F3</color>
 </resources>

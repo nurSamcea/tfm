@@ -8,24 +8,34 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.frontend.R;
+import com.example.frontend.WelcomeActivity;
+import com.example.frontend.utils.SessionManager;
 
 public class SupermarketProfileFragment extends Fragment {
     private static final String TAG = "Curr.ERROR SupermarketProfileFragment";
+    private SessionManager sessionManager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: Iniciando la aplicación");
         View view = inflater.inflate(R.layout.fragment_supermarket_profile, container, false);
 
-        // Nombre de usuario (puedes cambiarlo por el nombre real del usuario)
+        // Inicializar SessionManager
+        sessionManager = new SessionManager(requireContext());
+
+        // Información del usuario desde la sesión
         TextView profileName = view.findViewById(R.id.profileName);
-        profileName.setText("Ensigna");
+        String userName = sessionManager.getUserName();
+        String userEmail = sessionManager.getUserEmail();
+        
+        profileName.setText(userName != null ? userName : "Supermercado");
 
         View contactInformation = view.findViewById(R.id.optionPersonalInfo);
         ImageView persIcon = contactInformation.findViewById(R.id.optionIcon);
@@ -51,10 +61,22 @@ public class SupermarketProfileFragment extends Fragment {
         certificationIcon.setImageResource(R.drawable.ic_certification);
         certificationsText.setText("Certifications");
 
-        // Botón de volver
-        Button buttonBack = view.findViewById(R.id.buttonBackSupermarketToMain);
-        buttonBack.setOnClickListener(v -> requireActivity().recreate());
+        // Botón de logout
+        Button logoutButton = view.findViewById(R.id.logout_button);
+        if (logoutButton != null) {
+            logoutButton.setOnClickListener(v -> performLogout());
+        }
 
         return view;
+    }
+
+    private void performLogout() {
+        // Mostrar confirmación
+        Toast.makeText(requireContext(), "Cerrando sesión...", Toast.LENGTH_SHORT).show();
+        
+        // Cerrar sesión
+        if (getActivity() instanceof WelcomeActivity) {
+            ((WelcomeActivity) getActivity()).logout();
+        }
     }
 } 

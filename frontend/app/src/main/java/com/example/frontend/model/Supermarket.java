@@ -6,9 +6,9 @@ public class Supermarket extends User {
     private List<InventoryItem> inventory;
     private List<Farmer> suppliers;
 
-    public Supermarket(String id, String name, String email, Location location, float sustainabilityScore,
+    public Supermarket(int id, String name, String email, String role, String entity_name, Location location, float sustainabilityScore,
                        List<InventoryItem> inventory, List<Farmer> suppliers) {
-        super(id, name, email, location, sustainabilityScore);
+        super(id, name, email, role, entity_name, location, sustainabilityScore);
         this.inventory = inventory;
         this.suppliers = suppliers;
     }

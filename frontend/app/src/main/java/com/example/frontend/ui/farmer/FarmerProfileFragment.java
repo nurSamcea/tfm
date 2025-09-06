@@ -55,10 +55,6 @@ public class FarmerProfileFragment extends Fragment {
             logoutButton.setOnClickListener(v -> performLogout());
         }
 
-        // Botón de volver
-        Button buttonBack = view.findViewById(R.id.buttonBackFarmerToMain);
-        buttonBack.setOnClickListener(v -> requireActivity().recreate());
-
         return view;
     }
 

@@ -79,6 +79,11 @@ def create_tables():
                 print(f"❌ Error ejecutando esquema: {e}")
                 return False
         
+        # Actualizar esquema existente si es necesario
+        success = update_schema(cursor)
+        if not success:
+            print("⚠️  Algunos errores al actualizar esquema, pero continuando...")
+        
         return True
         
     except Exception as e:
@@ -89,6 +94,78 @@ def create_tables():
             cursor.close()
         if conn:
             conn.close()
+
+def update_schema(cursor):
+    """Actualizar esquema existente con nuevas columnas y modificaciones"""
+    try:
+        print("🔧 Actualizando esquema existente...")
+        
+        # Lista de actualizaciones del esquema
+        schema_updates = [
+            # Añadir columna is_hidden a products si no existe
+            """
+            DO $$ 
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'products' AND column_name = 'is_hidden'
+                ) THEN
+                    ALTER TABLE products ADD COLUMN is_hidden BOOLEAN DEFAULT FALSE NOT NULL;
+                    RAISE NOTICE 'Columna is_hidden añadida a products';
+                ELSE
+                    RAISE NOTICE 'Columna is_hidden ya existe en products';
+                END IF;
+            END $$;
+            """,
+            
+            # Añadir columna image_url a products si no existe
+            """
+            DO $$ 
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'products' AND column_name = 'image_url'
+                ) THEN
+                    ALTER TABLE products ADD COLUMN image_url TEXT;
+                    RAISE NOTICE 'Columna image_url añadida a products';
+                ELSE
+                    RAISE NOTICE 'Columna image_url ya existe en products';
+                END IF;
+            END $$;
+            """,
+            
+            # Añadir columna certifications a products si no existe
+            """
+            DO $$ 
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'products' AND column_name = 'certifications'
+                ) THEN
+                    ALTER TABLE products ADD COLUMN certifications JSONB;
+                    RAISE NOTICE 'Columna certifications añadida a products';
+                ELSE
+                    RAISE NOTICE 'Columna certifications ya existe en products';
+                END IF;
+            END $$;
+            """
+        ]
+        
+        # Ejecutar cada actualización
+        for i, update in enumerate(schema_updates, 1):
+            try:
+                cursor.execute(update)
+                print(f"✅ Actualización {i} ejecutada")
+            except psycopg2.Error as e:
+                print(f"⚠️  Error en actualización {i}: {e}")
+                # Continuar con las siguientes actualizaciones
+        
+        print("✅ Esquema actualizado")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error actualizando esquema: {e}")
+        return False
 
 def delete_tables():
     """Eliminar todas las tablas"""
@@ -233,7 +310,7 @@ def check_status():
 
 def main():
     parser = argparse.ArgumentParser(description='Gestor de Base de Datos para Railway')
-    parser.add_argument('actions', nargs='+', choices=['create', 'delete', 'update', 'status'], 
+    parser.add_argument('actions', nargs='+', choices=['create', 'delete', 'update', 'update-schema', 'status'], 
                        help='Acciones a realizar (puedes especificar múltiples)')
     
     args = parser.parse_args()
@@ -266,6 +343,21 @@ def main():
                 print("🎉 ¡Datos actualizados exitosamente!")
             else:
                 print("💥 Error actualizando datos")
+                sys.exit(1)
+        
+        elif action == 'update-schema':
+            conn, cursor = get_database_connection()
+            if conn:
+                success = update_schema(cursor)
+                cursor.close()
+                conn.close()
+                if success:
+                    print("🎉 ¡Esquema actualizado exitosamente!")
+                else:
+                    print("💥 Error actualizando esquema")
+                    sys.exit(1)
+            else:
+                print("💥 No se pudo conectar a la base de datos")
                 sys.exit(1)
         
         elif action == 'status':

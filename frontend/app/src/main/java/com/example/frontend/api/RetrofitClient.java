@@ -22,7 +22,10 @@ public class RetrofitClient {
     private RetrofitClient(Context context) {
         this.sessionManager = new SessionManager(context);
         
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(Constants.getConnectTimeout(), java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(Constants.getReadTimeout(), java.util.concurrent.TimeUnit.SECONDS)
+                .writeTimeout(Constants.getWriteTimeout(), java.util.concurrent.TimeUnit.SECONDS);
         
         // Interceptor para añadir el token JWT a todas las peticiones
         httpClient.addInterceptor(new Interceptor() {

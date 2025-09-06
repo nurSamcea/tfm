@@ -126,20 +126,6 @@
             android:fontFamily="@font/manrope_bold"
             android:textSize="14sp" />
 
-        <!-- Botón de volver -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonBackFarmerToMain"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="Volver a inicio"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/colorOrganic"
-            android:layout_marginStart="8dp"
-            app:cornerRadius="12dp"
-            android:fontFamily="@font/manrope_bold"
-            android:textSize="14sp" />
-
     </LinearLayout>
 
 </LinearLayout>

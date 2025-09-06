@@ -33,3 +33,15 @@ class UserRead(UserBase):
 
     class Config:
         from_attributes = True
+
+
+class UserSelect(BaseModel):
+    """Esquema simplificado para selección de usuarios en la interfaz"""
+    id: int
+    name: str
+    email: str
+    entity_name: Optional[str]
+    role: str
+    
+    class Config:
+        from_attributes = True

@@ -55,10 +55,6 @@ public class ConsumerProfileFragment extends Fragment {
             logoutButton.setOnClickListener(v -> performLogout());
         }
 
-        // Botón de volver
-        Button buttonBack = view.findViewById(R.id.buttonBackConsumerToMain);
-        buttonBack.setOnClickListener(v -> requireActivity().recreate());
-
         return view;
     }
 

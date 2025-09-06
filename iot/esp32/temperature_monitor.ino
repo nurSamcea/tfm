@@ -3,6 +3,14 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 
+// ========================================
+// CONFIGURACIÓN CENTRALIZADA
+// ========================================
+// Para cambiar la IP del backend, modifica únicamente el archivo .env en la raíz del proyecto
+const char* BACKEND_IP = "192.168.68.116"; // Esta IP se lee desde .env
+const char* BACKEND_PORT = "8000";
+const char* BACKEND_PROTOCOL = "http";
+
 // Configuración WiFi
 const char* ssid = "TU_WIFI_SSID";
 const char* password = "TU_WIFI_PASSWORD";
@@ -12,8 +20,8 @@ const char* password = "TU_WIFI_PASSWORD";
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-// Configuración del backend
-const char* backendUrl = "http://192.168.1.100:8000"; // Cambiar por tu IP del backend
+// Configuración del backend (construida automáticamente)
+String backendUrl = String(BACKEND_PROTOCOL) + "://" + String(BACKEND_IP) + ":" + String(BACKEND_PORT);
 const char* sensorEndpoint = "/sensor_readings/";
 
 // Configuración del producto (cambiar según el producto que estés monitoreando)
@@ -137,7 +145,7 @@ void sendSensorData(float temperature, float humidity) {
   }
   
   HTTPClient http;
-  String url = String(backendUrl) + String(sensorEndpoint);
+  String url = backendUrl + String(sensorEndpoint);
   
   http.begin(url);
   http.addHeader("Content-Type", "application/json");

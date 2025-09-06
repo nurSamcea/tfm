@@ -6,9 +6,9 @@ public class Farmer extends User {
     private List<Product> products;
     private List<Certification> certifications;
 
-    public Farmer(String id, String name, String email, Location location, float sustainabilityScore,
+    public Farmer(int id, String name, String email, String role, String entity_name, Location location, float sustainabilityScore,
                  List<Product> products, List<Certification> certifications) {
-        super(id, name, email, location, sustainabilityScore);
+        super(id, name, email, role, entity_name, location, sustainabilityScore);
         this.products = products;
         this.certifications = certifications;
     }

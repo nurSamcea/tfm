@@ -263,8 +263,8 @@ public class ConsumerProductsFragment extends Fragment {
         }
     }
 
-    private ProductFilterRequest construirRequest() {
-        ProductFilterRequest req = new ProductFilterRequest();
+    private ApiService.ProductFilterRequest construirRequest() {
+        ApiService.ProductFilterRequest req = new ApiService.ProductFilterRequest();
         req.search = searchBar.getText().toString();
         req.filters = new HashMap<>();
         req.filters.put("eco", filterEco.isChecked());
@@ -303,7 +303,7 @@ public class ConsumerProductsFragment extends Fragment {
         
         Log.d(TAG, "loadSampleProducts: Iniciando carga de productos");
         try {
-            ProductFilterRequest req = construirRequest();
+            ApiService.ProductFilterRequest req = construirRequest();
             Log.d(TAG, "loadSampleProducts: Request construido, creando ApiService");
             ApiService apiService = RetrofitClient.getInstance(requireContext()).getRetrofit().create(ApiService.class);
             Log.d(TAG, "loadSampleProducts: ApiService creado, haciendo llamada");

@@ -17,6 +17,7 @@ public class Product {
     private boolean sustainable;
     private Double distance_km;
     private Double score;
+    private boolean isHidden;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -33,6 +34,7 @@ public class Product {
         this.farmerId = farmerId;
         this.harvestDate = harvestDate;
         this.sustainabilityMetrics = sustainabilityMetrics;
+        this.isHidden = false;
     }
 
     public Product(String id, String name, String category, double price, int quantity, int stock) {
@@ -41,6 +43,7 @@ public class Product {
 
     public Product() {
         // necesario para Retrofit, Gson o inicialización manual
+        this.isHidden = false;
     }
 
     // Getters y setters
@@ -147,5 +150,13 @@ public class Product {
 
     public void setScore(Double score) {
         this.score = score;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 }

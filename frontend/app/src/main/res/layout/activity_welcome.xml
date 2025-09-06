@@ -15,11 +15,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp"
-            android:paddingTop="60dp"
-            android:gravity="center_horizontal">
+            android:padding="24dp"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <!-- Header con logo y título -->
             <LinearLayout
@@ -27,26 +27,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="48dp">
 
                 <!-- Logo de la app -->
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:src="@drawable/ic_app_logo"
                     android:contentDescription="Logo EcoMarket"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="24dp" />
 
                 <!-- Título principal -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¡Bienvenido a EcoMarket!"
-                    android:textSize="24sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="@color/primary"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
             </LinearLayout>
 
@@ -55,229 +55,65 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="24dp"
+                android:gravity="center_horizontal">
 
                 <!-- Botón Login -->
                 <Button
                     android:id="@+id/btn_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
                     android:text="Iniciar Sesión"
                     android:textSize="16sp"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_primary"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:drawableStart="@drawable/ic_login"
                     android:drawablePadding="12dp" />
 
                 <!-- Botón Registro -->
                 <Button
                     android:id="@+id/btn_register"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
                     android:text="Crear Cuenta"
                     android:textSize="16sp"
                     android:textColor="@color/white"
                     android:background="@drawable/btn_accent"
+                    android:layout_marginBottom="16dp"
                     android:drawableStart="@drawable/ic_register"
+                    android:drawablePadding="12dp" />
+
+                <!-- Botón Usuarios Existentes -->
+                <Button
+                    android:id="@+id/btn_existing_users"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
+                    android:text="Usar Usuario Existente (Demo)"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary"
+                    android:background="@drawable/btn_outline"
+                    android:drawableStart="@drawable/ic_user"
                     android:drawablePadding="12dp" />
 
             </LinearLayout>
 
-            <!-- Separador -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/card_background"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Modos de usuario -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Botón Modo Consumidor -->
-                <LinearLayout
-                    android:id="@+id/card_consumer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="@drawable/card_consumer_bg"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center_vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_consumer"
-                        android:contentDescription="Modo Consumidor"
-                        android:tint="@color/primary"
-                        android:layout_marginEnd="16dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Modo Consumidor"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginBottom="2dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Compra productos frescos"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_right"
-                        android:contentDescription="Ir a modo consumidor"
-                        android:tint="@color/primary" />
-
-                </LinearLayout>
-
-                <!-- Botón Modo Agricultor -->
-                <LinearLayout
-                    android:id="@+id/card_farmer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="@drawable/card_farmer_bg"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center_vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_farmer"
-                        android:contentDescription="Modo Agricultor"
-                        android:tint="@color/secondary"
-                        android:layout_marginEnd="16dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Modo Agricultor"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginBottom="2dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vende tus productos"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_right"
-                        android:contentDescription="Ir a modo agricultor"
-                        android:tint="@color/secondary" />
-
-                </LinearLayout>
-
-                <!-- Botón Modo Supermercado -->
-                <LinearLayout
-                    android:id="@+id/card_supermarket"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="@drawable/card_supermarket_bg"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center_vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_supermarket"
-                        android:contentDescription="Modo Supermercado"
-                        android:tint="@color/accent"
-                        android:layout_marginEnd="16dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Modo Supermercado"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginBottom="2dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gestiona tu tienda"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_right"
-                        android:contentDescription="Ir a modo supermercado"
-                        android:tint="@color/accent" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Footer -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="© 2024 EcoMarket"
-                android:textSize="10sp"
-                android:textColor="@color/text_hint"
-                android:gravity="center"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp" />
-
         </LinearLayout>
 
     </ScrollView>
+
+    <!-- Footer -->
+    <TextView
+        android:id="@+id/footer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2025 EcoMarket"
+        android:textSize="10sp"
+        android:textColor="@color/text_hint"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp" />
 
     <!-- Contenedor de fragmentos (inicialmente oculto) -->
     <FrameLayout

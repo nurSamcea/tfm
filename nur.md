@@ -1,3 +1,4 @@
+> alembic upgrade head
 > python .\database\railway_init.py delete create update status
 
 

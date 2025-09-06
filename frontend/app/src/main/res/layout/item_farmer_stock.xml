@@ -1,109 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
-    android:layout_marginHorizontal="4dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
-    android:backgroundTint="@android:color/white">
+    app:cardElevation="4dp"
+    android:background="@drawable/gradient_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
         <!-- Imagen del producto -->
         <ImageView
-            android:id="@+id/image_food"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:id="@+id/product_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Product image"
-            android:src="@drawable/icon_stock"
-            android:background="@drawable/image_rounded_bg"
-            android:clipToOutline="true" />
+            android:src="@drawable/tomate_cherry"
+            android:background="@drawable/bg_search_field"
+            android:layout_marginEnd="16dp" />
 
-        <!-- Información central del producto -->
+        <!-- Información del producto -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="5dp">
+            android:orientation="vertical">
 
-            <!-- Precio prominente -->
             <TextView
-                android:id="@+id/text_price"
+                android:id="@+id/product_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="€2.50"
+                android:text="Nombre del Producto"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/colorOrganic"
-                android:fontFamily="@font/manrope_bold"
                 android:layout_marginBottom="4dp" />
 
-            <!-- Nombre del producto -->
             <TextView
-                android:id="@+id/text_title"
+                android:id="@+id/product_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tomates Cherry"
-                android:textStyle="bold"
+                android:text="Stock: 0"
+                android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:fontFamily="@font/manrope_bold"
                 android:layout_marginBottom="4dp" />
 
-            <!-- Fecha de recolección -->
             <TextView
-                android:id="@+id/text_date"
+                android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recolectado hoy"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:fontFamily="@font/manrope_regular" />
+                android:text="Precio: 0.00 €"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/product_expiration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caducidad: --"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- Columna derecha: descuento y estado -->
+        <!-- Botones de acción -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="end">
+            android:layout_marginStart="8dp">
 
-            <!-- Descuento -->
-            <TextView
-                android:id="@+id/text_discount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20% OFF"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:fontFamily="@font/manrope_regular"
-                android:layout_marginBottom="8dp"
-                android:gravity="end" />
+            <!-- Botón ocultar/mostrar -->
+            <ImageButton
+                android:id="@+id/btn_toggle_hidden"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_visibility"
+                android:background="@drawable/bg_search_field"
+                android:tint="@android:color/white"
+                android:contentDescription="Ocultar/Mostrar producto"
+                android:layout_marginBottom="8dp" />
 
-            <!-- Estado del producto -->
-            <TextView
-                android:id="@+id/text_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Disponible"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:fontFamily="@font/manrope_bold"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:background="@drawable/status_available_background"
-                android:gravity="center" />
+            <!-- Botón eliminar -->
+            <ImageButton
+                android:id="@+id/btn_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_delete"
+                android:background="@drawable/bg_search_field"
+                android:tint="@android:color/white"
+                android:contentDescription="Eliminar producto" />
 
         </LinearLayout>
 
