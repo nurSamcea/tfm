@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, Body, UploadFile, File, Form, status
+from fastapi import APIRouter, Depends, HTTPException, Body, UploadFile, File, Form, status, Request
 from sqlalchemy.orm import Session
 from geopy.distance import geodesic
 import os
 import logging
+import json
 
 from backend.app import schemas, database, models
 from backend.app.schemas.product import ProductFilterRequest, ProductOptimizedResponse
+from backend.app.models.product import ProductCategory
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -88,6 +90,12 @@ async def create_product_with_image(
             detail=f"Error interno del servidor: {str(e)}"
         )
 
+@router.get("/categories")
+def get_product_categories():
+    """Obtener todas las categorías de productos disponibles."""
+    return [{"value": category.value, "label": category.value.replace("_", " ").title()} 
+            for category in ProductCategory]
+
 @router.get("/", response_model=list[schemas.ProductRead])
 def get_all_products(
     db: Session = Depends(database.get_db),
@@ -111,16 +119,43 @@ def get_product(product_id: int, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
+
 @router.put("/{product_id}", response_model=schemas.ProductRead)
-def update_product(product_id: int, product_data: schemas.ProductCreate, db: Session = Depends(database.get_db)):
-    product = db.query(models.Product).get(product_id)
-    if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    for k, v in product_data.dict().items():
-        setattr(product, k, v)
-    db.commit()
-    db.refresh(product)
-    return product
+def update_product(product_id: int, product_data: schemas.ProductUpdate, db: Session = Depends(database.get_db)):
+    try:
+        product = db.query(models.Product).get(product_id)
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        # Actualizar TODOS los campos, incluyendo los que son None
+        update_data = product_data.dict(exclude_none=False)
+        
+        # Manejar la fecha de expiración desde el campo string
+        if 'expiration_date_string' in update_data and update_data['expiration_date_string'] is not None:
+            try:
+                from datetime import datetime
+                expiration_date = datetime.strptime(update_data['expiration_date_string'], '%Y-%m-%d').date()
+                product.expiration_date = expiration_date
+            except Exception as e:
+                logging.error(f"Error al parsear fecha: {e}")
+        
+        # Actualizar todos los campos directamente (excepto expiration_date_string y expiration_date que ya se manejaron)
+        for k, v in update_data.items():
+            # Solo proteger is_hidden de ser None
+            if k == 'is_hidden' and v is None:
+                v = False
+            # Saltar expiration_date_string y expiration_date ya que se manejaron arriba
+            if k in ['expiration_date_string', 'expiration_date']:
+                continue
+            setattr(product, k, v)
+        
+        db.commit()
+        db.refresh(product)
+        return product
+        
+    except Exception as e:
+        logging.error(f"Error al actualizar producto {product_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 @router.delete("/{product_id}")
 def delete_product(product_id: int, db: Session = Depends(database.get_db)):
@@ -132,16 +167,58 @@ def delete_product(product_id: int, db: Session = Depends(database.get_db)):
     return {"message": "Product deleted"}
 
 
-# @router.patch("/{product_id}/toggle-hidden")
-# def toggle_product_hidden(product_id: int, db: Session = Depends(database.get_db)):
-#     product = db.query(models.Product).get(product_id)
-#     if not product:
-#         raise HTTPException(status_code=404, detail="Product not found")
-#     
-#     product.is_hidden = not product.is_hidden
-#     db.commit()
-#     db.refresh(product)
-#     return {"message": f"Product {'hidden' if product.is_hidden else 'visible'}", "is_hidden": product.is_hidden}
+@router.patch("/{product_id}/toggle-hidden")
+def toggle_product_hidden(product_id: int, db: Session = Depends(database.get_db)):
+    product = db.query(models.Product).get(product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    product.is_hidden = not product.is_hidden
+    db.commit()
+    db.refresh(product)
+    return {"message": f"Product {'hidden' if product.is_hidden else 'visible'}", "is_hidden": product.is_hidden}
+
+@router.patch("/{product_id}/image", response_model=schemas.ProductRead)
+async def update_product_image(
+    product_id: int,
+    image: UploadFile = File(...),
+    db: Session = Depends(database.get_db)
+):
+    """Actualizar imagen de un producto existente"""
+    try:
+        product = db.query(models.Product).get(product_id)
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        # Procesar nueva imagen
+        if image:
+            # Crear directorio media si no existe
+            os.makedirs("media", exist_ok=True)
+            
+            # Generar nombre único para la imagen
+            file_extension = os.path.splitext(image.filename)[1] if image.filename else ".jpg"
+            filename = f"product_{product.provider_id}_{product.name.replace(' ', '_')}_{product_id}{file_extension}"
+            file_path = os.path.join("media", filename)
+            
+            # Guardar nueva imagen
+            with open(file_path, "wb") as buffer:
+                content = await image.read()
+                buffer.write(content)
+            
+            # Actualizar URL de imagen en la base de datos
+            product.image_url = f"/media/{filename}"
+            db.commit()
+            db.refresh(product)
+            
+            logging.info(f"Imagen actualizada para producto {product_id}: {file_path}")
+            return product
+        
+    except Exception as e:
+        logging.error(f"Error al actualizar imagen del producto {product_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error interno del servidor: {str(e)}"
+        )
 
 
 @router.get("/farmer/{farmer_id}", response_model=list[schemas.ProductRead])

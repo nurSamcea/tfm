@@ -1,81 +1,371 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@drawable/gradient_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="6dp">
 
-        <EditText
-            android:id="@+id/input_name"
+        <!-- Título del formulario -->
+        <TextView
+            android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre" />
+            android:text="Nuevo Producto"
+            android:textColor="@color/colorEco"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
 
-        <EditText
-            android:id="@+id/input_description"
+        <!-- Card para el formulario -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Descripción" />
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/input_price"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <!-- Campo Nombre -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary"
+                    app:startIconDrawable="@drawable/ic_products"
+                    app:startIconTint="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nombre del producto"
+                        android:textSize="12dp"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
+                        android:fontFamily="@font/manrope_regular" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Campo Descripción -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary"
+                    app:startIconDrawable="@drawable/ic_info"
+                    app:startIconTint="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Descripción"
+                        android:textSize="12dp"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
+                        android:fontFamily="@font/manrope_regular"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Fila de Precio y Stock -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
+                        app:startIconDrawable="@drawable/ic_payment"
+                        app:startIconTint="@color/primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Precio (€)"
+                            android:textSize="12dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
+                            android:fontFamily="@font/manrope_regular"
+                            android:inputType="numberDecimal" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
+                        app:startIconDrawable="@drawable/ic_inventory"
+                        app:startIconTint="@color/primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_stock"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Stock"
+                            android:textSize="12dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
+                            android:fontFamily="@font/manrope_regular"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <!-- Fila de Categoría y Unidad -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Categoría"
+                            android:textColor="@color/primary"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:layout_marginBottom="4dp" />
+
+                        <Spinner
+                            android:id="@+id/spinner_category"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:textSize="12dp"
+                            android:background="@drawable/spinner_background"
+                            android:padding="12dp"
+                            android:textColor="@color/text_primary"
+                            android:fontFamily="@font/manrope_regular" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
+                        app:startIconDrawable="@drawable/ic_inventory"
+                        app:startIconTint="@color/primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_unit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Unidad (kg, caja...)"
+                            android:textSize="12dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
+                            android:fontFamily="@font/manrope_regular" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <!-- Campo Fecha de Caducidad -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de caducidad (Opcional)"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:layout_marginBottom="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/spinner_background"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_clock"
+                            android:tint="@color/primary"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:id="@+id/text_expiration_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Seleccionar fecha"
+                            android:textColor="@color/text_secondary"
+                            android:fontFamily="@font/manrope_regular" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_pick_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Elegir"
+                            android:textSize="12sp"
+                            android:textColor="@color/primary"
+                            app:backgroundTint="@color/primary_light"
+                            app:cornerRadius="16dp"
+                            style="@style/Widget.Material3.Button.TextButton" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_clear_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Limpiar"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            app:backgroundTint="@color/primary_light"
+                            app:cornerRadius="16dp"
+                            style="@style/Widget.Material3.Button.TextButton" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Checkbox Ecológico -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/primary_light"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_leaf"
+                            android:tint="@color/primary"
+                            android:layout_marginEnd="12dp" />
+
+                        <CheckBox
+                            android:id="@+id/check_eco"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Producto ecológico"
+                            android:textColor="@color/text_primary"
+                            android:fontFamily="@font/manrope_regular"
+                            android:buttonTint="@color/primary" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Botón para seleccionar imagen (opcional) -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Precio" 
-            android:inputType="numberDecimal"/>
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/input_stock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Stock disponible"
-            android:inputType="numberDecimal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
 
-        <EditText
-            android:id="@+id/input_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Categoría" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Imagen del producto (opcional)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/input_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Unidad (kg, caja...)" />
+                <!-- Preview de imagen seleccionada -->
+                <ImageView
+                    android:id="@+id/image_preview"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="12dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/ic_product_placeholder"
+                    android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/input_expiration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fecha caducidad (YYYY-MM-DD) - Opcional"
-            android:inputType="date" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_pick_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar imagen"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="20dp"
+                    style="@style/Widget.Material3.Button" />
 
-        <CheckBox
-            android:id="@+id/check_eco"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ecológico" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_remove_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quitar imagen"
+                    android:textColor="@color/error"
+                    app:backgroundTint="@color/primary_light"
+                    app:cornerRadius="20dp"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/image_preview"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_image_placeholder"
-            android:layout_marginTop="12dp" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_pick_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar imagen" />
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+
 </ScrollView>
-
-

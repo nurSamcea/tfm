@@ -1,5 +1,6 @@
 package com.example.frontend.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 public class Product {
@@ -17,7 +18,20 @@ public class Product {
     private boolean sustainable;
     private Double distance_km;
     private Double score;
+    @SerializedName("is_hidden")
     private boolean isHidden;
+    
+    // Campos adicionales para compatibilidad con el backend
+    @SerializedName("stock_available")
+    private Double stockAvailable;
+    @SerializedName("is_eco")
+    private Boolean isEco;
+    @SerializedName("expiration_date")
+    private Date expirationDate;
+    @SerializedName("provider_id")
+    private Integer providerId;
+    @SerializedName("image_url")
+    private String imageUrl;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -120,8 +134,16 @@ public class Product {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Integer getFarmerId() {
         return farmerId;
+    }
+
+    public void setFarmerId(Integer farmerId) {
+        this.farmerId = farmerId;
     }
 
     public Date getHarvestDate() {
@@ -158,5 +180,46 @@ public class Product {
 
     public void setHidden(boolean hidden) {
         isHidden = hidden;
+    }
+
+    // Getters y setters para compatibilidad con backend
+    public Double getStockAvailable() {
+        return stockAvailable;
+    }
+
+    public void setStockAvailable(Double stockAvailable) {
+        this.stockAvailable = stockAvailable;
+    }
+
+    public Boolean getIsEco() {
+        return isEco;
+    }
+
+    public void setIsEco(Boolean isEco) {
+        this.isEco = isEco;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Integer getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Integer providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -117,6 +117,19 @@ public interface ApiService {
     @PATCH("products/{productId}/toggle-hidden")
     Call<Map<String, Object>> toggleProductHidden(@Path("productId") int productId);
 
+    // Actualizar producto
+    @PUT("products/{productId}")
+    Call<com.example.frontend.model.Product> updateProduct(@Path("productId") int productId, @Body com.example.frontend.model.ProductUpdate productUpdate);
+
+    // Actualizar imagen de producto
+    @Multipart
+    @PATCH("products/{productId}/image")
+    Call<com.example.frontend.model.Product> updateProductImage(
+            @Path("productId") int productId,
+            @Part MultipartBody.Part image
+    );
+
+
     // ===== USUARIOS =====
     @GET("users/by-role/{role}")
     Call<List<User>> getUsersByRole(@Path("role") String role);

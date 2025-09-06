@@ -10,3 +10,15 @@ Adaptador de LAN inalámbrica Wi-Fi 2 ->
 modificar el .env
 BACKEND_IP=172.20.4.105
 
+
+# Ver el estado actual de las migraciones
+alembic current
+
+# Aplicar todas las migraciones pendientes
+alembic upgrade head
+
+# Ahora crear la nueva migración para las categorías
+alembic revision --autogenerate -m "update_product_category_to_enum"
+
+# Aplicar la nueva migración
+alembic upgrade head

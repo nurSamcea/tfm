@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-from typing import Optional, Dict, List
+from pydantic import BaseModel, validator
+from typing import Optional, Dict, List, Union
 from datetime import date, datetime
+from backend.app.models.product import ProductCategory
 
 class ProductBase(BaseModel):
     name: str
@@ -8,7 +9,7 @@ class ProductBase(BaseModel):
     price: Optional[float]
     currency: Optional[str]
     unit: Optional[str]
-    category: Optional[str]
+    category: Optional[ProductCategory]
     stock_available: Optional[float]
     expiration_date: Optional[date]
     is_eco: Optional[bool]
@@ -18,6 +19,40 @@ class ProductBase(BaseModel):
 
 class ProductCreate(ProductBase):
     pass
+
+class ProductUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    currency: Optional[str] = None
+    unit: Optional[str] = None
+    category: Optional[ProductCategory] = None
+    stock_available: Optional[float] = None
+    expiration_date: Optional[Union[date, str]] = None
+    expiration_date_string: Optional[str] = None
+    is_eco: Optional[bool] = None
+    image_url: Optional[str] = None
+    is_hidden: Optional[bool] = None
+    
+    class Config:
+        # Permitir que los campos None se incluyan en el dict
+        exclude_none = False
+    
+    @validator('expiration_date', pre=True)
+    def parse_expiration_date(cls, v):
+        if v is None:
+            return None
+        if isinstance(v, str):
+            try:
+                # Intentar parsear como fecha ISO
+                return datetime.fromisoformat(v.replace('Z', '+00:00')).date()
+            except:
+                try:
+                    # Intentar parsear como fecha simple
+                    return datetime.strptime(v, '%Y-%m-%d').date()
+                except:
+                    return None
+        return v
 
 class ProductRead(ProductBase):
     id: int
@@ -37,7 +72,7 @@ class ProductOptimizedResponse(BaseModel):
     id: int
     name: str
     price: float
-    category: Optional[str]
+    category: Optional[ProductCategory]
     is_eco: Optional[bool]
     is_gluten_free: Optional[bool]
     provider_id: int

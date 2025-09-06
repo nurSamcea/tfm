@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import os
+import logging
 from fastapi.middleware.cors import CORSMiddleware
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 from backend.app.api.v1.routers import (
     auth, users, products, shopping_lists, shopping_list_groups,
