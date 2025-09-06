@@ -68,9 +68,9 @@ public class FarmerOrdersFragment extends Fragment {
         // Filtros de estado
         filterAll = view.findViewById(R.id.filter_all);
         filterPending = view.findViewById(R.id.filter_pending);
-        filterInProgress = view.findViewById(R.id.filter_in_progress);
-        filterDelivered = view.findViewById(R.id.filter_delivered);
-        filterCancelled = view.findViewById(R.id.filter_cancelled);
+        filterInProgress = view.findViewById(R.id.filter_on_way);
+        filterDelivered = view.findViewById(R.id.filter_done);
+        filterCancelled = null; // No existe en el layout
 
         orderList = new ArrayList<>();
         allOrders = new ArrayList<>();
@@ -88,7 +88,7 @@ public class FarmerOrdersFragment extends Fragment {
         filterPending.setOnClickListener(v -> filterByStatus("pending"));
         filterInProgress.setOnClickListener(v -> filterByStatus("in_progress"));
         filterDelivered.setOnClickListener(v -> filterByStatus("delivered"));
-        filterCancelled.setOnClickListener(v -> filterByStatus("cancelled"));
+        // filterCancelled no existe en el layout, se omite
     }
 
     private void filterByStatus(String status) {
@@ -116,7 +116,7 @@ public class FarmerOrdersFragment extends Fragment {
         resetFilterButtonStyle(filterPending);
         resetFilterButtonStyle(filterInProgress);
         resetFilterButtonStyle(filterDelivered);
-        resetFilterButtonStyle(filterCancelled);
+        // filterCancelled no existe en el layout
         
         // Highlight selected button
         switch (selectedStatus) {
@@ -133,7 +133,7 @@ public class FarmerOrdersFragment extends Fragment {
                 setSelectedFilterButtonStyle(filterDelivered);
                 break;
             case "cancelled":
-                setSelectedFilterButtonStyle(filterCancelled);
+                // filterCancelled no existe en el layout, no se puede seleccionar
                 break;
         }
     }

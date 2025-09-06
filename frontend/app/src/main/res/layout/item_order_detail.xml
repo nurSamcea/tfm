@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@drawable/item_background"
+    android:layout_marginBottom="8dp">
+
+    <!-- Información del producto -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tomates Ecológicos"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:fontFamily="@font/manrope_bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cantidad: "
+            android:textSize="14sp"
+            android:textColor="@color/gray_600"
+            android:fontFamily="@font/manrope_medium" />
+
+        <TextView
+            android:id="@+id/text_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.0"
+            android:textSize="14sp"
+            android:textColor="@color/gray_700"
+            android:fontFamily="@font/manrope_regular"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+    <!-- Precios -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio unitario:"
+            android:textSize="12sp"
+            android:textColor="@color/gray_600"
+            android:fontFamily="@font/manrope_medium" />
+
+        <TextView
+            android:id="@+id/text_unit_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.50 €"
+            android:textSize="14sp"
+            android:textColor="@color/gray_700"
+            android:fontFamily="@font/manrope_regular"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:fontFamily="@font/manrope_bold" />
+
+        <TextView
+            android:id="@+id/text_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5.00 €"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:fontFamily="@font/manrope_bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

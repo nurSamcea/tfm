@@ -8,6 +8,7 @@ class TransactionStatusEnum(enum.Enum):
     pending = "pending"      # Pendiente - Recién creado
     in_progress = "in_progress"  # En curso - Agricultor preparando
     delivered = "delivered"  # Entregado - Listo para venta en supermercado
+    completed = "completed"  # Completado - Transacción finalizada
     cancelled = "cancelled"  # Cancelado
 
 class Transaction(Base):

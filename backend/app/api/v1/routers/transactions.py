@@ -126,9 +126,30 @@ def get_buyer_orders(buyer_id: int, buyer_type: str, db: Session = Depends(get_d
         seller = db.query(models.User).filter(models.User.id == tx.seller_id).first()
         buyer = db.query(models.User).filter(models.User.id == tx.buyer_id).first()
         
-        tx_data = tx.__dict__.copy()
-        tx_data['seller_name'] = seller.name if seller else None
-        tx_data['buyer_name'] = buyer.name if buyer else None
+        # Crear diccionario con solo los campos necesarios
+        # Asegurar que order_details sea siempre una lista
+        order_details = tx.order_details
+        if isinstance(order_details, dict):
+            order_details = [] if not order_details else [order_details]
+        elif not isinstance(order_details, list):
+            order_details = []
+        
+        tx_data = {
+            'id': tx.id,
+            'buyer_id': tx.buyer_id,
+            'seller_id': tx.seller_id,
+            'buyer_type': tx.buyer_type,
+            'seller_type': tx.seller_type,
+            'total_price': float(tx.total_price) if tx.total_price else 0.0,
+            'currency': tx.currency,
+            'status': tx.status,
+            'created_at': tx.created_at,
+            'confirmed_at': tx.confirmed_at,
+            'delivered_at': tx.delivered_at,
+            'order_details': order_details,
+            'seller_name': seller.name if seller else None,
+            'buyer_name': buyer.name if buyer else None
+        }
         result.append(tx_data)
     
     return result
@@ -150,9 +171,30 @@ def get_seller_orders(seller_id: int, seller_type: str, db: Session = Depends(ge
         seller = db.query(models.User).filter(models.User.id == tx.seller_id).first()
         buyer = db.query(models.User).filter(models.User.id == tx.buyer_id).first()
         
-        tx_data = tx.__dict__.copy()
-        tx_data['seller_name'] = seller.name if seller else None
-        tx_data['buyer_name'] = buyer.name if buyer else None
+        # Crear diccionario con solo los campos necesarios
+        # Asegurar que order_details sea siempre una lista
+        order_details = tx.order_details
+        if isinstance(order_details, dict):
+            order_details = [] if not order_details else [order_details]
+        elif not isinstance(order_details, list):
+            order_details = []
+        
+        tx_data = {
+            'id': tx.id,
+            'buyer_id': tx.buyer_id,
+            'seller_id': tx.seller_id,
+            'buyer_type': tx.buyer_type,
+            'seller_type': tx.seller_type,
+            'total_price': float(tx.total_price) if tx.total_price else 0.0,
+            'currency': tx.currency,
+            'status': tx.status,
+            'created_at': tx.created_at,
+            'confirmed_at': tx.confirmed_at,
+            'delivered_at': tx.delivered_at,
+            'order_details': order_details,
+            'seller_name': seller.name if seller else None,
+            'buyer_name': buyer.name if buyer else None
+        }
         result.append(tx_data)
     
     return result
@@ -323,9 +365,30 @@ def read_transactions(db: Session = Depends(get_db)):
         seller = db.query(models.User).filter(models.User.id == tx.seller_id).first()
         buyer = db.query(models.User).filter(models.User.id == tx.buyer_id).first()
         
-        tx_data = tx.__dict__.copy()
-        tx_data['seller_name'] = seller.name if seller else None
-        tx_data['buyer_name'] = buyer.name if buyer else None
+        # Crear diccionario con solo los campos necesarios
+        # Asegurar que order_details sea siempre una lista
+        order_details = tx.order_details
+        if isinstance(order_details, dict):
+            order_details = [] if not order_details else [order_details]
+        elif not isinstance(order_details, list):
+            order_details = []
+        
+        tx_data = {
+            'id': tx.id,
+            'buyer_id': tx.buyer_id,
+            'seller_id': tx.seller_id,
+            'buyer_type': tx.buyer_type,
+            'seller_type': tx.seller_type,
+            'total_price': float(tx.total_price) if tx.total_price else 0.0,
+            'currency': tx.currency,
+            'status': tx.status,
+            'created_at': tx.created_at,
+            'confirmed_at': tx.confirmed_at,
+            'delivered_at': tx.delivered_at,
+            'order_details': order_details,
+            'seller_name': seller.name if seller else None,
+            'buyer_name': buyer.name if buyer else None
+        }
         result.append(tx_data)
     
     return result

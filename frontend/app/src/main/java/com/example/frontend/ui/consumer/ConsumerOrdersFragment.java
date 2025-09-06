@@ -18,6 +18,7 @@ import com.example.frontend.R;
 import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.ConsumerOrderAdapter;
+import com.example.frontend.ui.dialogs.OrderDetailsDialog;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.network.ApiClient;
 import com.example.frontend.utils.SessionManager;
@@ -189,8 +190,19 @@ public class ConsumerOrdersFragment extends Fragment {
                         order.setStatus(status);
                         
                         // Convertir items del pedido
-                        // orderDetails es un String JSON, por ahora lo omitimos
-                        // TODO: Implementar parsing de JSON si es necesario
+                        if (transaction.getOrderDetails() != null && !transaction.getOrderDetails().isEmpty()) {
+                            List<ConsumerOrder.OrderItem> orderItems = new ArrayList<>();
+                            for (com.example.frontend.model.OrderItem item : transaction.getOrderDetails()) {
+                                ConsumerOrder.OrderItem orderItem = new ConsumerOrder.OrderItem(
+                                    String.valueOf(item.product_id),
+                                    (int) item.quantity,
+                                    item.unit_price
+                                );
+                                orderItem.setProductName(item.product_name);
+                                orderItems.add(orderItem);
+                            }
+                            order.setItems(orderItems);
+                        }
                         
                         allOrders.add(order);
                     }
@@ -232,12 +244,100 @@ public class ConsumerOrdersFragment extends Fragment {
     }
 
     private void showOrderDetails(ConsumerOrder order) {
-        Toast.makeText(getContext(), 
-            "Pedido #" + order.getId() + "\n" +
-            "Vendedor: " + order.getSellerId() + "\n" +
-            "Fecha: " + order.getOrderDate() + "\n" +
-            "Total: " + String.format("%.2f €", order.getTotalAmount()) + "\n" +
-            "Estado: " + order.getStatus().name(),
-            Toast.LENGTH_LONG).show();
+        // Convertir ConsumerOrder a Transaction para el popup
+        Transaction transaction = convertConsumerOrderToTransaction(order);
+        
+        // Obtener información del usuario actual
+        int userId = sessionManager.getUserId();
+        String userType = "consumer"; // Este fragment es para consumidores
+        
+        // Crear y mostrar el dialog
+        OrderDetailsDialog dialog = OrderDetailsDialog.newInstance(transaction, userType, userId);
+        dialog.setOnOrderActionListener(new OrderDetailsDialog.OnOrderActionListener() {
+            @Override
+            public void onDeliverOrder(Transaction transaction) {
+                updateOrderStatus(transaction.getId(), "delivered");
+            }
+            
+            @Override
+            public void onCancelOrder(Transaction transaction) {
+                updateOrderStatus(transaction.getId(), "cancelled");
+            }
+        });
+        
+        if (getFragmentManager() != null) {
+            dialog.show(getFragmentManager(), "OrderDetailsDialog");
+        }
+    }
+    
+    private Transaction convertConsumerOrderToTransaction(ConsumerOrder order) {
+        Transaction transaction = new Transaction();
+        transaction.setId(Integer.parseInt(order.getId()));
+        transaction.setBuyerId(sessionManager.getUserId());
+        transaction.setSellerId(Integer.parseInt(order.getSellerId()));
+        transaction.setBuyerType("consumer");
+        transaction.setSellerType("farmer"); // Asumimos que es farmer por ahora
+        transaction.setTotalPrice(order.getTotalAmount());
+        transaction.setCurrency("EUR");
+        transaction.setStatus(convertStatus(order.getStatus()));
+        transaction.setCreatedAt(order.getOrderDate());
+        transaction.setBuyerName("Consumidor"); // Podríamos obtener el nombre real
+        transaction.setSellerName("Vendedor " + order.getSellerId());
+        
+        // Convertir items
+        List<com.example.frontend.model.OrderItem> orderItems = new ArrayList<>();
+        if (order.getItems() != null) {
+            for (ConsumerOrder.OrderItem item : order.getItems()) {
+                com.example.frontend.model.OrderItem orderItem = new com.example.frontend.model.OrderItem();
+                orderItem.product_id = Integer.parseInt(item.getProductId());
+                orderItem.product_name = item.getProductName();
+                orderItem.quantity = item.getQuantity();
+                orderItem.unit_price = item.getUnitPrice();
+                orderItem.total_price = item.getTotalPrice();
+                orderItems.add(orderItem);
+            }
+        }
+        transaction.setOrderDetails(orderItems);
+        
+        return transaction;
+    }
+    
+    private String convertStatus(ConsumerOrder.OrderStatus status) {
+        if (status == null) return "pending";
+        
+        switch (status) {
+            case PENDING: return "pending";
+            case CONFIRMED:
+            case IN_TRANSIT: return "in_progress";
+            case DELIVERED: return "delivered";
+            case CANCELLED: return "cancelled";
+            default: return "pending";
+        }
+    }
+    
+    private void updateOrderStatus(int transactionId, String newStatus) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        // Crear el objeto de actualización
+        ApiService.StatusUpdateRequest statusUpdate = new ApiService.StatusUpdateRequest(newStatus);
+        
+        Call<Transaction> call = api.updateTransactionStatus(transactionId, statusUpdate);
+        call.enqueue(new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Estado actualizado correctamente", Toast.LENGTH_SHORT).show();
+                    loadOrders(); // Recargar la lista
+                } else {
+                    Toast.makeText(getContext(), "Error al actualizar el estado", Toast.LENGTH_SHORT).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error updating order status", t);
+            }
+        });
     }
 }

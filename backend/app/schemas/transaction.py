@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
+from pydantic import BaseModel, Field
+from typing import Optional, List, Dict, Any, Union
 from datetime import datetime
 from backend.app.models.transaction import TransactionStatusEnum
 
@@ -19,7 +19,7 @@ class TransactionBase(BaseModel):
     total_price: float
     currency: str = "EUR"
     status: TransactionStatusEnum
-    order_details: List[OrderItem]
+    order_details: Union[List[OrderItem], List[Dict[str, Any]], Dict[str, Any]] = Field(description="Lista de items del pedido")
 
 class TransactionCreate(BaseModel):
     """Esquema para crear una nueva transacción desde el carrito"""

@@ -94,4 +94,15 @@
     
     <!-- Color azul faltante -->
     <color name="blue">#2196F3</color>
+    
+    <!-- Colores de estado para pedidos -->
+    <color name="status_pending">#FF9800</color>
+    <color name="status_in_progress">#2196F3</color>
+    <color name="status_delivered">#4CAF50</color>
+    <color name="status_cancelled">#F44336</color>
+    <color name="status_completed">#4CAF50</color>
+    
+    <!-- Colores adicionales para grises -->
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
 </resources>

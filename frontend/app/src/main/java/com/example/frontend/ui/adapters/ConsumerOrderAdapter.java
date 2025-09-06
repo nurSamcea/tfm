@@ -46,7 +46,9 @@ public class ConsumerOrderAdapter extends RecyclerView.Adapter<ConsumerOrderAdap
         holder.sellerId.setText("Vendedor: " + order.getSellerId());
         holder.date.setText("Fecha: " + (order.getOrderDate() != null ? dateFormat.format(order.getOrderDate()) : "N/A"));
         holder.total.setText("Total: " + String.format("%.2f €", order.getTotalAmount()));
-        holder.status.setText("Estado: " + getStatusDisplayName(order.getStatus()));
+        holder.status.setText(getStatusDisplayName(order.getStatus()));
+        holder.status.setTextColor(android.graphics.Color.WHITE);
+        holder.status.setBackgroundResource(getStatusBackground(order.getStatus()));
         
         // Mostrar productos
         StringBuilder productsText = new StringBuilder("Productos: ");
@@ -76,15 +78,33 @@ public class ConsumerOrderAdapter extends RecyclerView.Adapter<ConsumerOrderAdap
             case PENDING:
                 return "Pendiente";
             case CONFIRMED:
-                return "Confirmado";
+                return "En Curso";
             case IN_TRANSIT:
-                return "En tránsito";
+                return "En Curso";
             case DELIVERED:
                 return "Entregado";
             case CANCELLED:
                 return "Cancelado";
             default:
                 return status.name();
+        }
+    }
+    
+    private int getStatusBackground(ConsumerOrder.OrderStatus status) {
+        if (status == null) return R.drawable.status_pending_background;
+        
+        switch (status) {
+            case PENDING:
+                return R.drawable.status_pending_background;
+            case CONFIRMED:
+            case IN_TRANSIT:
+                return R.drawable.status_in_progress_background;
+            case DELIVERED:
+                return R.drawable.status_delivered_background;
+            case CANCELLED:
+                return R.drawable.status_cancelled_background;
+            default:
+                return R.drawable.status_pending_background;
         }
     }
 
