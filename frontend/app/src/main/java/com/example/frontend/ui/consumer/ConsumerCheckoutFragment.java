@@ -16,7 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
 import com.example.frontend.ui.adapters.CartAdapter;
-import com.example.frontend.models.CartItem;
+import com.example.frontend.model.CartItem;
+import com.example.frontend.model.Product;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.network.ApiClient;
 import com.example.frontend.network.ApiService;
@@ -69,21 +70,20 @@ public class ConsumerCheckoutFragment extends Fragment {
         cartItems = new ArrayList<>();
         Log.d("ConsumerCheckout", "Lista de items del carrito inicializada");
         
-        adapter = new CartAdapter(cartItems, new CartAdapter.CartItemListener() {
+        adapter = new CartAdapter(cartItems);
+        adapter.setOnCartItemActionListener(new CartAdapter.OnCartItemActionListener() {
             @Override
-            public void onQuantityChanged(int position, int newQuantity) {
-                Log.d("ConsumerCheckout", "Cantidad cambiada en posición " + position + " a " + newQuantity);
-                if (position >= 0 && position < cartItems.size()) {
-                    cartItems.get(position).setQuantity(newQuantity);
-                    adapter.notifyDataSetChanged();
-                    updateTotalPrice();
-                }
+            public void onQuantityChanged(CartItem item, int newQuantity) {
+                Log.d("ConsumerCheckout", "Cantidad cambiada a " + newQuantity);
+                item.setQuantity(newQuantity);
+                adapter.notifyDataSetChanged();
+                updateTotalPrice();
             }
 
             @Override
-            public void onItemRemoved(int position) {
-                Log.d("ConsumerCheckout", "Item removido en posición " + position);
-                cartItems.remove(position);
+            public void onRemoveItem(CartItem item) {
+                Log.d("ConsumerCheckout", "Item removido");
+                cartItems.remove(item);
                 adapter.notifyDataSetChanged();
                 updateTotalPrice();
             }
@@ -100,9 +100,30 @@ public class ConsumerCheckoutFragment extends Fragment {
         // Aquí cargarías los items del carrito desde la lista de compra
         // Por ahora usamos datos de ejemplo
         Log.d("ConsumerCheckout", "Añadiendo items de ejemplo...");
-        cartItems.add(new CartItem(1, "Tomates Ecológicos", 2.5, 2, "kg"));
-        cartItems.add(new CartItem(2, "Lechuga Local", 1.8, 1, "unidad"));
-        cartItems.add(new CartItem(3, "Zanahorias Orgánicas", 3.2, 1, "kg"));
+        
+        // Crear productos de ejemplo
+        Product tomates = new Product();
+        tomates.setId("1");
+        tomates.setName("Tomates Ecológicos");
+        tomates.setPrice(2.5);
+        tomates.setCategory("Verduras");
+        
+        Product lechuga = new Product();
+        lechuga.setId("2");
+        lechuga.setName("Lechuga Local");
+        lechuga.setPrice(1.8);
+        lechuga.setCategory("Verduras");
+        
+        Product zanahorias = new Product();
+        zanahorias.setId("3");
+        zanahorias.setName("Zanahorias Orgánicas");
+        zanahorias.setPrice(3.2);
+        zanahorias.setCategory("Verduras");
+        
+        // Crear CartItems con los productos
+        cartItems.add(new CartItem(tomates, 2));
+        cartItems.add(new CartItem(lechuga, 1));
+        cartItems.add(new CartItem(zanahorias, 1));
         Log.d("ConsumerCheckout", "Items añadidos: " + cartItems.size());
         
         adapter.notifyDataSetChanged();
@@ -117,9 +138,9 @@ public class ConsumerCheckoutFragment extends Fragment {
         Log.d("ConsumerCheckout", "Precio total reiniciado a 0.0");
         
         for (CartItem item : cartItems) {
-            double itemTotal = item.getPrice() * item.getQuantity();
+            double itemTotal = item.getTotalPrice();
             totalPrice += itemTotal;
-            Log.d("ConsumerCheckout", "Item: " + item.getName() + " - Precio: " + item.getPrice() + " x " + item.getQuantity() + " = " + itemTotal);
+            Log.d("ConsumerCheckout", "Item: " + item.getProductName() + " - Precio: " + item.getUnitPrice() + " x " + item.getQuantity() + " = " + itemTotal);
         }
         
         Log.d("ConsumerCheckout", "Precio total calculado: " + totalPrice);

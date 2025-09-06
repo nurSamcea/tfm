@@ -3,112 +3,138 @@ package com.example.frontend.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.button.MaterialButton;
+import com.example.frontend.network.ApiClient;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
 
 import com.example.frontend.R;
-import com.example.frontend.models.CartItem;
+import com.example.frontend.model.CartItem;
 
 import java.util.List;
-import java.util.Locale;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+
     private List<CartItem> cartItems;
-    private CartItemListener listener;
+    private OnCartItemActionListener listener;
 
-    public interface CartItemListener {
-        void onQuantityChanged(int position, int newQuantity);
-        void onItemRemoved(int position);
+    public interface OnCartItemActionListener {
+        void onQuantityChanged(CartItem item, int newQuantity);
+        void onRemoveItem(CartItem item);
     }
 
-    public CartAdapter(List<CartItem> cartItems, CartItemListener listener) {
+    public CartAdapter(List<CartItem> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public void setOnCartItemActionListener(OnCartItemActionListener listener) {
         this.listener = listener;
+    }
+
+    public void updateCartItems(List<CartItem> newCartItems) {
+        this.cartItems = newCartItems;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_cart, parent, false);
-        return new CartViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartItem item = cartItems.get(position);
-        
-        // Mostrar nombre del producto
-        String productName = item.getName();
-        if (productName != null && !productName.trim().isEmpty()) {
-            holder.productNameTextView.setText(productName);
-        } else {
-            holder.productNameTextView.setText("Producto " + (position + 1));
-        }
-        
-        // Mostrar cantidad
-        holder.quantityTextView.setText(String.valueOf(item.getQuantity()));
-        
-        // Mostrar precio unitario
-        holder.unitPriceTextView.setText(String.format(Locale.getDefault(), "%.2f €/ud", item.getPrice()));
-        
-        // Mostrar precio total
-        double totalPrice = item.getPrice() * item.getQuantity();
-        holder.totalPriceTextView.setText(String.format(Locale.getDefault(), "%.2f €", totalPrice));
-        
-        // Botón para aumentar cantidad
-        holder.increaseButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onQuantityChanged(position, item.getQuantity() + 1);
-            }
-        });
-        
-        // Botón para disminuir cantidad
-        holder.decreaseButton.setOnClickListener(v -> {
-            if (listener != null && item.getQuantity() > 1) {
-                listener.onQuantityChanged(position, item.getQuantity() - 1);
-            }
-        });
-        
-        // Botón para eliminar
-        holder.removeButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemRemoved(position);
-            }
-        });
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        CartItem cartItem = cartItems.get(position);
+        holder.bind(cartItem);
     }
 
     @Override
     public int getItemCount() {
-        return cartItems != null ? cartItems.size() : 0;
+        return cartItems.size();
     }
 
-    public void updateData(List<CartItem> newItems) {
-        this.cartItems = newItems;
-        notifyDataSetChanged();
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView productImage;
+        private TextView productName, productPrice, productQuantity, productTotal, productFarmer;
+        private MaterialButton btnDecrease, btnIncrease, btnRemove;
 
-    static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView productNameTextView;
-        TextView quantityTextView;
-        TextView unitPriceTextView;
-        TextView totalPriceTextView;
-        ImageButton removeButton;
-        MaterialButton increaseButton;
-        MaterialButton decreaseButton;
-        
-        CartViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            productNameTextView = itemView.findViewById(R.id.text_product_name);
-            quantityTextView = itemView.findViewById(R.id.text_quantity);
-            unitPriceTextView = itemView.findViewById(R.id.text_unit_price);
-            totalPriceTextView = itemView.findViewById(R.id.text_total_price);
-            removeButton = itemView.findViewById(R.id.button_remove);
-            increaseButton = itemView.findViewById(R.id.button_increase);
-            decreaseButton = itemView.findViewById(R.id.button_decrease);
+            productImage = itemView.findViewById(R.id.product_image);
+            productName = itemView.findViewById(R.id.product_name);
+            productPrice = itemView.findViewById(R.id.product_price);
+            productQuantity = itemView.findViewById(R.id.product_quantity);
+            productTotal = itemView.findViewById(R.id.product_total);
+            productFarmer = itemView.findViewById(R.id.product_farmer);
+            btnDecrease = itemView.findViewById(R.id.btn_decrease);
+            btnIncrease = itemView.findViewById(R.id.btn_increase);
+            btnRemove = itemView.findViewById(R.id.btn_remove);
+
+            // Configurar listeners
+            btnDecrease.setOnClickListener(v -> {
+                if (listener != null) {
+                    CartItem item = cartItems.get(getAdapterPosition());
+                    if (item.getQuantity() > 1) {
+                        listener.onQuantityChanged(item, item.getQuantity() - 1);
+                    }
+                }
+            });
+
+            btnIncrease.setOnClickListener(v -> {
+                if (listener != null) {
+                    CartItem item = cartItems.get(getAdapterPosition());
+                    listener.onQuantityChanged(item, item.getQuantity() + 1);
+                }
+            });
+
+            btnRemove.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRemoveItem(cartItems.get(getAdapterPosition()));
+                }
+            });
+        }
+
+        public void bind(CartItem cartItem) {
+            productName.setText(cartItem.getProductName());
+            productPrice.setText(String.format("Precio: %.2f €", cartItem.getUnitPrice()));
+            productQuantity.setText(String.valueOf(cartItem.getQuantity()));
+            productTotal.setText(String.format("Total: %.2f €", cartItem.getTotalPrice()));
+            productFarmer.setText(cartItem.getFarmerInfo());
+
+            // Mostrar imagen del producto si existe
+            if (cartItem.getProduct().getImageUrl() != null && !cartItem.getProduct().getImageUrl().isEmpty()) {
+                String imageUrl = cartItem.getProduct().getImageUrl();
+                if (imageUrl.startsWith("/")) {
+                    String baseUrl = ApiClient.getBaseUrl();
+                    if (baseUrl.endsWith("/")) {
+                        baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+                    }
+                    imageUrl = baseUrl + imageUrl;
+                }
+                
+                imageUrl += "?t=" + System.currentTimeMillis();
+                
+                Glide.with(itemView.getContext())
+                    .load(imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.ic_product_placeholder)
+                    .error(R.drawable.ic_product_placeholder)
+                    .into(productImage);
+            } else {
+                productImage.setImageResource(R.drawable.ic_product_placeholder);
+            }
+
+            // Deshabilitar botón de disminuir si la cantidad es 1
+            btnDecrease.setEnabled(cartItem.getQuantity() > 1);
         }
     }
-} 
+}

@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,107 +12,64 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.frontend.R;
 import com.example.frontend.model.SupermarketOrder;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrderAdapter.OrderViewHolder> {
 
-    public interface OnOrderActionListener {
-        void onChangeStatus(SupermarketOrder order);
-        void onViewDetail(SupermarketOrder order);
+    public interface OnOrderClickListener {
+        void onClick(SupermarketOrder order);
     }
 
-    private List<SupermarketOrder> orders;
-    private final OnOrderActionListener listener;
+    private final List<SupermarketOrder> orderList;
+    private final OnOrderClickListener listener;
 
-    public SupermarketOrderAdapter(List<SupermarketOrder> orders, OnOrderActionListener listener) {
-        this.orders = orders;
+    public SupermarketOrderAdapter(List<SupermarketOrder> orderList, OnOrderClickListener listener) {
+        this.orderList = orderList;
         this.listener = listener;
     }
 
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_supermarket_order, parent, false);
-        return new OrderViewHolder(view);
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_farmer_order, parent, false);
+        return new OrderViewHolder(item);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        SupermarketOrder order = orders.get(position);
+        SupermarketOrder order = orderList.get(position);
+        holder.title.setText(order.getClientOrSupplier());
+        holder.products.setText("Productos: " + String.join(", ", order.getProducts()));
+        holder.date.setText("Entrega: " + order.getDeliveryDate());
+        holder.total.setText("Total: " + order.getTotal());
+        holder.status.setText("Estado: " + order.getStatus());
 
-        holder.txtCustomerName.setText(order.getClientName());
-        holder.txtOrderId.setText("(#" + order.getId() + ")");
-
-        String fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(order.getOrderDate());
-        holder.txtDateTotal.setText(fecha + " · Total: " + String.format(Locale.getDefault(), "%.2f €", order.getTotal()));
-
-        holder.txtAddress.setText(order.getAddress() != null ? order.getAddress() : "-");
-        holder.txtStatus.setText(order.getStatus());
-
-        // Estado visual
-        int color;
-        int icon;
-        switch (order.getStatus()) {
-            case "Preparando pedido":
-                color = holder.itemView.getResources().getColor(R.color.orange);
-                icon = R.drawable.ic_status_preparing;
-                break;
-            case "En camino":
-                color = holder.itemView.getResources().getColor(R.color.teal_700);
-                icon = R.drawable.ic_status_shipping;
-                break;
-            case "Entregado":
-                color = holder.itemView.getResources().getColor(R.color.green);
-                icon = R.drawable.ic_status_delivered;
-                break;
-            default:
-                color = holder.itemView.getResources().getColor(R.color.darker_gray);
-                icon = R.drawable.ic_status;
-                break;
-        }
-
-        holder.txtStatus.setTextColor(color);
-        holder.imgStatus.setImageResource(icon);
-
-        // Botones
-        holder.btnViewDetail.setOnClickListener(v -> listener.onViewDetail(order));
-
-        if ("Entregado".equals(order.getStatus())) {
-            holder.btnChangeStatus.setVisibility(View.GONE);
-        } else {
-            holder.btnChangeStatus.setVisibility(View.VISIBLE);
-            holder.btnChangeStatus.setOnClickListener(v -> listener.onChangeStatus(order));
-        }
+        holder.detailsBtn.setOnClickListener(v -> listener.onClick(order));
     }
 
     @Override
     public int getItemCount() {
-        return orders.size();
+        return orderList.size();
     }
 
-    public void updateData(List<SupermarketOrder> newOrders) {
-        this.orders = newOrders;
+    public void updateOrders(List<SupermarketOrder> newOrders) {
+        this.orderList.clear();
+        this.orderList.addAll(newOrders);
         notifyDataSetChanged();
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCustomerName, txtOrderId, txtDateTotal, txtAddress, txtStatus;
-        Button btnChangeStatus, btnViewDetail;
-        ImageView imgStatus;
+        TextView title, products, date, total, status;
+        Button detailsBtn;
 
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtCustomerName = itemView.findViewById(R.id.txt_customer_name);
-            txtOrderId = itemView.findViewById(R.id.txt_order_id);
-            txtDateTotal = itemView.findViewById(R.id.txt_date_total);
-            txtAddress = itemView.findViewById(R.id.txt_address);
-            txtStatus = itemView.findViewById(R.id.txt_status);
-            btnChangeStatus = itemView.findViewById(R.id.btn_change_status);
-            btnViewDetail = itemView.findViewById(R.id.btn_view_detail);
-            imgStatus = itemView.findViewById(R.id.img_status);
+            title = itemView.findViewById(R.id.order_title);
+            products = itemView.findViewById(R.id.order_products);
+            date = itemView.findViewById(R.id.order_date);
+            total = itemView.findViewById(R.id.order_total);
+            status = itemView.findViewById(R.id.order_status);
+            detailsBtn = itemView.findViewById(R.id.order_details_button);
         }
     }
 }

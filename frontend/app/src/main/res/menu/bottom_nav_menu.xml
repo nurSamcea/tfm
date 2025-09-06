@@ -18,14 +18,19 @@
 
     <!-- Menú para Supermercados -->
     <item
-        android:id="@+id/navigation_supermarket_inventory"
-        android:icon="@drawable/ic_inventory"
-        android:title="@string/title_supermarket_orders" />
+        android:id="@+id/navigation_supermarket_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/title_search" />
 
     <item
-        android:id="@+id/navigation_supermarket_suppliers"
-        android:icon="@drawable/ic_suppliers"
-        android:title="@string/title_suppliers" />
+        android:id="@+id/navigation_supermarket_orders"
+        android:icon="@drawable/ic_orders"
+        android:title="@string/title_orders" />
+
+    <item
+        android:id="@+id/navigation_supermarket_stock"
+        android:icon="@drawable/ic_inventory"
+        android:title="@string/title_stock" />
 
     <item
         android:id="@+id/navigation_supermarket_profile"

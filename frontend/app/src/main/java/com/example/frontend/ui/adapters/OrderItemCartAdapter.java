@@ -105,13 +105,13 @@ public class OrderItemCartAdapter extends RecyclerView.Adapter<OrderItemCartAdap
         
         CartViewHolder(View itemView) {
             super(itemView);
-            productNameTextView = itemView.findViewById(R.id.text_product_name);
-            quantityTextView = itemView.findViewById(R.id.text_quantity);
-            unitPriceTextView = itemView.findViewById(R.id.text_unit_price);
-            totalPriceTextView = itemView.findViewById(R.id.text_total_price);
-            removeButton = itemView.findViewById(R.id.button_remove);
-            increaseButton = itemView.findViewById(R.id.button_increase);
-            decreaseButton = itemView.findViewById(R.id.button_decrease);
+            productNameTextView = itemView.findViewById(R.id.product_name);
+            quantityTextView = itemView.findViewById(R.id.product_quantity);
+            unitPriceTextView = itemView.findViewById(R.id.product_price);
+            totalPriceTextView = itemView.findViewById(R.id.product_total);
+            removeButton = itemView.findViewById(R.id.btn_remove);
+            increaseButton = itemView.findViewById(R.id.btn_increase);
+            decreaseButton = itemView.findViewById(R.id.btn_decrease);
         }
     }
 }

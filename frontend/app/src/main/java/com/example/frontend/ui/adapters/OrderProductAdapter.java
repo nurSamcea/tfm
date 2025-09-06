@@ -15,7 +15,7 @@ import com.example.frontend.model.Product;
 
 import java.util.List;
 
-public class SupplierProductAdapter extends RecyclerView.Adapter<SupplierProductAdapter.ViewHolder> {
+public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapter.ViewHolder> {
 
     private List<Product> productList;
     private OnProductActionListener listener;
@@ -24,11 +24,11 @@ public class SupplierProductAdapter extends RecyclerView.Adapter<SupplierProduct
         void onAddToCart(Product product);
     }
 
-    public SupplierProductAdapter(List<Product> productList) {
+    public OrderProductAdapter(List<Product> productList) {
         this.productList = productList;
     }
 
-    public SupplierProductAdapter(List<Product> productList, OnProductActionListener listener) {
+    public OrderProductAdapter(List<Product> productList, OnProductActionListener listener) {
         this.productList = productList;
         this.listener = listener;
     }
@@ -40,15 +40,15 @@ public class SupplierProductAdapter extends RecyclerView.Adapter<SupplierProduct
 
     @NonNull
     @Override
-    public SupplierProductAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OrderProductAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_supplier_product, parent, false);
+                .inflate(R.layout.item_order_product, parent, false);
         return new ViewHolder(view);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void onBindViewHolder(@NonNull SupplierProductAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OrderProductAdapter.ViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
         holder.productDetails.setText(String.format("Precio: %.2f € · Agricultor ID: %d", product.getPrice(), product.getFarmerId()));

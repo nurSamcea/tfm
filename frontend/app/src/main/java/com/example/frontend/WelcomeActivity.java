@@ -24,9 +24,10 @@ import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
 import com.example.frontend.ui.farmer.FarmerStatisticsFragment;
 import com.example.frontend.ui.farmer.FarmerStockFragment;
-import com.example.frontend.ui.supermarket.SupermarketInventoryFragment;
+import com.example.frontend.ui.supermarket.SupermarketStockFragment;
+import com.example.frontend.ui.supermarket.SupermarketOrdersFragment;
+import com.example.frontend.ui.supermarket.SupermarketSearchProductsFragment;
 import com.example.frontend.ui.supermarket.SupermarketProfileFragment;
-import com.example.frontend.ui.supermarket.SupermarketSuppliersFragment;
 import com.example.frontend.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.frontend.ui.UserSelectionFragment;
@@ -261,10 +262,12 @@ public class WelcomeActivity extends AppCompatActivity {
                     }
                     break;
                 case "supermarket":
-                    if (itemId == R.id.navigation_supermarket_suppliers) {
-                        selectedFragment = new SupermarketSuppliersFragment();
-                    } else if (itemId == R.id.navigation_supermarket_inventory) {
-                        selectedFragment = new SupermarketInventoryFragment();
+                    if (itemId == R.id.navigation_supermarket_search) {
+                        selectedFragment = new SupermarketSearchProductsFragment();
+                    } else if (itemId == R.id.navigation_supermarket_orders) {
+                        selectedFragment = new SupermarketOrdersFragment();
+                    } else if (itemId == R.id.navigation_supermarket_stock) {
+                        selectedFragment = new SupermarketStockFragment();
                     } else if (itemId == R.id.navigation_supermarket_profile) {
                         selectedFragment = new SupermarketProfileFragment();
                     }
@@ -289,7 +292,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 initialFragment = new FarmerStockFragment();
                 break;
             case "supermarket":
-                initialFragment = new SupermarketInventoryFragment();
+                initialFragment = new SupermarketSearchProductsFragment();
                 break;
         }
         

@@ -47,7 +47,7 @@ public class SupermarketProfileFragment extends Fragment {
         ImageView supplierIcon = supplierOrdersHistory.findViewById(R.id.optionIcon);
         TextView supplierText = supplierOrdersHistory.findViewById(R.id.optionText);
         supplierIcon.setImageResource(R.drawable.ic_orders);
-        supplierText.setText("Supplier orders history");
+        supplierText.setText("Historial de pedidos");
 
         View customerOrdersHistory = view.findViewById(R.id.optionCustomerOrders);
         ImageView orderIcon = customerOrdersHistory.findViewById(R.id.optionIcon);

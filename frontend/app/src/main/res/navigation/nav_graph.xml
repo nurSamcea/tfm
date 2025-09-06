@@ -17,7 +17,7 @@
             app:destination="@id/navigation_farmer_products" />
         <action
             android:id="@+id/action_login_to_supermarket_home"
-            app:destination="@id/navigation_supermarket_inventory" />
+            app:destination="@id/navigation_supermarket_search" />
         <action
             android:id="@+id/action_login_to_consumer_home"
             app:destination="@id/navigation_consumer_products" />
@@ -55,19 +55,21 @@
         android:label="@string/title_profile" />
 
     <!-- Navegación para Supermercados -->
-    <fragment
-        android:id="@+id/navigation_supermarket_inventory"
-        android:name="com.example.frontend.ui.supermarket.InventoryFragment"
-        android:label="@string/title_supermarket_orders">
-        <action
-            android:id="@+id/action_inventory_to_product_detail"
-            app:destination="@id/navigation_product_detail" />
-    </fragment>
 
     <fragment
-        android:id="@+id/navigation_supermarket_suppliers"
-        android:name="com.example.frontend.ui.supermarket.SuppliersFragment"
-        android:label="@string/title_suppliers" />
+        android:id="@+id/navigation_supermarket_search"
+        android:name="com.example.frontend.ui.supermarket.SupermarketSearchProductsFragment"
+        android:label="@string/title_search" />
+
+    <fragment
+        android:id="@+id/navigation_supermarket_orders"
+        android:name="com.example.frontend.ui.supermarket.SupermarketOrdersFragment"
+        android:label="@string/title_orders" />
+
+    <fragment
+        android:id="@+id/navigation_supermarket_stock"
+        android:name="com.example.frontend.ui.supermarket.SupermarketStockFragment"
+        android:label="@string/title_stock" />
 
     <fragment
         android:id="@+id/navigation_supermarket_profile"

@@ -1,0 +1,454 @@
+package com.example.frontend.ui.supermarket;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.text.TextWatcher;
+import android.text.Editable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.frontend.R;
+import com.example.frontend.model.Product;
+import com.example.frontend.model.CartItem;
+import com.example.frontend.ui.adapters.SupermarketProductAdapter;
+import com.example.frontend.ui.adapters.CartAdapter;
+import com.example.frontend.api.ApiService;
+import com.example.frontend.network.ApiClient;
+import com.example.frontend.utils.SessionManager;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.button.MaterialButton;
+import android.widget.TextView;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class SupermarketSearchProductsFragment extends Fragment implements SupermarketProductAdapter.OnProductActionListener, CartAdapter.OnCartItemActionListener {
+
+    private static final String TAG = "SupermarketSearchProducts";
+
+    private RecyclerView recyclerProducts;
+    private SupermarketProductAdapter productAdapter;
+    private EditText searchProducts;
+    private ImageButton filterButton;
+    private ImageButton sortButton;
+    private ChipGroup chipGroupFilters;
+    private View filtersScroll;
+
+    // Carrito de compras
+    private LinearLayout cartContainer;
+    private RecyclerView recyclerCart;
+    private CartAdapter cartAdapter;
+    private TextView cartItemCount;
+    private TextView cartTotal;
+    private MaterialButton btnClearCart;
+    private MaterialButton btnCheckout;
+
+    private final List<Product> allProducts = new ArrayList<>();
+    private final List<Product> filteredProducts = new ArrayList<>();
+    private final List<CartItem> cartItems = new ArrayList<>();
+    private SessionManager sessionManager;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        try {
+            Log.d(TAG, "Iniciando onCreateView");
+
+            View view = inflater.inflate(R.layout.fragment_supermarket_search_products, container, false);
+
+            // Inicializar SessionManager
+            sessionManager = new SessionManager(requireContext());
+
+            // Referencias UI
+            recyclerProducts = view.findViewById(R.id.recycler_products);
+            searchProducts = view.findViewById(R.id.search_products);
+            filterButton = view.findViewById(R.id.filter_button);
+            sortButton = view.findViewById(R.id.sort_button);
+            chipGroupFilters = view.findViewById(R.id.chip_group_filters);
+            filtersScroll = view.findViewById(R.id.filters_scroll);
+
+            // Referencias del carrito
+            cartContainer = view.findViewById(R.id.cart_container);
+            recyclerCart = view.findViewById(R.id.recycler_cart);
+            cartItemCount = view.findViewById(R.id.cart_item_count);
+            cartTotal = view.findViewById(R.id.cart_total);
+            btnClearCart = view.findViewById(R.id.btn_clear_cart);
+            btnCheckout = view.findViewById(R.id.btn_checkout);
+
+            // Layouts
+            recyclerProducts.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            // Adapters
+            productAdapter = new SupermarketProductAdapter(filteredProducts);
+            productAdapter.setOnProductActionListener(this);
+            recyclerProducts.setAdapter(productAdapter);
+
+            cartAdapter = new CartAdapter(cartItems);
+            cartAdapter.setOnCartItemActionListener(this);
+            recyclerCart.setAdapter(cartAdapter);
+
+            // Configurar listeners
+            setupListeners();
+
+            // Cargar productos de agricultores
+            loadFarmerProducts();
+
+            Log.d(TAG, "Vista de búsqueda de productos cargada correctamente");
+            return view;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error en SupermarketSearchProductsFragment: " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private void setupListeners() {
+        // Búsqueda
+        searchProducts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterProducts();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Botón de filtros
+        filterButton.setOnClickListener(v -> {
+            if (filtersScroll.getVisibility() == View.GONE) {
+                filtersScroll.setVisibility(View.VISIBLE);
+            } else {
+                filtersScroll.setVisibility(View.GONE);
+            }
+        });
+
+        // Botón de ordenar
+        sortButton.setOnClickListener(v -> showSortDialog());
+
+        // Filtros dinámicos
+        chipGroupFilters.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            filterProducts();
+        });
+
+        // Botones del carrito
+        btnClearCart.setOnClickListener(v -> clearCart());
+        btnCheckout.setOnClickListener(v -> processCheckout());
+    }
+
+    private void loadFarmerProducts() {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        
+        // Obtener todos los productos de agricultores
+        Call<List<Product>> call = api.getProductsFiltered("", "farmer");
+        call.enqueue(new Callback<List<Product>>() {
+            @Override
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    allProducts.clear();
+                    allProducts.addAll(response.body());
+                    filterProducts();
+                    Log.d(TAG, "Productos cargados: " + allProducts.size());
+                } else {
+                    Log.e(TAG, "Error al cargar productos: " + response.code());
+                    Toast.makeText(getContext(), "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+                Log.e(TAG, "Error de conexión: " + t.getMessage());
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void filterProducts() {
+        String query = searchProducts.getText().toString().toLowerCase();
+        filteredProducts.clear();
+
+        for (Product product : allProducts) {
+            // Filtro de texto
+            boolean matchesText = query.isEmpty() || 
+                product.getName().toLowerCase().contains(query) ||
+                product.getCategory().toLowerCase().contains(query);
+
+            if (!matchesText) continue;
+
+            // Filtros de chips
+            boolean matchesFilters = true;
+            List<Integer> checkedIds = chipGroupFilters.getCheckedChipIds();
+            
+            for (int id : checkedIds) {
+                Chip chip = chipGroupFilters.findViewById(id);
+                if (chip == null) continue;
+                
+                String chipText = chip.getText().toString();
+                
+                switch (chipText) {
+                    case "Precio bajo":
+                        if (product.getPrice() > 2.0) matchesFilters = false;
+                        break;
+                    case "Cerca":
+                        if (product.getDistance_km() != null && product.getDistance_km() > 50) {
+                            matchesFilters = false;
+                        }
+                        break;
+                    case "Disponible":
+                        double stock = product.getStockAvailable() != null ? 
+                            product.getStockAvailable() : product.getStock();
+                        if (stock <= 0) matchesFilters = false;
+                        break;
+                    case "Sostenible":
+                        if (product.getScore() == null || product.getScore() < 70) {
+                            matchesFilters = false;
+                        }
+                        break;
+                    case "Ecológico":
+                        if (product.getIsEco() == null || !product.getIsEco()) {
+                            matchesFilters = false;
+                        }
+                        break;
+                }
+            }
+
+            if (matchesFilters) {
+                filteredProducts.add(product);
+            }
+        }
+
+        // Aplicar algoritmo de optimización
+        applyOptimizationAlgorithm();
+        
+        productAdapter.updateProducts(filteredProducts);
+    }
+
+    private void applyOptimizationAlgorithm() {
+        // Simular algoritmo de optimización basado en los criterios
+        Collections.sort(filteredProducts, (p1, p2) -> {
+            double score1 = calculateProductScore(p1);
+            double score2 = calculateProductScore(p2);
+            return Double.compare(score2, score1); // Orden descendente (mejor primero)
+        });
+    }
+
+    private double calculateProductScore(Product product) {
+        double score = 0.0;
+        
+        // Puntuación por precio (más bajo = mejor)
+        score += (5.0 - product.getPrice()) * 10;
+        
+        // Puntuación por distancia (más cerca = mejor)
+        if (product.getDistance_km() != null) {
+            score += Math.max(0, 50 - product.getDistance_km()) * 2;
+        }
+        
+        // Puntuación por sostenibilidad
+        if (product.getScore() != null) {
+            score += product.getScore() * 0.5;
+        }
+        
+        // Bonus por ser ecológico
+        if (product.getIsEco() != null && product.getIsEco()) {
+            score += 20;
+        }
+        
+        // Bonus por stock disponible
+        double stock = product.getStockAvailable() != null ? 
+            product.getStockAvailable() : product.getStock();
+        score += Math.min(stock * 2, 20);
+        
+        return score;
+    }
+
+    private void showSortDialog() {
+        String[] sortOptions = {
+            "Precio (menor a mayor)",
+            "Precio (mayor a menor)",
+            "Distancia (más cerca)",
+            "Sostenibilidad (mayor)",
+            "Stock disponible",
+            "Algoritmo optimizado"
+        };
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Ordenar productos")
+                .setItems(sortOptions, (dialog, which) -> {
+                    sortProducts(which);
+                });
+        builder.show();
+    }
+
+    private void sortProducts(int sortType) {
+        switch (sortType) {
+            case 0: // Precio menor a mayor
+                Collections.sort(filteredProducts, (p1, p2) -> 
+                    Double.compare(p1.getPrice(), p2.getPrice()));
+                break;
+            case 1: // Precio mayor a menor
+                Collections.sort(filteredProducts, (p1, p2) -> 
+                    Double.compare(p2.getPrice(), p1.getPrice()));
+                break;
+            case 2: // Distancia más cerca
+                Collections.sort(filteredProducts, (p1, p2) -> {
+                    Double d1 = p1.getDistance_km() != null ? p1.getDistance_km() : Double.MAX_VALUE;
+                    Double d2 = p2.getDistance_km() != null ? p2.getDistance_km() : Double.MAX_VALUE;
+                    return Double.compare(d1, d2);
+                });
+                break;
+            case 3: // Sostenibilidad mayor
+                Collections.sort(filteredProducts, (p1, p2) -> {
+                    Double s1 = p1.getScore() != null ? p1.getScore() : 0.0;
+                    Double s2 = p2.getScore() != null ? p2.getScore() : 0.0;
+                    return Double.compare(s2, s1);
+                });
+                break;
+            case 4: // Stock disponible
+                Collections.sort(filteredProducts, (p1, p2) -> {
+                    double stock1 = p1.getStockAvailable() != null ? p1.getStockAvailable() : p1.getStock();
+                    double stock2 = p2.getStockAvailable() != null ? p2.getStockAvailable() : p2.getStock();
+                    return Double.compare(stock2, stock1);
+                });
+                break;
+            case 5: // Algoritmo optimizado
+                applyOptimizationAlgorithm();
+                break;
+        }
+        
+        productAdapter.updateProducts(filteredProducts);
+    }
+
+    // Implementación de OnProductActionListener
+    @Override
+    public void onAddToCart(Product product) {
+        addProductToCart(product);
+    }
+
+    @Override
+    public void onViewDetails(Product product) {
+        Toast.makeText(getContext(), "Ver detalles de " + product.getName(), Toast.LENGTH_SHORT).show();
+        // TODO: Implementar vista de detalles del producto
+    }
+
+    @Override
+    public void onContactFarmer(Product product) {
+        Toast.makeText(getContext(), "Contactando agricultor de " + product.getName(), Toast.LENGTH_SHORT).show();
+        // TODO: Implementar funcionalidad de contacto con agricultor
+    }
+
+    // Métodos del carrito de compras
+    private void addProductToCart(Product product) {
+        // Verificar si el producto ya está en el carrito
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getProduct().getId().equals(product.getId())) {
+                // Si ya existe, incrementar cantidad
+                cartItem.incrementQuantity();
+                updateCartUI();
+                Toast.makeText(getContext(), "Cantidad actualizada: " + cartItem.getQuantity(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // Si no existe, agregar nuevo item al carrito
+        CartItem newCartItem = new CartItem(product, 1);
+        cartItems.add(newCartItem);
+        updateCartUI();
+        Toast.makeText(getContext(), product.getName() + " agregado al carrito", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateCartUI() {
+        // Actualizar contador de productos
+        int totalItems = 0;
+        for (CartItem item : cartItems) {
+            totalItems += item.getQuantity();
+        }
+        cartItemCount.setText(totalItems + " productos");
+
+        // Actualizar total
+        double total = 0.0;
+        for (CartItem item : cartItems) {
+            total += item.getTotalPrice();
+        }
+        cartTotal.setText(String.format("Total: %.2f €", total));
+
+        // Actualizar adapter del carrito
+        cartAdapter.updateCartItems(cartItems);
+    }
+
+    private void clearCart() {
+        if (cartItems.isEmpty()) {
+            Toast.makeText(getContext(), "El carrito ya está vacío", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Mostrar diálogo de confirmación
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Vaciar carrito")
+                .setMessage("¿Está seguro de que desea vaciar el carrito?")
+                .setPositiveButton("Sí, vaciar", (dialog, which) -> {
+                    cartItems.clear();
+                    updateCartUI();
+                    Toast.makeText(getContext(), "Carrito vaciado", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void processCheckout() {
+        if (cartItems.isEmpty()) {
+            Toast.makeText(getContext(), "El carrito está vacío", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Mostrar diálogo de confirmación
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Confirmar pedido")
+                .setMessage("¿Desea realizar el pedido con " + cartItems.size() + " productos diferentes?")
+                .setPositiveButton("Confirmar", (dialog, which) -> {
+                    // TODO: Implementar lógica para enviar pedido al backend
+                    Toast.makeText(getContext(), "Pedido realizado correctamente", Toast.LENGTH_SHORT).show();
+                    cartItems.clear();
+                    updateCartUI();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    // Implementación de OnCartItemActionListener
+    @Override
+    public void onQuantityChanged(CartItem item, int newQuantity) {
+        item.setQuantity(newQuantity);
+        updateCartUI();
+    }
+
+    @Override
+    public void onRemoveItem(CartItem item) {
+        cartItems.remove(item);
+        updateCartUI();
+        Toast.makeText(getContext(), item.getProductName() + " eliminado del carrito", Toast.LENGTH_SHORT).show();
+    }
+}

@@ -15,10 +15,9 @@
     <string name="nav_certification">Certificación</string>
     <string name="nav_profile">Perfil</string>
     <string name="nav_inventory">Inventario</string>
-    <string name="nav_suppliers">Proveedores</string>
+    <string name="nav_orders">Pedidos</string>
     <string name="nav_purchases">Compras</string>
     <string name="nav_cart">Carrito</string>
-    <string name="nav_orders">Pedidos</string>
     <string name="nav_metrics">Métricas</string>
     <string name="nav_sales">Ventas</string>
     
@@ -29,8 +28,9 @@
     <string name="title_certifications">Certificaciones</string>
     <string name="title_products">Productos</string>
     <string name="title_profile">Perfil</string>
-    <string name="title_supermarket_orders">Inventario</string>
-    <string name="title_suppliers">Proveedores</string>
+    <string name="title_stock">Stock</string>
+    <string name="title_orders">Pedidos</string>
+    <string name="title_search">Buscar</string>
     <string name="title_purchases">Compras</string>
     
     <!-- Mensajes de error -->
