@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,19 +31,24 @@ public class SupermarketOrdersFragment extends Fragment {
     private List<SupermarketOrder> orderList;
     private List<SupermarketOrder> allOrders;
     
-    // Botones de filtro
-    private Button filterAll, filterPending, filterOnWay, filterDone;
-    private Button filterToFarmers, filterFromConsumers;
+    // Tabs
+    private Button tabSuppliers, tabClients;
+    private boolean isSuppliersTabSelected = true;
+    
+    // Botones de filtro de estado
+    private Button filterAll, filterPending, filterInProgress, filterDelivered, filterCancelled;
+    private String currentStatusFilter = "all";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: Iniciando SupermarketOrdersFragment");
-        View view = inflater.inflate(R.layout.fragment_farmer_orders, container, false);
+        View view = inflater.inflate(R.layout.fragment_supermarket_orders, container, false);
 
         initializeViews(view);
         setupRecyclerView();
+        setupTabs();
         setupFilters();
         loadOrders();
 
@@ -51,10 +57,17 @@ public class SupermarketOrdersFragment extends Fragment {
 
     private void initializeViews(View view) {
         recyclerView = view.findViewById(R.id.recycler_orders);
+        
+        // Tabs
+        tabSuppliers = view.findViewById(R.id.tab_suppliers);
+        tabClients = view.findViewById(R.id.tab_clients);
+        
+        // Filtros de estado
         filterAll = view.findViewById(R.id.filter_all);
         filterPending = view.findViewById(R.id.filter_pending);
-        filterOnWay = view.findViewById(R.id.filter_on_way);
-        filterDone = view.findViewById(R.id.filter_done);
+        filterInProgress = view.findViewById(R.id.filter_in_progress);
+        filterDelivered = view.findViewById(R.id.filter_delivered);
+        filterCancelled = view.findViewById(R.id.filter_cancelled);
         
         orderList = new ArrayList<>();
         allOrders = new ArrayList<>();
@@ -66,12 +79,22 @@ public class SupermarketOrdersFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    private void setupTabs() {
+        // Configurar tab de proveedores (seleccionado por defecto)
+        tabSuppliers.setOnClickListener(v -> switchToSuppliersTab());
+        tabClients.setOnClickListener(v -> switchToClientsTab());
+        
+        // Aplicar estilo inicial
+        updateTabStyles();
+    }
+
     private void setupFilters() {
         // Filtros de estado
-        filterAll.setOnClickListener(v -> filterByStatus("TODOS"));
-        filterPending.setOnClickListener(v -> filterByStatus("PENDIENTE"));
-        filterOnWay.setOnClickListener(v -> filterByStatus("EN_CAMINO"));
-        filterDone.setOnClickListener(v -> filterByStatus("ENTREGADO"));
+        filterAll.setOnClickListener(v -> filterByStatus("all"));
+        filterPending.setOnClickListener(v -> filterByStatus("pending"));
+        filterInProgress.setOnClickListener(v -> filterByStatus("in_progress"));
+        filterDelivered.setOnClickListener(v -> filterByStatus("delivered"));
+        filterCancelled.setOnClickListener(v -> filterByStatus("cancelled"));
     }
 
     private void filterByStatus(String status) {
@@ -79,7 +102,7 @@ public class SupermarketOrdersFragment extends Fragment {
         
         orderList.clear();
         
-        if ("TODOS".equals(status)) {
+        if ("all".equals(status)) {
             orderList.addAll(allOrders);
         } else {
             for (SupermarketOrder order : allOrders) {
@@ -95,104 +118,167 @@ public class SupermarketOrdersFragment extends Fragment {
 
     private void updateFilterButtons(String selectedStatus) {
         // Reset all buttons
-        filterAll.setAlpha(0.6f);
-        filterPending.setAlpha(0.6f);
-        filterOnWay.setAlpha(0.6f);
-        filterDone.setAlpha(0.6f);
+        resetFilterButtonStyle(filterAll);
+        resetFilterButtonStyle(filterPending);
+        resetFilterButtonStyle(filterInProgress);
+        resetFilterButtonStyle(filterDelivered);
+        resetFilterButtonStyle(filterCancelled);
         
         // Highlight selected button
         switch (selectedStatus) {
-            case "TODOS":
-                filterAll.setAlpha(1.0f);
+            case "all":
+                setSelectedFilterButtonStyle(filterAll);
                 break;
-            case "PENDIENTE":
-                filterPending.setAlpha(1.0f);
+            case "pending":
+                setSelectedFilterButtonStyle(filterPending);
                 break;
-            case "EN_CAMINO":
-                filterOnWay.setAlpha(1.0f);
+            case "in_progress":
+                setSelectedFilterButtonStyle(filterInProgress);
                 break;
-            case "ENTREGADO":
-                filterDone.setAlpha(1.0f);
+            case "delivered":
+                setSelectedFilterButtonStyle(filterDelivered);
+                break;
+            case "cancelled":
+                setSelectedFilterButtonStyle(filterCancelled);
                 break;
         }
     }
 
+    private void resetFilterButtonStyle(Button button) {
+        button.setBackgroundResource(R.drawable.filter_background);
+        button.setTextColor(getResources().getColor(R.color.text_secondary));
+    }
+
+    private void setSelectedFilterButtonStyle(Button button) {
+        button.setBackgroundResource(R.drawable.filter_selected_background);
+        button.setTextColor(getResources().getColor(android.R.color.white));
+    }
+
+    private void switchToSuppliersTab() {
+        isSuppliersTabSelected = true;
+        updateTabStyles();
+        loadOrders();
+    }
+
+    private void switchToClientsTab() {
+        isSuppliersTabSelected = false;
+        updateTabStyles();
+        loadOrders();
+    }
+
+    private void updateTabStyles() {
+        if (isSuppliersTabSelected) {
+            tabSuppliers.setBackgroundResource(R.drawable.tab_selected_background);
+            tabSuppliers.setTextColor(getResources().getColor(android.R.color.white));
+            tabClients.setBackgroundResource(android.R.color.transparent);
+            tabClients.setTextColor(getResources().getColor(R.color.text_secondary));
+        } else {
+            tabClients.setBackgroundResource(R.drawable.tab_selected_background);
+            tabClients.setTextColor(getResources().getColor(android.R.color.white));
+            tabSuppliers.setBackgroundResource(android.R.color.transparent);
+            tabSuppliers.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
+    }
+
     private void loadOrders() {
-        Log.d(TAG, "loadOrders: Cargando pedidos del supermercado");
+        Log.d(TAG, "loadOrders: Cargando pedidos del supermercado - Tab: " + (isSuppliersTabSelected ? "Proveedores" : "Clientes"));
         
         allOrders.clear();
         
-        // Pedidos a agricultores (que hace el supermercado)
-        allOrders.add(new SupermarketOrder(
-            "EcoHuerta",
-            Arrays.asList("Tomates Ecológicos (50kg)", "Lechuga Local (30uds)"),
-            "28/12",
-            "125,50 €",
-            "🔴 Pendiente",
-            "TO_FARMER"
-        ));
+        if (isSuppliersTabSelected) {
+            loadSupplierOrders();
+        } else {
+            loadClientOrders();
+        }
         
-        allOrders.add(new SupermarketOrder(
-            "CampoFresco",
-            Arrays.asList("Zanahorias Orgánicas (40kg)", "Manzanas Rojas (25kg)"),
-            "29/12",
-            "98,80 €",
-            "🟡 En camino",
-            "TO_FARMER"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "FrutasSur",
-            Arrays.asList("Plátanos (35kg)", "Naranjas (20kg)"),
-            "27/12",
-            "67,30 €",
-            "🟢 Entregado",
-            "TO_FARMER"
-        ));
-        
-        // Pedidos de consumidores (que recibe el supermercado)
-        allOrders.add(new SupermarketOrder(
-            "María García",
-            Arrays.asList("Tomates (2kg)", "Lechuga (1ud)", "Zanahorias (1kg)"),
-            "28/12",
-            "8,50 €",
-            "🔴 Pendiente",
-            "FROM_CONSUMER"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Juan Pérez",
-            Arrays.asList("Manzanas (3kg)", "Plátanos (2kg)"),
-            "29/12",
-            "6,20 €",
-            "🟡 En camino",
-            "FROM_CONSUMER"
-        ));
-        
-        allOrders.add(new SupermarketOrder(
-            "Ana López",
-            Arrays.asList("Lechuga (2uds)", "Tomates (1kg)"),
-            "27/12",
-            "4,80 €",
-            "🟢 Entregado",
-            "FROM_CONSUMER"
-        ));
-        
-        // Mostrar todos los pedidos por defecto
-        orderList.clear();
-        orderList.addAll(allOrders);
-        adapter.notifyDataSetChanged();
-        
-        // Activar filtro "Todos" por defecto
-        updateFilterButtons("TODOS");
+        // Aplicar filtro actual
+        filterByStatus(currentStatusFilter);
         
         Log.d(TAG, "loadOrders: " + allOrders.size() + " pedidos cargados");
+    }
+
+    private void loadSupplierOrders() {
+        // Pedidos realizados a proveedores (agricultores) desde la pestaña de búsqueda
+        allOrders.add(new SupermarketOrder(
+            "Agricultor Juan Pérez",
+            Arrays.asList("Tomates Ecológicos (50kg)", "Lechuga Romana (30uds)"),
+            "2024-01-15",
+            "125,50 €",
+            "pending",
+            "TO_SUPPLIER"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Granja Ecológica María",
+            Arrays.asList("Manzanas Rojas (25kg)", "Peras Verdes (20kg)"),
+            "2024-01-16",
+            "98,80 €",
+            "in_progress",
+            "TO_SUPPLIER"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Huerto Familiar Los Pinos",
+            Arrays.asList("Espinacas (15kg)", "Acelgas (10kg)", "Rábanos (8kg)"),
+            "2024-01-12",
+            "67,30 €",
+            "delivered",
+            "TO_SUPPLIER"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Cultivos Sostenibles S.L.",
+            Arrays.asList("Brócoli (20kg)", "Coliflor (15kg)"),
+            "2024-01-18",
+            "85,40 €",
+            "cancelled",
+            "TO_SUPPLIER"
+        ));
+    }
+
+    private void loadClientOrders() {
+        // Pedidos realizados por clientes (consumidores) de los productos del stock
+        allOrders.add(new SupermarketOrder(
+            "Cliente Ana García",
+            Arrays.asList("Tomates Ecológicos (2kg)", "Lechuga Romana (1ud)"),
+            "2024-01-14",
+            "8,50 €",
+            "delivered",
+            "FROM_CLIENT"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Cliente Carlos López",
+            Arrays.asList("Zanahorias Orgánicas (1kg)", "Manzanas Rojas (3kg)"),
+            "2024-01-17",
+            "6,20 €",
+            "pending",
+            "FROM_CLIENT"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Cliente María Rodríguez",
+            Arrays.asList("Espinacas (500g)", "Acelgas (500g)"),
+            "2024-01-13",
+            "4,80 €",
+            "in_progress",
+            "FROM_CLIENT"
+        ));
+        
+        allOrders.add(new SupermarketOrder(
+            "Cliente Pedro Martín",
+            Arrays.asList("Brócoli (1kg)", "Coliflor (1kg)"),
+            "2024-01-19",
+            "7,60 €",
+            "cancelled",
+            "FROM_CLIENT"
+        ));
     }
 
     private void showOrderDetails(SupermarketOrder order) {
         Log.d(TAG, "showOrderDetails: " + order.getClientOrSupplier());
         
-        String orderTypeText = "TO_FARMER".equals(order.getOrderType()) ? "Pedido a Agricultor" : "Pedido de Consumidor";
+        String orderTypeText = "TO_SUPPLIER".equals(order.getOrderType()) ? "Pedido a Proveedor" : "Pedido de Cliente";
         
         Toast.makeText(getContext(), 
             orderTypeText + "\n" +

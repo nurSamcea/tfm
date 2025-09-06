@@ -440,7 +440,7 @@ public class SupermarketStockFragment extends Fragment implements FarmerStockAda
                         int stock = Integer.parseInt(stockStr);
                         
                         // Actualizar producto
-                        updateProduct(product, name, description, price, stock, unit, selectedCategory, selectedExpirationDate, checkEco.isChecked());
+                        updateProductWithImage(product, name, description, price, stock, unit, selectedCategory, selectedExpirationDate, checkEco.isChecked());
                         
                     } catch (NumberFormatException e) {
                         Toast.makeText(getContext(), "Por favor, ingrese valores numéricos válidos", Toast.LENGTH_SHORT).show();
@@ -513,9 +513,15 @@ public class SupermarketStockFragment extends Fragment implements FarmerStockAda
             byte[] imageBytes = null;
             try {
                 java.io.InputStream inputStream = getContext().getContentResolver().openInputStream(selectedImageUri);
-                imageBytes = new byte[inputStream.available()];
-                inputStream.read(imageBytes);
+                java.io.ByteArrayOutputStream byteArrayOutputStream = new java.io.ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, length);
+                }
+                imageBytes = byteArrayOutputStream.toByteArray();
                 inputStream.close();
+                byteArrayOutputStream.close();
             } catch (Exception e) {
                 Toast.makeText(getContext(), "Error al procesar imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 return;
@@ -580,6 +586,65 @@ public class SupermarketStockFragment extends Fragment implements FarmerStockAda
         });
     }
 
+    private void updateProductWithImage(Product product, String name, String description, double price, int stock, String unit, String category, String expirationDate, boolean isEco) {
+        if (selectedImageUri != null) {
+            // Si hay una nueva imagen, actualizar primero la imagen y luego los datos
+            updateProductImage(product, name, description, price, stock, unit, category, expirationDate, isEco);
+        } else {
+            // Si no hay nueva imagen, solo actualizar los datos
+            updateProduct(product, name, description, price, stock, unit, category, expirationDate, isEco);
+        }
+    }
+
+    private void updateProductImage(Product product, String name, String description, double price, int stock, String unit, String category, String expirationDate, boolean isEco) {
+        try {
+            // Preparar la imagen
+            byte[] imageBytes = null;
+            try {
+                java.io.InputStream inputStream = getContext().getContentResolver().openInputStream(selectedImageUri);
+                java.io.ByteArrayOutputStream byteArrayOutputStream = new java.io.ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, length);
+                }
+                imageBytes = byteArrayOutputStream.toByteArray();
+                inputStream.close();
+                byteArrayOutputStream.close();
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Error al procesar imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
+            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", "product_image.jpg", imageRequestBody);
+            
+            // Actualizar la imagen primero
+            Call<Product> imageCall = apiService.updateProductImage(Integer.parseInt(product.getId()), imagePart);
+            imageCall.enqueue(new Callback<Product>() {
+                @Override
+                public void onResponse(Call<Product> call, Response<Product> response) {
+                    if (response.isSuccessful()) {
+                        // Si la imagen se actualizó correctamente, actualizar los datos del producto
+                        updateProduct(product, name, description, price, stock, unit, category, expirationDate, isEco);
+                        // Resetear la imagen seleccionada
+                        selectedImageUri = null;
+                    } else {
+                        Toast.makeText(getContext(), "Error al actualizar imagen: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                
+                @Override
+                public void onFailure(Call<Product> call, Throwable t) {
+                    Toast.makeText(getContext(), "Error de conexión al actualizar imagen: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error al procesar imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void updateProduct(Product product, String name, String description, double price, int stock, String unit, String category, String expirationDate, boolean isEco) {
         // Crear objeto ProductUpdate con los nuevos datos
         com.example.frontend.model.ProductUpdate productUpdate = new com.example.frontend.model.ProductUpdate();
@@ -602,6 +667,8 @@ public class SupermarketStockFragment extends Fragment implements FarmerStockAda
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show();
                     loadSupermarketStock(); // Recargar la lista
+                    // Resetear la imagen seleccionada
+                    selectedImageUri = null;
                 } else {
                     Toast.makeText(getContext(), "Error al actualizar producto: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
