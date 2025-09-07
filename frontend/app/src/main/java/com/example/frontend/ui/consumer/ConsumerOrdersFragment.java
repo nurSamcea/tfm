@@ -43,7 +43,7 @@ public class ConsumerOrdersFragment extends Fragment {
     private SessionManager sessionManager;
     
     // Botones de filtro de estado
-    private Button filterAll, filterPending, filterInProgress, filterDelivered, filterCancelled;
+    private Button filterAll, filterInProgress, filterDelivered, filterCancelled;
     private String currentStatusFilter = "all";
 
     @Nullable
@@ -61,6 +61,15 @@ public class ConsumerOrdersFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Recargar pedidos cuando el fragmento se vuelve visible
+        // Esto asegura que se muestren las compras recién creadas
+        Log.d(TAG, "onResume: Recargando pedidos del consumidor");
+        loadOrders();
+    }
+
     private void initializeViews(View view) {
         recyclerView = view.findViewById(R.id.recycler_orders);
         
@@ -69,7 +78,6 @@ public class ConsumerOrdersFragment extends Fragment {
         
         // Filtros de estado
         filterAll = view.findViewById(R.id.filter_all);
-        filterPending = view.findViewById(R.id.filter_pending);
         filterInProgress = view.findViewById(R.id.filter_in_progress);
         filterDelivered = view.findViewById(R.id.filter_delivered);
         filterCancelled = view.findViewById(R.id.filter_cancelled);
@@ -92,7 +100,6 @@ public class ConsumerOrdersFragment extends Fragment {
     private void setupFilters() {
         // Filtros de estado
         filterAll.setOnClickListener(v -> filterByStatus("all"));
-        filterPending.setOnClickListener(v -> filterByStatus("pending"));
         filterInProgress.setOnClickListener(v -> filterByStatus("in_progress"));
         filterDelivered.setOnClickListener(v -> filterByStatus("delivered"));
         filterCancelled.setOnClickListener(v -> filterByStatus("cancelled"));
@@ -120,7 +127,6 @@ public class ConsumerOrdersFragment extends Fragment {
     private void updateFilterButtons(String selectedStatus) {
         // Reset all buttons
         resetFilterButtonStyle(filterAll);
-        resetFilterButtonStyle(filterPending);
         resetFilterButtonStyle(filterInProgress);
         resetFilterButtonStyle(filterDelivered);
         resetFilterButtonStyle(filterCancelled);
@@ -129,9 +135,6 @@ public class ConsumerOrdersFragment extends Fragment {
         switch (selectedStatus) {
             case "all":
                 setSelectedFilterButtonStyle(filterAll);
-                break;
-            case "pending":
-                setSelectedFilterButtonStyle(filterPending);
                 break;
             case "in_progress":
                 setSelectedFilterButtonStyle(filterInProgress);
@@ -175,10 +178,18 @@ public class ConsumerOrdersFragment extends Fragment {
         call.enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                Log.d(TAG, "Respuesta recibida - Código: " + response.code() + ", Exitoso: " + response.isSuccessful());
+                
                 if (response.isSuccessful() && response.body() != null) {
                     allOrders.clear();
+                    Log.d(TAG, "Transacciones recibidas: " + response.body().size());
                     
                     for (Transaction transaction : response.body()) {
+                        Log.d(TAG, "Procesando transacción ID: " + transaction.getId() + 
+                              ", Buyer ID: " + transaction.getBuyerId() + 
+                              ", Seller ID: " + transaction.getSellerId() +
+                              ", Status: " + transaction.getStatus());
+                        
                         // Convertir Transaction a SupermarketOrder
                         List<String> products = new ArrayList<>();
                         // orderDetails es un String JSON, por ahora usamos datos básicos
@@ -200,8 +211,11 @@ public class ConsumerOrdersFragment extends Fragment {
                     filterByStatus(currentStatusFilter);
                     Log.d(TAG, "Pedidos del consumidor cargados: " + allOrders.size());
                 } else {
-                    Log.e(TAG, "Error al cargar pedidos: " + response.code());
-                    Toast.makeText(getContext(), "Error al cargar pedidos", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error al cargar pedidos: " + response.code() + ", Mensaje: " + response.message());
+                    if (response.body() == null) {
+                        Log.e(TAG, "Response body es null");
+                    }
+                    Toast.makeText(getContext(), "Error al cargar pedidos: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 

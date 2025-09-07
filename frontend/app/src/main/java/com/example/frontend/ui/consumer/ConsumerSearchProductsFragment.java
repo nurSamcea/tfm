@@ -174,6 +174,10 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // Marcar productos como de agricultores
+                    for (Product product : response.body()) {
+                        product.setSellerType("farmer");
+                    }
                     allProducts.addAll(response.body());
                     Log.d(TAG, "Productos de agricultores cargados: " + response.body().size());
                 }
@@ -199,6 +203,10 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // Marcar productos como de supermercados
+                    for (Product product : response.body()) {
+                        product.setSellerType("supermarket");
+                    }
                     allProducts.addAll(response.body());
                     Log.d(TAG, "Productos de supermercados cargados: " + response.body().size());
                 }
@@ -414,7 +422,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         for (CartItem item : cartItems) {
             total += item.getTotalPrice();
         }
-        cartTotal.setText(String.format("Total: %.2f €", total));
+        cartTotal.setText(String.format("%.2f €", total));
 
         // Actualizar adapter del carrito
         cartAdapter.updateCartItems(cartItems);
@@ -481,8 +489,20 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     }
 
     private String determineSellerType(Product product) {
-        // Por ahora, asumimos que si el producto tiene provider_id, es de un agricultor
-        // En el futuro, podríamos tener un campo específico para el tipo de vendedor
+        // Usar el campo sellerType que establecimos al cargar los productos
+        if (product.getSellerType() != null && !product.getSellerType().isEmpty()) {
+            return product.getSellerType();
+        }
+        
+        // Fallback: determinar basándose en el provider_id si no hay sellerType
+        if (product.getProviderId() != null) {
+            int providerId = product.getProviderId();
+            // Si el provider_id es mayor a 10, asumimos que es un supermercado
+            if (providerId > 10) {
+                return "supermarket";
+            }
+        }
+        
         return "farmer"; // Por defecto, asumimos agricultor
     }
 
@@ -546,6 +566,10 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         cartItems.clear();
         updateCartUI();
         Toast.makeText(getContext(), "Pedidos realizados correctamente", Toast.LENGTH_SHORT).show();
+        
+        // Notificar que se han creado nuevos pedidos para que se actualice la lista de pedidos
+        // Esto se puede hacer mediante un callback o evento
+        Log.d(TAG, "Pedidos creados exitosamente, notificando actualización de lista de pedidos");
     }
 
     // Implementación de OnCartItemActionListener
@@ -562,3 +586,4 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         Toast.makeText(getContext(), item.getProductName() + " eliminado del carrito", Toast.LENGTH_SHORT).show();
     }
 }
+

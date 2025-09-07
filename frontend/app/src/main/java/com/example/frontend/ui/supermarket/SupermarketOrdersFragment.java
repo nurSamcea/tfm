@@ -46,7 +46,7 @@ public class SupermarketOrdersFragment extends Fragment {
     private boolean isSuppliersTabSelected = true;
     
     // Botones de filtro de estado
-    private Button filterAll, filterPending, filterInProgress, filterDelivered, filterCancelled;
+    private Button filterAll, filterInProgress, filterDelivered, filterCancelled;
     private String currentStatusFilter = "all";
 
     @Nullable
@@ -77,7 +77,6 @@ public class SupermarketOrdersFragment extends Fragment {
         
         // Filtros de estado
         filterAll = view.findViewById(R.id.filter_all);
-        filterPending = view.findViewById(R.id.filter_pending);
         filterInProgress = view.findViewById(R.id.filter_in_progress);
         filterDelivered = view.findViewById(R.id.filter_delivered);
         filterCancelled = view.findViewById(R.id.filter_cancelled);
@@ -109,7 +108,6 @@ public class SupermarketOrdersFragment extends Fragment {
     private void setupFilters() {
         // Filtros de estado
         filterAll.setOnClickListener(v -> filterByStatus("all"));
-        filterPending.setOnClickListener(v -> filterByStatus("pending"));
         filterInProgress.setOnClickListener(v -> filterByStatus("in_progress"));
         filterDelivered.setOnClickListener(v -> filterByStatus("delivered"));
         filterCancelled.setOnClickListener(v -> filterByStatus("cancelled"));
@@ -137,7 +135,6 @@ public class SupermarketOrdersFragment extends Fragment {
     private void updateFilterButtons(String selectedStatus) {
         // Reset all buttons
         resetFilterButtonStyle(filterAll);
-        resetFilterButtonStyle(filterPending);
         resetFilterButtonStyle(filterInProgress);
         resetFilterButtonStyle(filterDelivered);
         resetFilterButtonStyle(filterCancelled);
@@ -146,9 +143,6 @@ public class SupermarketOrdersFragment extends Fragment {
         switch (selectedStatus) {
             case "all":
                 setSelectedFilterButtonStyle(filterAll);
-                break;
-            case "pending":
-                setSelectedFilterButtonStyle(filterPending);
                 break;
             case "in_progress":
                 setSelectedFilterButtonStyle(filterInProgress);

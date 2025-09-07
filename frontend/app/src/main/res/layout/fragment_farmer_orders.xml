@@ -48,10 +48,10 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton" />
 
             <Button
-                android:id="@+id/filter_pending"
+                android:id="@+id/filter_in_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pendientes"
+                android:text="En curso"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:fontFamily="@font/manrope_bold"
@@ -59,21 +59,21 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton" />
 
             <Button
-                android:id="@+id/filter_on_way"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="En camino"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/manrope_bold"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-            <Button
-                android:id="@+id/filter_done"
+                android:id="@+id/filter_delivered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Entregados"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_marginStart="8dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+            <Button
+                android:id="@+id/filter_cancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelados"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:fontFamily="@font/manrope_bold"

@@ -32,6 +32,9 @@ public class Product {
     private Integer providerId;
     @SerializedName("image_url")
     private String imageUrl;
+    
+    // Campo para almacenar el tipo de vendedor (farmer/supermarket)
+    private String sellerType;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -221,5 +224,13 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getSellerType() {
+        return sellerType;
+    }
+
+    public void setSellerType(String sellerType) {
+        this.sellerType = sellerType;
     }
 }

@@ -85,18 +85,6 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton" />
 
                 <Button
-                    android:id="@+id/filter_pending"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Pendiente"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular"
-                    android:background="@drawable/filter_background"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-                <Button
                     android:id="@+id/filter_in_progress"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"

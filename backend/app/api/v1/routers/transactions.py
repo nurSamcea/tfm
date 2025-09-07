@@ -75,7 +75,7 @@ def create_order_from_cart(
             seller_type=order_data.seller_type,
             total_price=order_data.total_price,
             currency=order_data.currency,
-            status=TransactionStatusEnum.pending,
+            status=TransactionStatusEnum.in_progress,
             order_details=[item.dict() for item in order_data.order_details],
             created_at=datetime.utcnow()
         )
@@ -243,7 +243,6 @@ def update_transaction_status(
         new_status = status_update.status
         
         valid_transitions = {
-            TransactionStatusEnum.pending: [TransactionStatusEnum.in_progress, TransactionStatusEnum.cancelled],
             TransactionStatusEnum.in_progress: [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled],
             TransactionStatusEnum.delivered: [],  # Estado final
             TransactionStatusEnum.cancelled: []   # Estado final

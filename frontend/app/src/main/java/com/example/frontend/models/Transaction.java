@@ -232,23 +232,15 @@ public class Transaction implements Serializable {
         if (status == null) return "Desconocido";
         
         switch (status.toLowerCase()) {
-            case "pending":
-                return "Pendiente";
             case "in_progress":
                 return "En curso";
             case "delivered":
                 return "Entregado";
             case "cancelled":
                 return "Cancelado";
-            case "completed":
-                return "Completado";
             default:
                 return status;
         }
-    }
-
-    public boolean isPending() {
-        return "pending".equalsIgnoreCase(status);
     }
 
     public boolean isInProgress() {
@@ -261,10 +253,6 @@ public class Transaction implements Serializable {
 
     public boolean isCancelled() {
         return "cancelled".equalsIgnoreCase(status);
-    }
-
-    public boolean isCompleted() {
-        return "completed".equalsIgnoreCase(status);
     }
 
     // Métodos de utilidad para tipos de usuario
