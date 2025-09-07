@@ -387,7 +387,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
 
     @Override
     public void onViewDetails(Product product) {
-        Toast.makeText(getContext(), "Ver detalles de " + product.getName(), Toast.LENGTH_SHORT).show();
+        // Ver detalles del producto
         // TODO: Implementar vista de detalles del producto
     }
 
@@ -400,7 +400,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
                 // Si ya existe, incrementar cantidad
                 cartItem.incrementQuantity();
                 updateCartUI();
-                Toast.makeText(getContext(), "Cantidad actualizada: " + cartItem.getQuantity(), Toast.LENGTH_SHORT).show();
+                // Cantidad actualizada silenciosamente
                 return;
             }
         }
@@ -409,7 +409,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
         CartItem newCartItem = new CartItem(product, 1);
         cartItems.add(newCartItem);
         updateCartUI();
-        Toast.makeText(getContext(), product.getName() + " agregado al carrito", Toast.LENGTH_SHORT).show();
+        // Producto agregado al carrito silenciosamente
     }
 
     private void updateCartUI() {
@@ -433,7 +433,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
 
     private void clearCart() {
         if (cartItems.isEmpty()) {
-            Toast.makeText(getContext(), "El carrito ya está vacío", Toast.LENGTH_SHORT).show();
+            // El carrito ya está vacío
             return;
         }
 
@@ -444,7 +444,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
                 .setPositiveButton("Sí, vaciar", (dialog, which) -> {
                     cartItems.clear();
                     updateCartUI();
-                    Toast.makeText(getContext(), "Carrito vaciado", Toast.LENGTH_SHORT).show();
+                    // Carrito vaciado silenciosamente
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -562,6 +562,6 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
     public void onRemoveItem(CartItem item) {
         cartItems.remove(item);
         updateCartUI();
-        Toast.makeText(getContext(), item.getProductName() + " eliminado del carrito", Toast.LENGTH_SHORT).show();
+        // Producto eliminado del carrito silenciosamente
     }
 }

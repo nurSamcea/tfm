@@ -21,9 +21,6 @@ def get_farmer_dashboard(
 ):
     """Obtener dashboard completo del farmer con métricas principales."""
     
-    logger.info(f"=== FARMER METRICS DASHBOARD ===")
-    logger.info(f"Farmer ID: {farmer_id}")
-    
     # Verificar que el farmer existe
     farmer = db.query(models.User).filter(
         models.User.id == farmer_id,
@@ -31,10 +28,7 @@ def get_farmer_dashboard(
     ).first()
     
     if not farmer:
-        logger.error(f"Farmer {farmer_id} not found or not a farmer")
         raise HTTPException(status_code=404, detail="Farmer no encontrado")
-    
-    logger.info(f"Farmer found: {farmer.name} (ID: {farmer.id})")
     
     # Obtener zonas del farmer
     zones = db.query(models.SensorZone).filter(
@@ -42,12 +36,7 @@ def get_farmer_dashboard(
         models.SensorZone.is_active == True
     ).all()
     
-    logger.info(f"Found {len(zones)} zones for farmer {farmer_id}")
-    for zone in zones:
-        logger.info(f"Zone: {zone.name} (ID: {zone.id})")
-    
     if not zones:
-        logger.warning(f"No zones found for farmer {farmer_id}")
         return {
             "farmer_id": farmer_id,
             "farmer_name": farmer.name,

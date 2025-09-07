@@ -56,20 +56,9 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
 def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     """Registrar nuevo usuario"""
     try:
-        # DEBUG: Imprimir datos recibidos
-        print(f"=== REGISTER DEBUG ===")
-        print(f"Datos recibidos: {payload.dict()}")
-        print(f"Email: {payload.email}")
-        print(f"Nombre: {payload.name}")
-        print(f"Rol: {payload.role}")
-        print(f"Entity name: {payload.entity_name}")
-        print(f"Location: {payload.location_lat}, {payload.location_lon}")
-        print(f"Preferences: {payload.preferences}")
-        
         # Verificar si el email ya está registrado
         existing = db.query(models.User).filter(models.User.email == payload.email).first()
         if existing:
-            print(f"ERROR: Email {payload.email} ya está registrado")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, 
                 detail="El email ya está registrado"
@@ -78,12 +67,9 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
         # Crear nuevo usuario
         from backend.app.models.user import UserRoleEnum
         
-        print(f"Convirtiendo rol '{payload.role}' a enum...")
         try:
             role_enum = UserRoleEnum(payload.role)
-            print(f"Rol convertido exitosamente: {role_enum}")
         except ValueError as e:
-            print(f"ERROR al convertir rol: {e}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Rol inválido: {payload.role}. Roles válidos: consumer, farmer, supermarket"
@@ -102,17 +88,11 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
         
         # Filtrar valores None
         user_data = {k: v for k, v in user_data.items() if v is not None}
-        print(f"Datos del usuario a crear: {user_data}")
         
-        print("Creando objeto User...")
         user = models.User(**user_data)
-        print("Usuario creado, añadiendo a la base de datos...")
         db.add(user)
-        print("Haciendo commit...")
         db.commit()
-        print("Refrescando usuario...")
         db.refresh(user)
-        print(f"Usuario creado exitosamente con ID: {user.id}")
         
         return RegisterResponse(
             id=user.id,
@@ -125,12 +105,6 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
-        print(f"=== ERROR EN REGISTER ===")
-        print(f"Tipo de error: {type(e).__name__}")
-        print(f"Mensaje de error: {str(e)}")
-        print(f"Traceback completo:")
-        import traceback
-        traceback.print_exc()
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

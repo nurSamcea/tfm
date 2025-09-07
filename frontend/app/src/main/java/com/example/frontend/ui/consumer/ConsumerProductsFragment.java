@@ -81,40 +81,33 @@ public class ConsumerProductsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: Fragmento creado");
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.d(TAG, "onAttach: Fragmento adjunto al contexto");
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated: Vista del fragmento creada");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: Fragmento iniciado");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: Fragmento resumido");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         try {
-            Log.d(TAG, "onCreateView: Iniciando el fragm");
             View view = inflater.inflate(R.layout.fragment_consumer_products, container, false);
-            Log.d(TAG, "onCreateView: Layout inflado correctamente");
             
             // Inicializar UI
             searchBar = view.findViewById(R.id.search_bar);
@@ -123,7 +116,6 @@ public class ConsumerProductsFragment extends Fragment {
             filterGlutenFree = view.findViewById(R.id.filter_gluten_free);
             filterEco = view.findViewById(R.id.filter_eco);
             filterCategory = view.findViewById(R.id.filter_category);
-            Log.d(TAG, "onCreateView: UI básica inicializada");
 
         // Configurar el toggle de filtros desde el icono de la barra de búsqueda
         HorizontalScrollView filtersScroll = view.findViewById(R.id.filters_scroll);
@@ -219,11 +211,9 @@ public class ConsumerProductsFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         obtenerUbicacionUsuario();
 
-        Log.d(TAG, "onCreateView: Fragmento inicializado completamente");
         return view;
         
         } catch (Exception e) {
-            Log.e(TAG, "Error en onCreateView: " + e.getMessage(), e);
             // Retornar una vista simple en caso de error
             View errorView = new View(requireContext());
             errorView.setBackgroundColor(0xFF000000); // Fondo negro
@@ -233,7 +223,6 @@ public class ConsumerProductsFragment extends Fragment {
 
     private void obtenerUbicacionUsuario() {
         if (!isAdded() || getContext() == null) {
-            Log.w(TAG, "obtenerUbicacionUsuario: Fragmento no adjunto o contexto nulo, cancelando obtención de ubicación");
             return;
         }
         
@@ -245,7 +234,6 @@ public class ConsumerProductsFragment extends Fragment {
             .addOnSuccessListener(location -> {
                 // Verificar que el fragmento siga adjunto antes de procesar la ubicación
                 if (!isAdded() || getContext() == null) {
-                    Log.w(TAG, "obtenerUbicacionUsuario: Fragmento no adjunto en callback de ubicación, cancelando procesamiento");
                     return;
                 }
                 
@@ -338,16 +326,12 @@ public class ConsumerProductsFragment extends Fragment {
     private void loadSampleProducts() {
         // Verificar que el fragmento esté adjunto antes de continuar
         if (!isAdded() || getContext() == null) {
-            Log.w(TAG, "loadSampleProducts: Fragmento no adjunto o contexto nulo, cancelando carga");
             return;
         }
         
-        Log.d(TAG, "loadSampleProducts: Iniciando carga de productos");
         try {
             ApiService.ProductFilterRequest req = construirRequest();
-            Log.d(TAG, "loadSampleProducts: Request construido, creando ApiService");
             ApiService apiService = RetrofitClient.getInstance(requireContext()).getRetrofit().create(ApiService.class);
-            Log.d(TAG, "loadSampleProducts: ApiService creado, haciendo llamada");
             Call<List<Product>> call = apiService.getProductsOptimized(req);
             pendingApiCall = call; // Almacenar la llamada pendiente
             call.enqueue(new Callback<List<Product>>() {
@@ -355,7 +339,6 @@ public class ConsumerProductsFragment extends Fragment {
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 // Verificar que el fragmento siga adjunto antes de actualizar la UI
                 if (!isAdded() || getContext() == null) {
-                    Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en onResponse, cancelando actualización");
                     return;
                 }
                 
@@ -371,23 +354,19 @@ public class ConsumerProductsFragment extends Fragment {
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 // Verificar que el fragmento siga adjunto antes de mostrar el error
                 if (!isAdded() || getContext() == null) {
-                    Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en onFailure, cancelando actualización");
                     return;
                 }
                 
-                Log.e(TAG, "loadSampleProducts: Error de red: " + t.getMessage(), t);
-                showSafeToast("Error de red: " + t.getMessage());
+                showSafeToast("Error de red");
             }
         });
         } catch (Exception e) {
             // Verificar que el fragmento siga adjunto antes de mostrar el error
             if (!isAdded() || getContext() == null) {
-                Log.w(TAG, "loadSampleProducts: Fragmento no adjunto en catch, cancelando actualización");
                 return;
             }
             
-            Log.e(TAG, "loadSampleProducts: Error general: " + e.getMessage(), e);
-            showSafeToast("Error al cargar productos: " + e.getMessage());
+            showSafeToast("Error al cargar productos");
         }
     }
 
@@ -409,15 +388,11 @@ public class ConsumerProductsFragment extends Fragment {
     }
 
     private void initializeCartPreferencesAsync() {
-        Log.d(TAG, "initializeCartPreferencesAsync: Iniciando inicialización asíncrona");
         new Thread(() -> {
             try {
-                Log.d(TAG, "initializeCartPreferencesAsync: Creando CartPreferences");
                 cartPrefs = new CartPreferences(requireContext());
-                Log.d(TAG, "initializeCartPreferencesAsync: CartPreferences creado exitosamente");
                 
                 // Cargar estado guardado
-                Log.d(TAG, "initializeCartPreferencesAsync: Cargando estado guardado");
                 List<ConsumerOrder.OrderItem> savedCart = cartPrefs.getCartItems();
                 String savedSearchQuery = cartPrefs.getSearchQuery();
                 boolean savedFilterDistance = cartPrefs.getFilterDistance();
@@ -425,12 +400,10 @@ public class ConsumerProductsFragment extends Fragment {
                 boolean savedFilterGlutenFree = cartPrefs.getFilterGlutenFree();
                 boolean savedFilterEco = cartPrefs.getFilterEco();
                 boolean savedFilterCategory = cartPrefs.getFilterCategory();
-                Log.d(TAG, "initializeCartPreferencesAsync: Estado cargado, actualizando UI");
                 
                 // Actualizar UI en el hilo principal
                 requireActivity().runOnUiThread(() -> {
                     try {
-                        Log.d(TAG, "initializeCartPreferencesAsync: Actualizando UI en hilo principal");
                         if (savedCart != null) {
                             cartItems.clear();
                             cartItems.addAll(savedCart);
@@ -448,27 +421,22 @@ public class ConsumerProductsFragment extends Fragment {
                         actualizarTotalCarrito();
                         
                         // Configurar listeners después de cargar el estado
-                        Log.d(TAG, "initializeCartPreferencesAsync: Configurando listeners");
                         setupListeners();
-                        Log.d(TAG, "initializeCartPreferencesAsync: Inicialización completada exitosamente");
                     } catch (Exception e) {
-                        Log.e(TAG, "Error al actualizar UI: " + e.getMessage(), e);
+                        // Error silencioso
                     }
                 });
             } catch (Exception e) {
-                Log.e(TAG, "Error al inicializar CartPreferences: " + e.getMessage(), e);
+                // Error silencioso
             }
         }).start();
     }
 
     private void setupListeners() {
-        Log.d(TAG, "setupListeners: Iniciando configuración de listeners");
         if (cartPrefs == null) {
-            Log.w(TAG, "setupListeners: cartPrefs es null, saliendo");
             return;
         }
         
-        Log.d(TAG, "setupListeners: Configurando listener de búsqueda");
         // Listener de búsqueda
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -518,45 +486,37 @@ public class ConsumerProductsFragment extends Fragment {
                 loadSampleProducts();
             }
         });
-        
-        Log.d(TAG, "setupListeners: Todos los listeners configurados exitosamente");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause: Fragmento pausado");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: Fragmento detenido");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView: Vista del fragmento destruida");
         
         // Cancelar llamada de API pendiente si existe
         if (pendingApiCall != null && !pendingApiCall.isCanceled()) {
             pendingApiCall.cancel();
             pendingApiCall = null;
-            Log.d(TAG, "onDestroyView: Llamada de API pendiente cancelada");
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: Fragmento destruido");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "onDetach: Fragmento desvinculado del contexto");
     }
 
     /**
@@ -617,17 +577,13 @@ public class ConsumerProductsFragment extends Fragment {
             call.enqueue(new Callback<Transaction>() {
                 @Override
                 public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "Pedido creado exitosamente para " + sellerType + " " + sellerId);
-                    } else {
-                        Log.e(TAG, "Error al crear pedido: " + response.code());
-                        showSafeToast("Error al crear pedido para " + sellerType + " " + sellerId);
+                    if (!response.isSuccessful()) {
+                        showSafeToast("Error al crear pedido");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Transaction> call, Throwable t) {
-                    Log.e(TAG, "Error de conexión al crear pedido: " + t.getMessage());
                     showSafeToast("Error de conexión al crear pedido");
                 }
             });
@@ -652,7 +608,7 @@ public class ConsumerProductsFragment extends Fragment {
                 bottomNav.setSelectedItemId(R.id.navigation_consumer_purchases);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error al navegar: " + e.getMessage());
+            // Error silencioso
         }
     }
 
@@ -716,7 +672,7 @@ public class ConsumerProductsFragment extends Fragment {
                 snackbar.show();
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error al mostrar Snackbar: " + e.getMessage());
+            // Error silencioso
         }
     }
 }

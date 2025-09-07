@@ -54,7 +54,6 @@ async def create_product_with_image(
                 buffer.write(content)
             
             image_url = f"/media/{filename}"
-            logging.info(f"Imagen guardada: {file_path}")
         
         # Crear objeto de producto
         product_data = {
@@ -81,11 +80,9 @@ async def create_product_with_image(
         db.commit()
         db.refresh(db_product)
         
-        logging.info(f"Producto creado: {db_product.id} - {db_product.name}")
         return db_product
         
     except Exception as e:
-        logging.error(f"Error al crear producto: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error interno del servidor: {str(e)}"
@@ -162,7 +159,6 @@ def update_product(product_id: int, product_data: schemas.ProductUpdate, db: Ses
         return product
         
     except Exception as e:
-        logging.error(f"Error al actualizar producto {product_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 @router.delete("/{product_id}")
@@ -218,11 +214,9 @@ async def update_product_image(
             db.commit()
             db.refresh(product)
             
-            logging.info(f"Imagen actualizada para producto {product_id}: {file_path}")
             return product
         
     except Exception as e:
-        logging.error(f"Error al actualizar imagen del producto {product_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error interno del servidor: {str(e)}"

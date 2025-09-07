@@ -430,7 +430,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
                 // Si ya existe, incrementar cantidad
                 cartItem.incrementQuantity();
                 updateCartUI();
-                Toast.makeText(getContext(), "Cantidad actualizada: " + cartItem.getQuantity(), Toast.LENGTH_SHORT).show();
+                // Cantidad actualizada silenciosamente
                 return;
             }
         }
@@ -439,7 +439,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         CartItem newCartItem = new CartItem(product, 1);
         cartItems.add(newCartItem);
         updateCartUI();
-        Toast.makeText(getContext(), product.getName() + " agregado al carrito", Toast.LENGTH_SHORT).show();
+        // Producto agregado al carrito silenciosamente
     }
 
     private void updateCartUI() {
@@ -463,7 +463,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
 
     private void clearCart() {
         if (cartItems.isEmpty()) {
-            Toast.makeText(getContext(), "El carrito ya está vacío", Toast.LENGTH_SHORT).show();
+            // El carrito ya está vacío
             return;
         }
 
@@ -474,7 +474,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
                 .setPositiveButton("Sí, vaciar", (dialog, which) -> {
                     cartItems.clear();
                     updateCartUI();
-                    Toast.makeText(getContext(), "Carrito vaciado", Toast.LENGTH_SHORT).show();
+                    // Carrito vaciado silenciosamente
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -616,7 +616,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     public void onRemoveItem(CartItem item) {
         cartItems.remove(item);
         updateCartUI();
-        Toast.makeText(getContext(), item.getProductName() + " eliminado del carrito", Toast.LENGTH_SHORT).show();
+        // Producto eliminado del carrito silenciosamente
     }
 }
 
