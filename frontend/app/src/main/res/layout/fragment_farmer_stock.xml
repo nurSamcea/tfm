@@ -48,16 +48,6 @@
 
         </LinearLayout>
 
-        <!-- Botón de filtro -->
-        <ImageButton
-            android:id="@+id/filter_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/ic_filters"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="@color/primary"
-            android:contentDescription="Filtros" />
 
         <!-- Botón de agregar producto -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton

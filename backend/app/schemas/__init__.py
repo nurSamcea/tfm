@@ -6,6 +6,7 @@ from .sensor_reading import *
 from .sensor import *
 from .sensor_alert import *
 from .blockchain_log import *
+from .blockchain_traceability import *
 from .impact_metric import *
 from .shopping_list import *
 from .shopping_list_group import *

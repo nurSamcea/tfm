@@ -241,6 +241,7 @@ public interface ApiService {
         public Double sustainability_weight;
         public java.util.Map<String, Boolean> filters;
         public java.util.Map<String, Float> weights;
+        public String sort_criteria; // "optimal", "price", "distance", "sustainability", "eco", "stock"
     }
     
     public static class ProductOptimizedResponse {

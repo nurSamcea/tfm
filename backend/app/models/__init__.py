@@ -1,4 +1,8 @@
 from .blockchain_log import BlockchainLog
+from .blockchain_traceability import (
+    TraceabilityEvent, ProductTraceabilityChain, SensorTraceabilityData,
+    TransportLog, QualityCheck, TraceabilityEventType
+)
 from .impact_metric import ImpactMetric
 from .product import Product
 from .qr import QR

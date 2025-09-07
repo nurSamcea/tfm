@@ -8,4 +8,5 @@ public class ProductFilterRequest {
     public Map<String, Float> weights;
     public Double user_lat;
     public Double user_lon;
+    public String sort_criteria; // "optimal", "price", "distance", "sustainability", "eco", "stock"
 } 

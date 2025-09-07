@@ -18,4 +18,6 @@ email-validator
 requests
 numpy
 aiohttp
-python create_iot_tables.py
+qrcode[pil]
+Pillow
+jinja2

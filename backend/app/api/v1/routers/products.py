@@ -8,6 +8,7 @@ import json
 from backend.app import schemas, database, models
 from backend.app.schemas.product import ProductFilterRequest, ProductOptimizedResponse
 from backend.app.models.product import ProductCategory
+from backend.app.algorithms.optimize_products import sort_products_by_priority, calculate_product_score
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -255,6 +256,10 @@ def get_products_optimized(
 
     # 2. Preprocesar productos
     productos_dict = []
+    user_location = None
+    if request.user_lat and request.user_lon:
+        user_location = (request.user_lat, request.user_lon)
+    
     for p in productos:
         prod = {
             "id": p.id,
@@ -264,17 +269,26 @@ def get_products_optimized(
             "is_eco": p.is_eco if p.is_eco is not None else False,
             "is_gluten_free": getattr(p, "is_gluten_free", False),
             "provider_id": p.provider_id,
-            "distance_km": None
+            "stock_available": float(p.stock_available) if p.stock_available is not None else 0.0,
+            "stock": float(p.stock) if p.stock is not None else 0.0,
+            "score": getattr(p, "score", 0) or 0,  # Score de sostenibilidad del producto
+            "distance_km": None,
+            "provider_lat": None,
+            "provider_lon": None
         }
-        # Calcular distancia si se requiere
-        if request.user_lat and request.user_lon and hasattr(p, "provider") and p.provider and p.provider.location_lat and p.provider.location_lon:
-            try:
-                prod["distance_km"] = geodesic(
-                    (request.user_lat, request.user_lon),
-                    (float(p.provider.location_lat), float(p.provider.location_lon))
-                ).km
-            except (ValueError, TypeError):
-                prod["distance_km"] = None
+        
+        # Calcular distancia y obtener coordenadas del proveedor
+        if user_location and hasattr(p, "provider") and p.provider:
+            if p.provider.location_lat and p.provider.location_lon:
+                try:
+                    prod["provider_lat"] = float(p.provider.location_lat)
+                    prod["provider_lon"] = float(p.provider.location_lon)
+                    prod["distance_km"] = geodesic(
+                        user_location,
+                        (prod["provider_lat"], prod["provider_lon"])
+                    ).km
+                except (ValueError, TypeError):
+                    prod["distance_km"] = None
         productos_dict.append(prod)
 
     # 3. Filtrar según filtros booleanos
@@ -282,47 +296,45 @@ def get_products_optimized(
         if activo:
             if filtro == "eco":
                 productos_dict = [p for p in productos_dict if p["is_eco"]]
-            if filtro == "gluten_free":
+            elif filtro == "gluten_free":
                 productos_dict = [p for p in productos_dict if p["is_gluten_free"]]
-            # Puedes añadir más filtros aquí
+            elif filtro == "price" and request.weights and "price" in request.weights:
+                # Si se prioriza precio, filtrar productos muy caros
+                max_price = 5.0  # Precio máximo razonable
+                productos_dict = [p for p in productos_dict if p["price"] <= max_price]
+            elif filtro == "distance" and user_location:
+                # Si se prioriza distancia, filtrar productos muy lejanos
+                max_distance = 50.0  # Distancia máxima en km
+                productos_dict = [p for p in productos_dict if p["distance_km"] is None or p["distance_km"] <= max_distance]
 
-    # 4. Normalizar valores para score
-    def normaliza(lista, clave):
-        valores = [p[clave] for p in lista if p[clave] is not None]
-        if not valores or min(valores) == max(valores):
-            return {p["id"]: 0.0 for p in lista}
-        min_v, max_v = min(valores), max(valores)
-        return {p["id"]: (p[clave] - min_v) / (max_v - min_v) if p[clave] is not None else 0.0 for p in lista}
+    # 4. Determinar criterio de ordenación
+    sort_criteria = request.sort_criteria or "optimal"  # Usar criterio del request o óptimo por defecto
+    
+    # Si no se especifica criterio pero hay filtros activos, inferir criterio
+    if not request.sort_criteria:
+        if request.filters.get("price", False):
+            sort_criteria = "price"
+        elif request.filters.get("distance", False):
+            sort_criteria = "distance"
+        elif request.filters.get("eco", False):
+            sort_criteria = "eco"
+        elif request.filters.get("sustainability", False):
+            sort_criteria = "sustainability"
 
-    norm_price = normaliza(productos_dict, "price")
-    norm_distance = normaliza(productos_dict, "distance_km") if any(p["distance_km"] is not None for p in productos_dict) else {p["id"]: 0.0 for p in productos_dict}
+    # 5. Usar el nuevo algoritmo de ordenación
+    productos_ordenados = sort_products_by_priority(
+        productos_dict,
+        user_location=user_location,
+        weights=request.weights,
+        filters=request.filters,
+        sort_criteria=sort_criteria
+    )
 
-    # 5. Pesos por defecto si no se especifican
-    # weights = request.weights or {"price": 0.7, "distance": 0.3}
-    # if not weights.get("price"): weights["price"] = 0.7
-    # if not weights.get("distance"): weights["distance"] = 0.3
-    # 5. Usar solo pesos si el usuario los envía
-    weights = request.weights if request.weights else None
+    # 6. Asegurar que todos los productos tengan un score calculado
+    for producto in productos_ordenados:
+        if "optimization_score" not in producto:
+            producto["optimization_score"] = calculate_product_score(
+                producto, user_location, request.weights, request.filters
+            )
 
-    # 6. Calcular score ponderado solo si hay pesos
-    if weights and any(v > 0 for v in weights.values()):
-        for p in productos_dict:
-            score = 0.0
-            if "price" in weights:
-                score += norm_price[p["id"]] * weights.get("price", 0)
-            if "distance" in weights:
-                score += norm_distance[p["id"]] * weights.get("distance", 0)
-            p["score"] = score
-    else:
-        for p in productos_dict:
-            p["score"] = 0  # Score por defecto si no se usa
-
-    # 7. Ordenar productos según lógica clara
-    if weights and any(v > 0 for v in weights.values()):
-        productos_dict.sort(key=lambda x: x["score"])
-    elif request.filters.get("price", False):
-        productos_dict.sort(key=lambda x: x["price"])
-    else:
-        productos_dict.sort(key=lambda x: x["name"].lower())
-
-    return productos_dict
+    return productos_ordenados

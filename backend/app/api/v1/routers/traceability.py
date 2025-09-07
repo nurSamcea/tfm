@@ -1,217 +1,550 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
 
 from backend.app import schemas, database, models
 from backend.app.database import get_db
-from backend.app.algorithms.blockchain_manager import BlockchainManager
-from backend.app.core.config import settings
+from backend.app.algorithms.traceability_service import TraceabilityService
+from backend.app.models.blockchain_traceability import TraceabilityEventType
+from backend.app.api.v1.routers.dependencies import get_current_user
+from backend.app.models.user import User
 
-router = APIRouter(prefix="/traceability", tags=["Traceability"])
+router = APIRouter(prefix="/traceability", tags=["Trazabilidad Blockchain"])
 
-# Inicializar el gestor de blockchain
-blockchain_manager = BlockchainManager(settings.BLOCKCHAIN_URL)
-
-
-@router.get("/product/{qr_hash}")
-def get_product_traceability(qr_hash: str, db: Session = Depends(get_db)):
+@router.post("/products/{product_id}/create-chain")
+def create_product_traceability_chain(
+    product_id: int,
+    blockchain_private_key: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
-    Obtiene la información completa de trazabilidad de un producto basado en su QR hash.
+    Crea una nueva cadena de trazabilidad para un producto
     """
     try:
-        # 1. Buscar el QR en la base de datos
-        qr = db.query(models.QR).filter(models.QR.qr_hash == qr_hash).first()
-        if not qr:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="QR no encontrado"
-            )
-
-        # 2. Obtener el producto asociado
-        product = db.query(models.Product).filter(models.Product.id == qr.product_id).first()
-        if not product:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Producto no encontrado"
-            )
-
-        # 3. Obtener el productor
-        producer = db.query(models.User).filter(models.User.id == product.provider_id).first()
-
-        # 4. Obtener las últimas lecturas de sensores
-        latest_sensor_readings = db.query(models.SensorReading).filter(
-            models.SensorReading.product_id == product.id
-        ).order_by(models.SensorReading.created_at.desc()).limit(5).all()
-
-        # 5. Obtener logs de blockchain
-        blockchain_logs = db.query(models.BlockchainLog).filter(
-            models.BlockchainLog.entity_id == product.id
-        ).order_by(models.BlockchainLog.timestamp.desc()).all()
-
-        # 6. Obtener transacciones relacionadas
-        transactions = db.query(models.Transaction).join(
-            models.ShoppingListItem, models.Transaction.shopping_list_id == models.ShoppingListItem.shopping_list_id
-        ).filter(
-            models.ShoppingListItem.product_id == product.id
-        ).order_by(models.Transaction.created_at.desc()).all()
-
-        # 7. Construir eventos de trazabilidad
-        traceability_events = []
+        traceability_service = TraceabilityService(db)
         
-        # Evento de creación del producto
-        if product.created_at:
-            traceability_events.append({
-                "timestamp": product.created_at.isoformat(),
-                "event": "Producto registrado en el sistema",
-                "location": f"{producer.location_lat}, {producer.location_lon}" if producer and producer.location_lat else "Ubicación no disponible"
-            })
-
-        # Eventos de blockchain
-        for log in blockchain_logs:
-            traceability_events.append({
-                "timestamp": log.timestamp.isoformat() if log.timestamp else datetime.utcnow().isoformat(),
-                "event": f"Registrado en blockchain: {log.entity_type}",
-                "hash": log.hash
-            })
-
-        # Eventos de transacciones
-        for tx in transactions:
-            traceability_events.append({
-                "timestamp": tx.created_at.isoformat() if tx.created_at else datetime.utcnow().isoformat(),
-                "event": f"Transacción realizada - Estado: {tx.status}",
-                "amount": f"{tx.total_price} {tx.currency}"
-            })
-
-        # Ordenar eventos por timestamp
-        traceability_events.sort(key=lambda x: x["timestamp"], reverse=True)
-
-        # 8. Obtener temperatura y humedad actuales
-        current_temperature = None
-        current_humidity = None
+        result = traceability_service.create_product_traceability_chain(
+            product_id=product_id,
+            producer_id=current_user.id,
+            blockchain_private_key=blockchain_private_key
+        )
         
-        if latest_sensor_readings:
-            latest_reading = latest_sensor_readings[0]
-            current_temperature = latest_reading.temperature
-            current_humidity = latest_reading.humidity
-
-        # 9. Construir respuesta
-        response = {
-            "product_id": product.id,
-            "product_name": product.name,
-            "product_description": product.description,
-            "category": product.category,
-            "is_eco": product.is_eco,
-            "origin": {
-                "producer_name": producer.name if producer else "Productor no disponible",
-                "producer_location": f"{producer.location_lat}, {producer.location_lon}" if producer and producer.location_lat else "Ubicación no disponible",
-                "entity_name": producer.entity_name if producer else None
-            },
-            "current_conditions": {
-                "temperature": current_temperature,
-                "humidity": current_humidity,
-                "last_updated": latest_sensor_readings[0].created_at.isoformat() if latest_sensor_readings else None
-            },
-            "certifications": {
-                "eco_certified": product.is_eco,
-                "local_product": producer and producer.role in ["farmer"] if producer else False,
-                "organic": product.certifications.get("organic", False) if product.certifications else False
-            },
-            "traceability_events": traceability_events,
-            "blockchain_verification": {
-                "verified": len(blockchain_logs) > 0,
-                "total_logs": len(blockchain_logs),
-                "last_verification": blockchain_logs[0].timestamp.isoformat() if blockchain_logs else None
-            },
-            "qr_info": {
-                "hash": qr.qr_hash,
-                "created_at": qr.created_at.isoformat() if qr.created_at else None,
-                "metadata": qr.qr_metadata
-            }
+        return {
+            "success": True,
+            "message": "Cadena de trazabilidad creada exitosamente",
+            "data": result
         }
-
-        return response
-
-    except HTTPException:
-        raise
+        
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error interno del servidor: {str(e)}"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error creando cadena de trazabilidad: {str(e)}"
         )
 
-
-@router.get("/product/{product_id}/history")
-def get_product_history(product_id: int, db: Session = Depends(get_db)):
+@router.post("/products/{product_id}/sensor-reading")
+def add_sensor_reading_to_traceability(
+    product_id: int,
+    sensor_reading_data: schemas.SensorTraceabilityDataCreate,
+    blockchain_private_key: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """
-    Obtiene el historial completo de un producto incluyendo todas las transacciones y eventos.
+    Añade una lectura de sensor a la trazabilidad del producto
     """
     try:
-        # Verificar que el producto existe
-        product = db.query(models.Product).filter(models.Product.id == product_id).first()
-        if not product:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Producto no encontrado"
-            )
-
-        # Obtener todas las transacciones relacionadas
-        transactions = db.query(models.Transaction).join(
-            models.ShoppingListItem, models.Transaction.shopping_list_id == models.ShoppingListItem.shopping_list_id
-        ).filter(
-            models.ShoppingListItem.product_id == product_id
-        ).order_by(models.Transaction.created_at.desc()).all()
-
-        # Obtener todas las lecturas de sensores
-        sensor_readings = db.query(models.SensorReading).filter(
-            models.SensorReading.product_id == product_id
-        ).order_by(models.SensorReading.created_at.desc()).all()
-
-        # Obtener logs de blockchain
-        blockchain_logs = db.query(models.BlockchainLog).filter(
-            models.BlockchainLog.entity_id == product_id
-        ).order_by(models.BlockchainLog.timestamp.desc()).all()
-
+        traceability_service = TraceabilityService(db)
+        
+        result = traceability_service.add_sensor_reading_to_traceability(
+            product_id=product_id,
+            sensor_id=sensor_reading_data.sensor_id,
+            sensor_reading_data=sensor_reading_data.dict(),
+            blockchain_private_key=blockchain_private_key
+        )
+        
         return {
-            "product_id": product_id,
-            "product_name": product.name,
-            "transactions": [
-                {
-                    "id": tx.id,
-                    "status": tx.status,
-                    "total_price": float(tx.total_price) if tx.total_price else 0,
-                    "currency": tx.currency,
-                    "created_at": tx.created_at.isoformat() if tx.created_at else None,
-                    "confirmed_at": tx.confirmed_at.isoformat() if tx.confirmed_at else None
-                }
-                for tx in transactions
-            ],
-            "sensor_readings": [
-                {
-                    "id": reading.id,
-                    "temperature": reading.temperature,
-                    "humidity": reading.humidity,
-                    "sensor_type": reading.sensor_type.value if reading.sensor_type else None,
-                    "created_at": reading.created_at.isoformat() if reading.created_at else None,
-                    "source_device": reading.source_device
-                }
-                for reading in sensor_readings
-            ],
-            "blockchain_logs": [
-                {
-                    "id": log.id,
-                    "entity_type": log.entity_type,
-                    "hash": log.hash,
-                    "timestamp": log.timestamp.isoformat() if log.timestamp else None
-                }
-                for log in blockchain_logs
-            ]
+            "success": True,
+            "message": "Lectura de sensor añadida a la trazabilidad",
+            "data": result
         }
-
-    except HTTPException:
-        raise
+        
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error interno del servidor: {str(e)}"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error añadiendo lectura de sensor: {str(e)}"
+        )
+
+@router.post("/products/{product_id}/transport-event")
+def add_transport_event(
+    product_id: int,
+    event_type: str,
+    transport_data: schemas.TransportLogCreate,
+    blockchain_private_key: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Añade un evento de transporte a la trazabilidad
+    """
+    try:
+        # Validar el tipo de evento
+        if event_type not in ["transport_start", "transport_checkpoint", "transport_end"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Tipo de evento de transporte inválido"
+            )
+        
+        traceability_service = TraceabilityService(db)
+        
+        result = traceability_service.add_transport_event(
+            product_id=product_id,
+            event_type=TraceabilityEventType(event_type),
+            transport_data=transport_data.dict(),
+            actor_id=current_user.id,
+            blockchain_private_key=blockchain_private_key
+        )
+        
+        return {
+            "success": True,
+            "message": "Evento de transporte añadido a la trazabilidad",
+            "data": result
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error añadiendo evento de transporte: {str(e)}"
+        )
+
+@router.post("/transactions/{transaction_id}/add-to-traceability")
+def add_transaction_to_traceability(
+    transaction_id: int,
+    blockchain_private_key: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Añade una transacción a la trazabilidad
+    """
+    try:
+        traceability_service = TraceabilityService(db)
+        
+        result = traceability_service.add_transaction_to_traceability(
+            transaction_id=transaction_id,
+            blockchain_private_key=blockchain_private_key
+        )
+        
+        return {
+            "success": True,
+            "message": "Transacción añadida a la trazabilidad",
+            "data": result
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error añadiendo transacción a la trazabilidad: {str(e)}"
+        )
+
+@router.post("/products/{product_id}/quality-check")
+def add_quality_check(
+    product_id: int,
+    check_data: schemas.QualityCheckCreate,
+    blockchain_private_key: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Añade un control de calidad a la trazabilidad
+    """
+    try:
+        traceability_service = TraceabilityService(db)
+        
+        result = traceability_service.add_quality_check(
+            product_id=product_id,
+            check_data=check_data.dict(),
+            inspector_id=current_user.id,
+            blockchain_private_key=blockchain_private_key
+        )
+        
+        return {
+            "success": True,
+            "message": "Control de calidad añadido a la trazabilidad",
+            "data": result
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error añadiendo control de calidad: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/summary")
+def get_product_traceability_summary(
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene un resumen completo de la trazabilidad de un producto
+    """
+    try:
+        traceability_service = TraceabilityService(db)
+        
+        summary = traceability_service.get_product_traceability_summary(product_id)
+        
+        return {
+            "success": True,
+            "data": summary
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo resumen de trazabilidad: {str(e)}"
+        )
+
+@router.post("/products/{product_id}/verify")
+def verify_traceability_authenticity(
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Verifica la autenticidad de la trazabilidad de un producto
+    """
+    try:
+        traceability_service = TraceabilityService(db)
+        
+        verification_result = traceability_service.verify_traceability_authenticity(product_id)
+        
+        return {
+            "success": True,
+            "data": verification_result
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error verificando autenticidad: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/events")
+def get_product_traceability_events(
+    product_id: int,
+    event_type: Optional[str] = None,
+    limit: int = 100,
+    offset: int = 0,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene los eventos de trazabilidad de un producto
+    """
+    try:
+        query = db.query(models.TraceabilityEvent).filter(
+            models.TraceabilityEvent.product_id == product_id
+        )
+        
+        if event_type:
+            query = query.filter(models.TraceabilityEvent.event_type == event_type)
+        
+        events = query.order_by(models.TraceabilityEvent.timestamp.desc()).offset(offset).limit(limit).all()
+        
+        return {
+            "success": True,
+            "data": [
+                {
+                    "id": event.id,
+                    "event_type": event.event_type.value,
+                    "timestamp": event.timestamp.isoformat(),
+                    "location": {
+                        "lat": event.location_lat,
+                        "lon": event.location_lon,
+                        "description": event.location_description
+                    },
+                    "actor": {
+                        "id": event.actor_id,
+                        "type": event.actor_type
+                    },
+                    "event_data": event.event_data,
+                    "blockchain_hash": event.blockchain_hash,
+                    "is_verified": event.is_verified
+                }
+                for event in events
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo eventos de trazabilidad: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/sensor-data")
+def get_product_sensor_data(
+    product_id: int,
+    sensor_id: Optional[int] = None,
+    limit: int = 100,
+    offset: int = 0,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene los datos de sensores asociados a la trazabilidad de un producto
+    """
+    try:
+        query = db.query(models.SensorTraceabilityData).join(
+            models.TraceabilityEvent
+        ).filter(
+            models.TraceabilityEvent.product_id == product_id
+        )
+        
+        if sensor_id:
+            query = query.filter(models.SensorTraceabilityData.sensor_id == sensor_id)
+        
+        sensor_data = query.order_by(models.SensorTraceabilityData.id.desc()).offset(offset).limit(limit).all()
+        
+        return {
+            "success": True,
+            "data": [
+                {
+                    "id": data.id,
+                    "sensor_id": data.sensor_id,
+                    "temperature": data.temperature,
+                    "humidity": data.humidity,
+                    "gas_level": data.gas_level,
+                    "light_level": data.light_level,
+                    "shock_detected": data.shock_detected,
+                    "soil_moisture": data.soil_moisture,
+                    "ph_level": data.ph_level,
+                    "reading_quality": data.reading_quality,
+                    "is_processed": data.is_processed,
+                    "extra_data": data.extra_data
+                }
+                for data in sensor_data
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo datos de sensores: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/transport-logs")
+def get_product_transport_logs(
+    product_id: int,
+    limit: int = 100,
+    offset: int = 0,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene los logs de transporte de un producto
+    """
+    try:
+        transport_logs = db.query(models.TransportLog).join(
+            models.TraceabilityEvent
+        ).filter(
+            models.TraceabilityEvent.product_id == product_id
+        ).order_by(models.TransportLog.id.desc()).offset(offset).limit(limit).all()
+        
+        return {
+            "success": True,
+            "data": [
+                {
+                    "id": log.id,
+                    "transport_type": log.transport_type,
+                    "driver_id": log.driver_id,
+                    "vehicle_id": log.vehicle_id,
+                    "start_location": {
+                        "lat": log.start_location_lat,
+                        "lon": log.start_location_lon
+                    },
+                    "end_location": {
+                        "lat": log.end_location_lat,
+                        "lon": log.end_location_lon
+                    },
+                    "distance_km": log.distance_km,
+                    "estimated_time_hours": log.estimated_time_hours,
+                    "actual_time_hours": log.actual_time_hours,
+                    "temperature_range": {
+                        "min": log.temperature_min,
+                        "max": log.temperature_max
+                    },
+                    "humidity_range": {
+                        "min": log.humidity_min,
+                        "max": log.humidity_max
+                    },
+                    "created_at": log.created_at.isoformat()
+                }
+                for log in transport_logs
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo logs de transporte: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/quality-checks")
+def get_product_quality_checks(
+    product_id: int,
+    limit: int = 100,
+    offset: int = 0,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene los controles de calidad de un producto
+    """
+    try:
+        quality_checks = db.query(models.QualityCheck).join(
+            models.TraceabilityEvent
+        ).filter(
+            models.TraceabilityEvent.product_id == product_id
+        ).order_by(models.QualityCheck.id.desc()).offset(offset).limit(limit).all()
+        
+        return {
+            "success": True,
+            "data": [
+                {
+                    "id": check.id,
+                    "check_type": check.check_type,
+                    "inspector_id": check.inspector_id,
+                    "passed": check.passed,
+                    "score": check.score,
+                    "notes": check.notes,
+                    "check_data": check.check_data,
+                    "created_at": check.created_at.isoformat()
+                }
+                for check in quality_checks
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo controles de calidad: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/chain-status")
+def get_product_chain_status(
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene el estado de la cadena de trazabilidad de un producto
+    """
+    try:
+        chain = db.query(models.ProductTraceabilityChain).filter(
+            models.ProductTraceabilityChain.product_id == product_id
+        ).first()
+        
+        if not chain:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No se encontró cadena de trazabilidad para el producto"
+            )
+        
+        return {
+            "success": True,
+            "data": {
+                "product_id": chain.product_id,
+                "product_name": chain.product_name,
+                "is_complete": chain.is_complete,
+                "is_verified": chain.is_verified,
+                "total_distance_km": chain.total_distance_km,
+                "total_time_hours": chain.total_time_hours,
+                "temperature_violations": chain.temperature_violations,
+                "quality_score": chain.quality_score,
+                "created_at": chain.created_at.isoformat(),
+                "completed_at": chain.completed_at.isoformat() if chain.completed_at else None,
+                "verified_at": chain.verified_at.isoformat() if chain.verified_at else None
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error obteniendo estado de la cadena: {str(e)}"
+        )
+
+@router.post("/products/{product_id}/complete-chain")
+def complete_traceability_chain(
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Marca la cadena de trazabilidad como completa
+    """
+    try:
+        chain = db.query(models.ProductTraceabilityChain).filter(
+            models.ProductTraceabilityChain.product_id == product_id
+        ).first()
+        
+        if not chain:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No se encontró cadena de trazabilidad para el producto"
+            )
+        
+        chain.is_complete = True
+        chain.completed_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Cadena de trazabilidad marcada como completa"
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error completando cadena de trazabilidad: {str(e)}"
+        )
+
+@router.post("/products/{product_id}/verify-chain")
+def verify_traceability_chain(
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Marca la cadena de trazabilidad como verificada
+    """
+    try:
+        chain = db.query(models.ProductTraceabilityChain).filter(
+            models.ProductTraceabilityChain.product_id == product_id
+        ).first()
+        
+        if not chain:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No se encontró cadena de trazabilidad para el producto"
+            )
+        
+        chain.is_verified = True
+        chain.verified_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Cadena de trazabilidad marcada como verificada"
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error verificando cadena de trazabilidad: {str(e)}"
         )

@@ -219,13 +219,85 @@ def get_consumer_orders(consumer_id: int, db: Session = Depends(get_db)):
     return get_buyer_orders(consumer_id, "consumer", db)
 
 
+def _validate_transaction_permissions(transaction, new_status, user_id: int, user_type: str):
+    """
+    Validar si un usuario puede realizar un cambio de estado específico en una transacción.
+    
+    Reglas de negocio:
+    - Farmer: puede cambiar de 'in_progress' a 'delivered' o 'cancelled' en sus ventas
+    - Supermarket (como vendedor): puede cambiar de 'in_progress' a 'delivered' o 'cancelled' en ventas a consumidores
+    - Supermarket (como comprador): solo puede cancelar pedidos de proveedores (farmers)
+    - Consumer: solo puede cancelar sus pedidos
+    """
+    current_status = transaction.status
+    
+    # Validar transiciones básicas
+    valid_transitions = {
+        TransactionStatusEnum.in_progress: [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled],
+        TransactionStatusEnum.delivered: [],  # Estado final
+        TransactionStatusEnum.cancelled: []   # Estado final
+    }
+    
+    if new_status not in valid_transitions.get(current_status, []):
+        return False, f"Transición de estado no válida: {current_status.value} -> {new_status.value}"
+    
+    # Validar permisos específicos por tipo de usuario
+    if user_type == "farmer":
+        # Farmer solo puede modificar sus propias ventas
+        if transaction.seller_id != user_id or transaction.seller_type != "farmer":
+            return False, "Los agricultores solo pueden modificar sus propias ventas"
+        
+        # Farmer puede entregar o cancelar
+        if new_status in [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled]:
+            return True, "Permitido"
+    
+    elif user_type == "supermarket":
+        # Supermarket puede actuar como vendedor o comprador
+        if transaction.seller_id == user_id and transaction.seller_type == "supermarket":
+            # Como vendedor: solo puede vender a consumidores, puede entregar o cancelar
+            if transaction.buyer_type == "consumer":
+                if new_status in [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled]:
+                    return True, "Permitido"
+            else:
+                return False, "Los supermercados solo pueden vender directamente a consumidores"
+        
+        elif transaction.buyer_id == user_id and transaction.buyer_type == "supermarket":
+            # Como comprador: solo puede cancelar pedidos de farmers
+            if transaction.seller_type == "farmer":
+                if new_status == TransactionStatusEnum.cancelled:
+                    return True, "Permitido"
+                else:
+                    return False, "Los supermercados solo pueden cancelar pedidos de agricultores"
+            else:
+                return False, "Los supermercados solo pueden cancelar pedidos de agricultores"
+        else:
+            return False, "El supermercado no está involucrado en esta transacción"
+    
+    elif user_type == "consumer":
+        # Consumer solo puede cancelar sus propios pedidos
+        if transaction.buyer_id != user_id or transaction.buyer_type != "consumer":
+            return False, "Los consumidores solo pueden cancelar sus propios pedidos"
+        
+        if new_status == TransactionStatusEnum.cancelled:
+            return True, "Permitido"
+        else:
+            return False, "Los consumidores solo pueden cancelar pedidos"
+    
+    else:
+        return False, f"Tipo de usuario no válido: {user_type}"
+    
+    return False, "Operación no permitida"
+
+
 @router.patch("/{transaction_id}/status", response_model=schemas.TransactionOut)
 def update_transaction_status(
     transaction_id: int,
     status_update: schemas.TransactionUpdate,
+    user_id: int,
+    user_type: str,
     db: Session = Depends(get_db)
 ):
-    """Actualizar el estado de una transacción"""
+    """Actualizar el estado de una transacción con validación de permisos"""
     try:
         # 1. Buscar la transacción
         transaction = db.query(models.Transaction).filter(
@@ -238,32 +310,27 @@ def update_transaction_status(
                 detail="Transacción no encontrada"
             )
 
-        # 2. Validar transición de estado
-        current_status = transaction.status
-        new_status = status_update.status
+        # 2. Validar permisos del usuario
+        is_allowed, error_message = _validate_transaction_permissions(
+            transaction, status_update.status, user_id, user_type
+        )
         
-        valid_transitions = {
-            TransactionStatusEnum.in_progress: [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled],
-            TransactionStatusEnum.delivered: [],  # Estado final
-            TransactionStatusEnum.cancelled: []   # Estado final
-        }
-        
-        if new_status not in valid_transitions.get(current_status, []):
+        if not is_allowed:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Transición de estado no válida: {current_status.value} -> {new_status.value}"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_message
             )
 
         # 3. Actualizar estado y fechas
-        transaction.status = new_status
+        transaction.status = status_update.status
         
-        if new_status == TransactionStatusEnum.in_progress:
+        if status_update.status == TransactionStatusEnum.in_progress:
             transaction.confirmed_at = datetime.utcnow()
-        elif new_status == TransactionStatusEnum.delivered:
+        elif status_update.status == TransactionStatusEnum.delivered:
             transaction.delivered_at = datetime.utcnow()
             # Cuando se marca como entregado, crear productos para el comprador
             _create_buyer_products(transaction, db)
-        elif new_status == TransactionStatusEnum.cancelled:
+        elif status_update.status == TransactionStatusEnum.cancelled:
             # Si se cancela, devolver stock al vendedor
             _restore_seller_stock(transaction, db)
 
@@ -340,22 +407,35 @@ def _create_buyer_products(transaction, db):
                 certifications=original_product.certifications
             )
             db.add(new_product)
+        
+        # Eliminar el producto del vendedor si el stock llega a 0
+        # (El stock ya se redujo al crear la transacción)
+        if original_product.stock_available <= 0:
+            db.delete(original_product)
 
 
 def _restore_seller_stock(transaction, db):
     """Restaurar stock del vendedor cuando se cancela una transacción"""
     for item_data in transaction.order_details:
+        # Buscar el producto original del vendedor
         product = db.query(models.Product).filter(
             models.Product.id == item_data['product_id']
         ).first()
         
         if product:
+            # Restaurar el stock
             product.stock_available += item_data['quantity']
+            
+            # Si el producto estaba oculto (stock = 0), hacerlo visible nuevamente
+            if product.is_hidden:
+                product.is_hidden = False
 
 
 @router.patch("/{transaction_id}/cancel", response_model=schemas.TransactionOut)
 def cancel_transaction(
     transaction_id: int,
+    user_id: int,
+    user_type: str,
     db: Session = Depends(get_db)
 ):
     """Cancelar una transacción y restaurar el stock del vendedor"""
@@ -371,11 +451,15 @@ def cancel_transaction(
                 detail="Transacción no encontrada"
             )
 
-        # 2. Validar que se puede cancelar
-        if transaction.status in [TransactionStatusEnum.delivered, TransactionStatusEnum.cancelled]:
+        # 2. Validar permisos del usuario para cancelar
+        is_allowed, error_message = _validate_transaction_permissions(
+            transaction, TransactionStatusEnum.cancelled, user_id, user_type
+        )
+        
+        if not is_allowed:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"No se puede cancelar una transacción con estado: {transaction.status.value}"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_message
             )
 
         # 3. Cancelar y restaurar stock
@@ -429,6 +513,8 @@ def cancel_transaction(
 @router.patch("/{transaction_id}/deliver", response_model=schemas.TransactionOut)
 def deliver_transaction(
     transaction_id: int,
+    user_id: int,
+    user_type: str,
     db: Session = Depends(get_db)
 ):
     """Marcar una transacción como entregada y transferir stock al comprador"""
@@ -444,11 +530,15 @@ def deliver_transaction(
                 detail="Transacción no encontrada"
             )
 
-        # 2. Validar que se puede entregar
-        if transaction.status != TransactionStatusEnum.in_progress:
+        # 2. Validar permisos del usuario para entregar
+        is_allowed, error_message = _validate_transaction_permissions(
+            transaction, TransactionStatusEnum.delivered, user_id, user_type
+        )
+        
+        if not is_allowed:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Solo se pueden entregar transacciones en estado 'in_progress'. Estado actual: {transaction.status.value}"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_message
             )
 
         # 3. Marcar como entregado y transferir stock

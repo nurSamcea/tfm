@@ -1,9 +1,10 @@
 package com.example.frontend.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Product {
+public class Product implements Serializable {
     private String id;
     private String name;
     private String category;

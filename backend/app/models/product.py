@@ -43,3 +43,5 @@ class Product(Base):
     provider = relationship("User", back_populates="products")
     sensor_readings = relationship("SensorReading", back_populates="product")
     qrs = relationship("QR", back_populates="product")
+    traceability_events = relationship("TraceabilityEvent", back_populates="product")
+    traceability_chain = relationship("ProductTraceabilityChain", back_populates="product", uselist=False)

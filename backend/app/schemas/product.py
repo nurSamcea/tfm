@@ -67,6 +67,7 @@ class ProductFilterRequest(BaseModel):
     weights: Dict[str, float] = {} # Ej: {"price": 0.5, "distance": 0.3, ...}
     user_lat: Optional[float] = None
     user_lon: Optional[float] = None
+    sort_criteria: Optional[str] = "optimal" # "optimal", "price", "distance", "sustainability", "eco", "stock"
 
 class ProductOptimizedResponse(BaseModel):
     id: int
@@ -78,3 +79,5 @@ class ProductOptimizedResponse(BaseModel):
     provider_id: int
     distance_km: Optional[float]
     score: float
+    optimization_score: Optional[float] = None
+    stock_available: Optional[float] = None

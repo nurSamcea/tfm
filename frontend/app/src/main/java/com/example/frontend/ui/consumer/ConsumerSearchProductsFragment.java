@@ -25,6 +25,7 @@ import com.example.frontend.model.OrderRequest;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.SupermarketProductAdapter;
 import com.example.frontend.ui.adapters.CartAdapter;
+import com.example.frontend.ui.dialogs.ProductTraceabilityDialog;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.network.ApiClient;
 import com.example.frontend.utils.SessionManager;
@@ -227,51 +228,12 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         filteredProducts.clear();
 
         for (Product product : allProducts) {
-            // Filtro de texto
+            // Solo filtro de texto
             boolean matchesText = query.isEmpty() || 
                 product.getName().toLowerCase().contains(query) ||
                 product.getCategory().toLowerCase().contains(query);
 
-            if (!matchesText) continue;
-
-            // Filtros de chips
-            boolean matchesFilters = true;
-            List<Integer> checkedIds = chipGroupFilters.getCheckedChipIds();
-            
-            for (int id : checkedIds) {
-                Chip chip = chipGroupFilters.findViewById(id);
-                if (chip == null) continue;
-                
-                String chipText = chip.getText().toString();
-                
-                switch (chipText) {
-                    case "Precio bajo":
-                        if (product.getPrice() > 2.0) matchesFilters = false;
-                        break;
-                    case "Cerca":
-                        if (product.getDistance_km() != null && product.getDistance_km() > 50) {
-                            matchesFilters = false;
-                        }
-                        break;
-                    case "Disponible":
-                        double stock = product.getStockAvailable() != null ? 
-                            product.getStockAvailable() : product.getStock();
-                        if (stock <= 0) matchesFilters = false;
-                        break;
-                    case "Sostenible":
-                        if (product.getScore() == null || product.getScore() < 70) {
-                            matchesFilters = false;
-                        }
-                        break;
-                    case "Ecológico":
-                        if (product.getIsEco() == null || !product.getIsEco()) {
-                            matchesFilters = false;
-                        }
-                        break;
-                }
-            }
-
-            if (matchesFilters) {
+            if (matchesText) {
                 filteredProducts.add(product);
             }
         }
@@ -283,39 +245,111 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     }
 
     private void applyOptimizationAlgorithm() {
-        // Simular algoritmo de optimización basado en los criterios
+        // Determinar criterios de priorización basados en filtros activos
+        String sortCriteria = determineSortCriteria();
+        
+        // Aplicar algoritmo de optimización según criterios
         Collections.sort(filteredProducts, (p1, p2) -> {
-            double score1 = calculateProductScore(p1);
-            double score2 = calculateProductScore(p2);
+            double score1 = calculateProductScore(p1, sortCriteria);
+            double score2 = calculateProductScore(p2, sortCriteria);
             return Double.compare(score2, score1); // Orden descendente (mejor primero)
         });
     }
 
-    private double calculateProductScore(Product product) {
+    private String determineSortCriteria() {
+        // Usar algoritmo óptimo por defecto
+        // El usuario puede cambiar el criterio usando el botón de ordenar
+        return "optimal";
+    }
+
+    private double calculateProductScore(Product product, String sortCriteria) {
         double score = 0.0;
         
-        // Puntuación por precio (más bajo = mejor)
-        score += (5.0 - product.getPrice()) * 10;
+        switch (sortCriteria) {
+            case "price":
+                // Priorizar precio bajo (menor precio = mayor score)
+                score = 100.0 - (product.getPrice() * 20); // Normalizar precio
+                break;
+                
+            case "price_desc":
+                // Priorizar precio alto (mayor precio = mayor score)
+                score = product.getPrice() * 20; // Normalizar precio
+                break;
+                
+            case "distance":
+                // Priorizar proximidad
+                if (product.getDistance_km() != null) {
+                    score = Math.max(0, 100 - (product.getDistance_km() * 2));
+                } else {
+                    score = 50; // Score neutral si no hay distancia
+                }
+                break;
+                
+            case "sustainability":
+                // Priorizar sostenibilidad
+                if (product.getScore() != null) {
+                    score = product.getScore();
+                } else {
+                    score = 0;
+                }
+                break;
+                
+            case "eco":
+                // Priorizar productos ecológicos
+                if (product.getIsEco() != null && product.getIsEco()) {
+                    score = 100;
+                } else {
+                    score = 0;
+                }
+                break;
+                
+            case "stock":
+                // Priorizar stock disponible
+                double stock = product.getStockAvailable() != null ? 
+                    product.getStockAvailable() : product.getStock();
+                score = Math.min(stock * 10, 100);
+                break;
+                
+            case "optimal":
+            default:
+                // Algoritmo óptimo que considera múltiples factores
+                score = calculateOptimalScore(product);
+                break;
+        }
         
-        // Puntuación por distancia (más cerca = mejor)
+        return score;
+    }
+
+    private double calculateOptimalScore(Product product) {
+        double score = 0.0;
+        
+        // 1. Puntuación por precio (30% peso)
+        double priceScore = Math.max(0, 100 - (product.getPrice() * 10));
+        score += 0.3 * priceScore;
+        
+        // 2. Puntuación por distancia (25% peso)
         if (product.getDistance_km() != null) {
-            score += Math.max(0, 50 - product.getDistance_km()) * 2;
+            double distanceScore = Math.max(0, 100 - (product.getDistance_km() * 2));
+            score += 0.25 * distanceScore;
+        } else {
+            score += 0.25 * 50; // Score neutral si no hay distancia
         }
         
-        // Puntuación por sostenibilidad
+        // 3. Puntuación por sostenibilidad (20% peso)
         if (product.getScore() != null) {
-            score += product.getScore() * 0.5;
+            score += 0.2 * product.getScore();
         }
         
-        // Bonus por ser ecológico
+        // 4. Bonus por ser ecológico (15% peso)
         if (product.getIsEco() != null && product.getIsEco()) {
-            score += 20;
+            score += 0.15 * 100;
         }
         
-        // Bonus por stock disponible
+        // 5. Puntuación por stock disponible (10% peso)
         double stock = product.getStockAvailable() != null ? 
             product.getStockAvailable() : product.getStock();
-        score += Math.min(stock * 2, 20);
+        double stockScore = Math.min(stock * 10, 100);
+        score += 0.1 * stockScore;
         
         return score;
     }
@@ -339,40 +373,38 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     }
 
     private void sortProducts(int sortType) {
+        String sortCriteria;
+        
         switch (sortType) {
             case 0: // Precio menor a mayor
-                Collections.sort(filteredProducts, (p1, p2) -> 
-                    Double.compare(p1.getPrice(), p2.getPrice()));
+                sortCriteria = "price";
                 break;
             case 1: // Precio mayor a menor
-                Collections.sort(filteredProducts, (p1, p2) -> 
-                    Double.compare(p2.getPrice(), p1.getPrice()));
+                sortCriteria = "price_desc";
                 break;
             case 2: // Distancia más cerca
-                Collections.sort(filteredProducts, (p1, p2) -> {
-                    Double d1 = p1.getDistance_km() != null ? p1.getDistance_km() : Double.MAX_VALUE;
-                    Double d2 = p2.getDistance_km() != null ? p2.getDistance_km() : Double.MAX_VALUE;
-                    return Double.compare(d1, d2);
-                });
+                sortCriteria = "distance";
                 break;
             case 3: // Sostenibilidad mayor
-                Collections.sort(filteredProducts, (p1, p2) -> {
-                    Double s1 = p1.getScore() != null ? p1.getScore() : 0.0;
-                    Double s2 = p2.getScore() != null ? p2.getScore() : 0.0;
-                    return Double.compare(s2, s1);
-                });
+                sortCriteria = "sustainability";
                 break;
             case 4: // Stock disponible
-                Collections.sort(filteredProducts, (p1, p2) -> {
-                    double stock1 = p1.getStockAvailable() != null ? p1.getStockAvailable() : p1.getStock();
-                    double stock2 = p2.getStockAvailable() != null ? p2.getStockAvailable() : p2.getStock();
-                    return Double.compare(stock2, stock1);
-                });
+                sortCriteria = "stock";
                 break;
             case 5: // Algoritmo optimizado
-                applyOptimizationAlgorithm();
+                sortCriteria = "optimal";
+                break;
+            default:
+                sortCriteria = "optimal";
                 break;
         }
+        
+        // Aplicar ordenación según el criterio seleccionado
+        Collections.sort(filteredProducts, (p1, p2) -> {
+            double score1 = calculateProductScore(p1, sortCriteria);
+            double score2 = calculateProductScore(p2, sortCriteria);
+            return Double.compare(score2, score1); // Orden descendente (mejor primero)
+        });
         
         productAdapter.updateProducts(filteredProducts);
     }
@@ -385,8 +417,9 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
 
     @Override
     public void onViewDetails(Product product) {
-        Toast.makeText(getContext(), "Ver detalles de " + product.getName(), Toast.LENGTH_SHORT).show();
-        // TODO: Implementar vista de detalles del producto
+        // Mostrar diálogo de trazabilidad
+        ProductTraceabilityDialog dialog = ProductTraceabilityDialog.newInstance(product);
+        dialog.show(getParentFragmentManager(), "traceability_dialog");
     }
 
     // Métodos del carrito de compras

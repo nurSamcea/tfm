@@ -21,6 +21,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public interface OnProductClickListener {
         void onProductClick(Product product);
+        void onViewDetails(Product product);
     }
 
     private List<Product> productList = new ArrayList<>();
@@ -87,6 +88,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         } else {
             holder.addToCartButton.setVisibility(View.GONE);
         }
+        
+        // Botón ver detalles
+        if (isConsumerMode) {
+            holder.viewDetailsButton.setVisibility(View.VISIBLE);
+            holder.viewDetailsButton.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onViewDetails(product);
+                }
+            });
+        } else {
+            holder.viewDetailsButton.setVisibility(View.GONE);
+        }
         // Si quieres mostrar el score o la distancia en el layout, añade aquí la lógica para mostrar esos campos en el ViewHolder.
         // Por ejemplo:
         // holder.scoreTextView.setText(product.getScore() != null ? String.format("Score: %.2f", product.getScore()) : "");
@@ -104,6 +117,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView stockTextView;
         TextView discountTextView;
         Button addToCartButton;
+        Button viewDetailsButton;
         ImageView productImageView;
 
         ProductViewHolder(View itemView) {
@@ -113,6 +127,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             stockTextView = itemView.findViewById(R.id.productStock);
             discountTextView = itemView.findViewById(R.id.productDiscount);
             addToCartButton = itemView.findViewById(R.id.addToCartButton);
+            viewDetailsButton = itemView.findViewById(R.id.viewDetailsButton);
             productImageView = itemView.findViewById(R.id.imageViewProduct);
         }
     }

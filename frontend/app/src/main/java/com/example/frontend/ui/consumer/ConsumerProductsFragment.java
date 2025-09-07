@@ -33,6 +33,7 @@ import com.example.frontend.utils.CartPreferences;
 import com.example.frontend.utils.SessionManager;
 import com.example.frontend.ui.adapters.ProductAdapter;
 import com.example.frontend.ui.adapters.OrderItemCartAdapter;
+import com.example.frontend.ui.dialogs.ProductTraceabilityDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.api.RetrofitClient;
@@ -171,21 +172,31 @@ public class ConsumerProductsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.products_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         products = new ArrayList<>();
-        adapter = new ProductAdapter(product -> {
-            ConsumerOrder.OrderItem item = buscarEnCarrito(product.getId());
-            if (item == null) {
-                item = new ConsumerOrder.OrderItem(product.getId(), 1, product.getPrice());
-                item.setProductName(product.getName());
-                cartItems.add(item);
-                showSafeToast("Añadido al carrito");
-            } else {
-                item.setQuantity(item.getQuantity() + 1);
+        adapter = new ProductAdapter(new ProductAdapter.OnProductClickListener() {
+            @Override
+            public void onProductClick(Product product) {
+                ConsumerOrder.OrderItem item = buscarEnCarrito(product.getId());
+                if (item == null) {
+                    item = new ConsumerOrder.OrderItem(product.getId(), 1, product.getPrice());
+                    item.setProductName(product.getName());
+                    cartItems.add(item);
+                    showSafeToast("Añadido al carrito");
+                } else {
+                    item.setQuantity(item.getQuantity() + 1);
+                }
+                actualizarTotalCarrito();
+                if (cartPrefs != null) {
+                    cartPrefs.saveCartItems(cartItems);
+                }
+                cartAdapter.notifyDataSetChanged();
             }
-            actualizarTotalCarrito();
-            if (cartPrefs != null) {
-                cartPrefs.saveCartItems(cartItems);
+            
+            @Override
+            public void onViewDetails(Product product) {
+                // Mostrar diálogo de trazabilidad
+                ProductTraceabilityDialog dialog = ProductTraceabilityDialog.newInstance(product);
+                dialog.show(getParentFragmentManager(), "traceability_dialog");
             }
-            cartAdapter.notifyDataSetChanged();
         }, true);
         recyclerView.setAdapter(adapter);
 
@@ -268,26 +279,60 @@ public class ConsumerProductsFragment extends Fragment {
         req.filters.put("price", filterPrice.isChecked());
         req.filters.put("distance", filterDistance.isChecked());
 
-        boolean usarScore = filterDistance.isChecked();
+        // Determinar criterio de ordenación basado en filtros activos
+        req.sort_criteria = determinarCriterioOrdenacion();
+
+        // Configurar pesos y ubicación
+        boolean usarScore = filterDistance.isChecked() || filterPrice.isChecked();
         if (usarScore) {
             req.weights = new HashMap<>();
             if (filterPrice.isChecked()) {
-                req.weights.put("price", 1.0f);
+                req.weights.put("price", 0.4f);
             }
             if (filterDistance.isChecked()) {
-                req.weights.put("distance", 1.0f);
+                req.weights.put("distance", 0.4f);
             }
+            req.weights.put("sustainability", 0.2f); // Siempre incluir sostenibilidad
+            
             // Añadir ubicación si está disponible
             if (userLat != null && userLon != null) {
                 req.user_lat = userLat;
                 req.user_lon = userLon;
             }
         } else {
-            req.weights = null;
-            req.user_lat = null;
-            req.user_lon = null;
+            // Usar pesos por defecto para algoritmo óptimo
+            req.weights = new HashMap<>();
+            req.weights.put("price", 0.3f);
+            req.weights.put("distance", 0.25f);
+            req.weights.put("sustainability", 0.2f);
+            req.weights.put("eco", 0.15f);
+            req.weights.put("stock", 0.1f);
+            
+            if (userLat != null && userLon != null) {
+                req.user_lat = userLat;
+                req.user_lon = userLon;
+            }
         }
         return req;
+    }
+
+    private String determinarCriterioOrdenacion() {
+        // Si no hay filtros activos, usar algoritmo óptimo
+        if (!filterEco.isChecked() && !filterGlutenFree.isChecked() && 
+            !filterPrice.isChecked() && !filterDistance.isChecked()) {
+            return "optimal";
+        }
+        
+        // Determinar criterio basado en filtros activos
+        if (filterPrice.isChecked()) {
+            return "price";
+        } else if (filterDistance.isChecked()) {
+            return "distance";
+        } else if (filterEco.isChecked()) {
+            return "eco";
+        } else {
+            return "optimal";
+        }
     }
 
     private void loadSampleProducts() {

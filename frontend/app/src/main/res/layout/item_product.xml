@@ -91,20 +91,43 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="end" />
 
-            <!-- Botón añadir al carrito -->
-            <Button
-                android:id="@+id/addToCartButton"
+            <!-- Botones -->
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/primary"
-                android:minHeight="40dp"
-                android:text="Añadir"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:cornerRadius="20dp"
-                android:fontFamily="@font/manrope_bold"
-                android:paddingHorizontal="16dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <Button
+                    android:id="@+id/viewDetailsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:backgroundTint="@color/secondary"
+                    android:minHeight="32dp"
+                    android:text="Detalles"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:paddingHorizontal="12dp"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/addToCartButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:backgroundTint="@color/primary"
+                    android:minHeight="32dp"
+                    android:text="Añadir"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:paddingHorizontal="12dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
