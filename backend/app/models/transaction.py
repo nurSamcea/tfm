@@ -5,7 +5,6 @@ from datetime import datetime
 import enum
 
 class TransactionStatusEnum(enum.Enum):
-    pending = "pending"  # Pendiente - Recién creado, esperando confirmación
     in_progress = "in_progress"  # En curso - Agricultor preparando
     delivered = "delivered"  # Entregado - Listo para venta en supermercado
     cancelled = "cancelled"  # Cancelado

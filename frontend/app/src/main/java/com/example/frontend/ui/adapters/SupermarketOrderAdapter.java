@@ -58,7 +58,11 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
         holder.products.setText("Productos: " + String.join(", ", order.getProducts()));
         holder.date.setText("Fecha: " + order.getDeliveryDate());
         holder.total.setText("Total: " + order.getTotal());
-        holder.status.setText("Estado: " + order.getStatus());
+        holder.status.setText(getStatusDisplayName(order.getStatus()));
+        
+        // Aplicar color de fondo según el estado
+        holder.status.setBackgroundResource(getStatusBackground(order.getStatus()));
+        holder.status.setTextColor(android.graphics.Color.WHITE);
 
         holder.detailsBtn.setOnClickListener(v -> listener.onClick(order));
 
@@ -73,8 +77,8 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
         holder.actionButtonsLayout.setVisibility(View.GONE);
         holder.cancelBtn.setVisibility(View.GONE);
 
-        // Solo mostrar botón de cancelar para pedidos pendientes o en curso
-        if (status.contains("pending") || status.contains("in_progress")) {
+        // Solo mostrar botón de cancelar para pedidos en curso
+        if (status.contains("in_progress")) {
             holder.actionButtonsLayout.setVisibility(View.VISIBLE);
             holder.cancelBtn.setVisibility(View.VISIBLE);
             
@@ -91,6 +95,36 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
         this.orderList.clear();
         this.orderList.addAll(newOrders);
         notifyDataSetChanged();
+    }
+
+    private String getStatusDisplayName(String status) {
+        if (status == null) return "Desconocido";
+        
+        String lowerStatus = status.toLowerCase();
+        if (lowerStatus.contains("in_progress")) {
+            return "En Curso";
+        } else if (lowerStatus.contains("delivered")) {
+            return "Entregado";
+        } else if (lowerStatus.contains("cancelled")) {
+            return "Cancelado";
+        } else {
+            return status;
+        }
+    }
+    
+    private int getStatusBackground(String status) {
+        if (status == null) return R.drawable.status_in_progress_background;
+        
+        String lowerStatus = status.toLowerCase();
+        if (lowerStatus.contains("in_progress")) {
+            return R.drawable.status_in_progress_background;
+        } else if (lowerStatus.contains("delivered")) {
+            return R.drawable.status_delivered_background;
+        } else if (lowerStatus.contains("cancelled")) {
+            return R.drawable.status_cancelled_background;
+        } else {
+            return R.drawable.status_in_progress_background;
+        }
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {

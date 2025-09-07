@@ -114,19 +114,6 @@ public class OrderDetailsDialog extends DialogFragment {
         String status = transaction.getStatus();
         
         switch (status) {
-            case "pending":
-                // Estado inicial - solo el vendedor puede aceptar (cambiar a in_progress)
-                if (isSeller) {
-                    deliverButton.setText("Aceptar Pedido");
-                    deliverButton.setVisibility(View.VISIBLE);
-                    cancelButton.setVisibility(View.GONE);
-                } else {
-                    deliverButton.setVisibility(View.GONE);
-                    cancelButton.setText("Cancelar Pedido");
-                    cancelButton.setVisibility(View.VISIBLE);
-                }
-                break;
-                
             case "in_progress":
                 // En curso - vendedor puede entregar, comprador puede cancelar
                 if (isSeller) {
@@ -186,7 +173,6 @@ public class OrderDetailsDialog extends DialogFragment {
     
     private String getStatusDisplayName(String status) {
         switch (status) {
-            case "pending": return "Pendiente";
             case "in_progress": return "En Curso";
             case "delivered": return "Entregado";
             case "cancelled": return "Cancelado";
@@ -197,7 +183,6 @@ public class OrderDetailsDialog extends DialogFragment {
     
     private int getStatusColor(String status) {
         switch (status) {
-            case "pending": return getResources().getColor(R.color.status_pending);
             case "in_progress": return getResources().getColor(R.color.status_in_progress);
             case "delivered": return getResources().getColor(R.color.status_delivered);
             case "cancelled": return getResources().getColor(R.color.status_cancelled);

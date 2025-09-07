@@ -69,14 +69,7 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
         holder.cancelBtn.setVisibility(View.GONE);
 
         // Mostrar botones según el estado
-        if (status.contains("pending")) {
-            holder.actionButtonsLayout.setVisibility(View.VISIBLE);
-            holder.acceptBtn.setVisibility(View.VISIBLE);
-            holder.cancelBtn.setVisibility(View.VISIBLE);
-            
-            holder.acceptBtn.setOnClickListener(v -> actionListener.onAcceptOrder(order));
-            holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
-        } else if (status.contains("in_progress")) {
+        if (status.contains("in_progress")) {
             holder.actionButtonsLayout.setVisibility(View.VISIBLE);
             holder.deliverBtn.setVisibility(View.VISIBLE);
             holder.cancelBtn.setVisibility(View.VISIBLE);
