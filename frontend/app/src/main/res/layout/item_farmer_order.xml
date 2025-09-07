@@ -16,8 +16,8 @@
         android:padding="12dp">
 
         <TextView
-            android:id="@+id/order_title"
-            android:text="🏪 Supermercado Día"
+            android:id="@+id/order_id"
+            android:text="Pedido #123"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@android:color/black"
@@ -25,6 +25,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/buyer_id"
+            android:text="Comprador: Supermercado Día"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:fontFamily="@font/manrope_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/order_products"
+            android:text="Productos: Tomate (6kg), Lechuga (3)"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:fontFamily="@font/manrope_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +52,7 @@
 
             <TextView
                 android:id="@+id/order_date"
-                android:text="Entrega: 24/06"
+                android:text="Fecha: 24/06"
                 android:textColor="#666666"
                 android:textSize="12sp"
                 android:fontFamily="@font/manrope_regular"
@@ -78,33 +95,10 @@
                 android:text="Ver detalles"
                 android:textAllCaps="false"
                 android:fontFamily="@font/manrope_bold"
-                android:textSize="12sp"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:minWidth="80dp"
-                android:backgroundTint="@color/colorOrganic"
-                android:textColor="@android:color/white"
-                style="@style/Widget.MaterialComponents.Button" />
-
-            <Button
-                android:id="@+id/btn_cancel_order"
-                android:text="Cancelar"
-                android:textAllCaps="false"
-                android:fontFamily="@font/manrope_bold"
-                android:textSize="12sp"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="0dp"
-                android:minWidth="80dp"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:textColor="@android:color/white"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button" />
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -8,79 +8,72 @@
     android:background="@drawable/gradient_background"
     android:padding="8dp">
 
-    <!-- Barra de filtros con estética similar a la de stock -->
-    <LinearLayout
-        android:id="@+id/status_filters"
+    <!-- Barra de filtros horizontal -->
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
-
-        <TextView
-            android:id="@+id/title_filters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pedidos"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:fontFamily="@font/manrope_bold"
-            android:layout_marginEnd="12dp" />
+        android:layout_marginBottom="16dp"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/filters_container"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_search_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            android:gravity="center_vertical">
+            android:padding="4dp">
 
             <Button
                 android:id="@+id/filter_all"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="Todos"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/manrope_bold"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
             <Button
                 android:id="@+id/filter_in_progress"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="En curso"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/manrope_bold"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
             <Button
                 android:id="@+id/filter_delivered"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="Entregados"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/manrope_bold"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
             <Button
                 android:id="@+id/filter_cancelled"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="Cancelados"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/manrope_bold"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:paddingHorizontal="16dp" />
+
         </LinearLayout>
-    </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- Lista de pedidos -->
     <androidx.recyclerview.widget.RecyclerView
@@ -88,6 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="16dp" />
+        android:padding="4dp"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

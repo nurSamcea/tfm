@@ -46,9 +46,10 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         SupermarketOrder order = orderList.get(position);
         
-        // El título ya viene con el icono desde el fragmento
-        holder.title.setText(order.getClientOrSupplier());
-        
+        // Configurar la información del pedido
+        holder.orderId.setText("Pedido #" + order.getTransactionId());
+        holder.buyerId.setText("Cliente: " + order.getClientOrSupplier());
+        holder.orderProducts.setText("Productos: " + formatProductsList(order.getProducts()));
         holder.date.setText("Fecha: " + order.getDeliveryDate());
         holder.total.setText("Total: " + order.getTotal());
         holder.status.setText(getStatusDisplayName(order.getStatus()));
@@ -115,15 +116,31 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
             return R.drawable.status_in_progress_background;
         }
     }
+    
+    private String formatProductsList(List<String> products) {
+        if (products == null || products.isEmpty()) {
+            return "Sin productos";
+        }
+        
+        if (products.size() == 1) {
+            return products.get(0);
+        } else if (products.size() <= 3) {
+            return String.join(", ", products);
+        } else {
+            return products.get(0) + " y " + (products.size() - 1) + " más";
+        }
+    }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView title, date, total, status;
+        TextView orderId, buyerId, orderProducts, date, total, status;
         Button detailsBtn;
         Button cancelBtn;
 
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.order_title);
+            orderId = itemView.findViewById(R.id.order_id);
+            buyerId = itemView.findViewById(R.id.buyer_id);
+            orderProducts = itemView.findViewById(R.id.order_products);
             date = itemView.findViewById(R.id.order_date);
             total = itemView.findViewById(R.id.order_total);
             status = itemView.findViewById(R.id.order_status);
