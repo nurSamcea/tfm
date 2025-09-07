@@ -18,14 +18,31 @@
             android:padding="16dp">
 
             <!-- Título -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dashboard de Métricas"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryVariant"
-                android:layout_marginBottom="24dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dashboard de Métricas"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryVariant" />
+
+                <TextView
+                    android:id="@+id/tv_last_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Última actualización: --:--"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:gravity="end" />
+
+            </LinearLayout>
 
             <!-- Gráfica de Ventas -->
             <com.google.android.material.card.MaterialCardView

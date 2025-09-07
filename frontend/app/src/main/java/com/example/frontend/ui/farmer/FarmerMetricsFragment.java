@@ -2,6 +2,8 @@ package com.example.frontend.ui.farmer;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.example.frontend.R;
 import com.example.frontend.models.FarmerDashboard;
 import com.example.frontend.services.ApiClient;
 import com.example.frontend.services.FarmerMetricsApiService;
+import com.example.frontend.utils.RefreshConfig;
 import com.example.frontend.utils.SessionManager;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -26,8 +29,11 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,9 +45,14 @@ public class FarmerMetricsFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView tvTotalZones, tvTotalSensors, tvOnlineSensors, tvOfflineSensors;
     private TextView tvAvgTemperature, tvAvgHumidity, tvAvgSoilMoisture, tvActiveAlerts;
+    private TextView tvLastUpdate;
     private LinearLayout linearLayoutZones;
     private BarChart barChartSales;
     private SessionManager sessionManager;
+    
+    private Handler autoRefreshHandler;
+    private Runnable autoRefreshRunnable;
+    private SimpleDateFormat timeFormat;
     
     @Nullable
     @Override
@@ -50,10 +61,13 @@ public class FarmerMetricsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_farmer_metrics, container, false);
         
         sessionManager = new SessionManager(requireContext());
+        timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        autoRefreshHandler = new Handler(Looper.getMainLooper());
         
         initViews(view);
         setupSwipeRefresh();
         setupSalesChart();
+        setupAutoRefresh();
         
         // Logs de debug
         logSessionInfo();
@@ -101,6 +115,9 @@ public class FarmerMetricsFragment extends Fragment {
         tvAvgSoilMoisture = view.findViewById(R.id.tv_avg_soil_moisture);
         tvActiveAlerts = view.findViewById(R.id.tv_active_alerts);
         
+        // Última actualización
+        tvLastUpdate = view.findViewById(R.id.tv_last_update);
+        
         // Lista de zonas
         linearLayoutZones = view.findViewById(R.id.linear_layout_zones);
         
@@ -110,6 +127,56 @@ public class FarmerMetricsFragment extends Fragment {
     
     private void setupSwipeRefresh() {
         swipeRefreshLayout.setOnRefreshListener(this::loadDashboard);
+    }
+    
+    private void setupAutoRefresh() {
+        if (!RefreshConfig.isAutoRefreshEnabled()) {
+            Log.d(TAG, "Auto-refresh: Deshabilitado por configuración");
+            return;
+        }
+        
+        autoRefreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Auto-refresh: Actualizando datos automáticamente");
+                loadDashboard();
+                // Programar la siguiente actualización usando la configuración
+                if (RefreshConfig.isAutoRefreshEnabled()) {
+                    autoRefreshHandler.postDelayed(this, RefreshConfig.getRefreshInterval());
+                }
+            }
+        };
+        
+        // Iniciar la actualización automática después del primer delay
+        autoRefreshHandler.postDelayed(autoRefreshRunnable, RefreshConfig.getRefreshInterval());
+    }
+    
+    private void updateLastUpdateTime() {
+        String currentTime = timeFormat.format(new Date());
+        tvLastUpdate.setText("Última actualización: " + currentTime);
+    }
+    
+    private void stopAutoRefresh() {
+        if (autoRefreshHandler != null && autoRefreshRunnable != null) {
+            autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+        }
+    }
+    
+    /**
+     * Actualiza la configuración de actualización automática.
+     */
+    public void updateRefreshConfig(boolean enabled, int intervalSeconds) {
+        RefreshConfig.setAutoRefreshEnabled(enabled);
+        RefreshConfig.setRefreshIntervalSeconds(intervalSeconds);
+        
+        // Reiniciar la actualización automática con la nueva configuración
+        stopAutoRefresh();
+        if (enabled) {
+            setupAutoRefresh();
+        }
+        
+        Log.d(TAG, "Configuración actualizada - Habilitado: " + enabled + 
+              ", Intervalo: " + RefreshConfig.getIntervalDescription());
     }
     
     private void setupSalesChart() {
@@ -179,6 +246,7 @@ public class FarmerMetricsFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "onResponse: Actualizando dashboard");
                     updateDashboard(response.body());
+                    updateLastUpdateTime();
                 } else {
                     Log.e(TAG, "onResponse: Error en respuesta - Código: " + response.code());
                     if (response.errorBody() != null) {
@@ -189,7 +257,9 @@ public class FarmerMetricsFragment extends Fragment {
                             Log.e(TAG, "onResponse: Error leyendo error body: " + e.getMessage());
                         }
                     }
-                    Toast.makeText(getContext(), "Error al cargar métricas: " + response.code(), Toast.LENGTH_LONG).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Error al cargar métricas: " + response.code(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
             
@@ -197,7 +267,9 @@ public class FarmerMetricsFragment extends Fragment {
             public void onFailure(Call<FarmerDashboard> call, Throwable t) {
                 Log.e(TAG, "onFailure: Error en la llamada", t);
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -227,13 +299,19 @@ public class FarmerMetricsFragment extends Fragment {
     private void updateZonesCards(java.util.List<FarmerDashboard.ZoneSummary> zones) {
         Log.d(TAG, "updateZonesCards: Actualizando " + zones.size() + " zonas");
         
+        // Verificar que el contexto esté disponible
+        if (getContext() == null) {
+            Log.e(TAG, "updateZonesCards: Context es null, no se pueden crear las cards");
+            return;
+        }
+        
         // Limpiar layout anterior
         linearLayoutZones.removeAllViews();
         
         for (FarmerDashboard.ZoneSummary zone : zones) {
             Log.d(TAG, "updateZonesCards: Creando card para zona: " + zone.zone_name);
             
-            View zoneCard = LayoutInflater.from(getContext()).inflate(R.layout.item_zone_card, linearLayoutZones, false);
+            View zoneCard = LayoutInflater.from(requireContext()).inflate(R.layout.item_zone_card, linearLayoutZones, false);
             
             // Configurar datos de la zona
             TextView tvZoneName = zoneCard.findViewById(R.id.tv_zone_name);
@@ -259,5 +337,32 @@ public class FarmerMetricsFragment extends Fragment {
         }
         
         Log.d(TAG, "updateZonesCards: Cards creadas exitosamente");
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: Reanudando actualización automática");
+        // Reiniciar la actualización automática cuando el fragment se vuelve visible
+        if (autoRefreshHandler != null && autoRefreshRunnable != null && RefreshConfig.isAutoRefreshEnabled()) {
+            autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+            autoRefreshHandler.postDelayed(autoRefreshRunnable, RefreshConfig.getRefreshInterval());
+        }
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Pausando actualización automática");
+        // Pausar la actualización automática cuando el fragment no es visible
+        stopAutoRefresh();
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView: Limpiando recursos");
+        // Limpiar recursos cuando se destruye la vista
+        stopAutoRefresh();
     }
 }
