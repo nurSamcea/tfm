@@ -22,8 +22,6 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
     }
 
     public interface OnOrderActionListener {
-        void onAcceptOrder(FarmerOrder order);
-        void onDeliverOrder(FarmerOrder order);
         void onCancelOrder(FarmerOrder order);
     }
 
@@ -48,7 +46,6 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         FarmerOrder order = orderList.get(position);
         holder.title.setText(order.getClientOrMarket());
-        holder.products.setText("Productos: " + String.join(", ", order.getProducts()));
         holder.date.setText("Entrega: " + order.getDeliveryDate());
         holder.total.setText("Total: " + order.getTotal());
         holder.status.setText("Estado: " + order.getStatus());
@@ -62,20 +59,12 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
     private void setupActionButtons(OrderViewHolder holder, FarmerOrder order) {
         String status = order.getStatus().toLowerCase();
         
-        // Ocultar todos los botones por defecto
-        holder.actionButtonsLayout.setVisibility(View.GONE);
-        holder.acceptBtn.setVisibility(View.GONE);
-        holder.deliverBtn.setVisibility(View.GONE);
-        holder.cancelBtn.setVisibility(View.GONE);
-
-        // Mostrar botones según el estado
+        // Solo mostrar botón de cancelar para pedidos en curso
         if (status.contains("in_progress")) {
-            holder.actionButtonsLayout.setVisibility(View.VISIBLE);
-            holder.deliverBtn.setVisibility(View.VISIBLE);
             holder.cancelBtn.setVisibility(View.VISIBLE);
-            
-            holder.deliverBtn.setOnClickListener(v -> actionListener.onDeliverOrder(order));
             holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
+        } else {
+            holder.cancelBtn.setVisibility(View.GONE);
         }
     }
 
@@ -85,23 +74,17 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView title, products, date, total, status;
+        TextView title, date, total, status;
         Button detailsBtn;
-        LinearLayout actionButtonsLayout;
-        Button acceptBtn, deliverBtn, cancelBtn;
+        Button cancelBtn;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.order_title);
-            products = itemView.findViewById(R.id.order_products);
             date = itemView.findViewById(R.id.order_date);
             total = itemView.findViewById(R.id.order_total);
             status = itemView.findViewById(R.id.order_status);
             detailsBtn = itemView.findViewById(R.id.order_details_button);
-            
-            actionButtonsLayout = itemView.findViewById(R.id.action_buttons_layout);
-            acceptBtn = itemView.findViewById(R.id.btn_accept_order);
-            deliverBtn = itemView.findViewById(R.id.btn_deliver_order);
             cancelBtn = itemView.findViewById(R.id.btn_cancel_order);
         }
     }

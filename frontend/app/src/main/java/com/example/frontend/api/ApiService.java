@@ -141,6 +141,9 @@ public interface ApiService {
     @GET("transactions/")
     Call<List<Transaction>> getTransactions();
     
+    @GET("transactions/{transactionId}")
+    Call<Transaction> getTransactionById(@Path("transactionId") int transactionId);
+    
     @POST("transactions/")
     Call<Transaction> createTransaction(@Body Transaction transaction);
     

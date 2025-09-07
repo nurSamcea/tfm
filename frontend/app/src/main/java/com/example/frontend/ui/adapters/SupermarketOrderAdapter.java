@@ -46,16 +46,9 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         SupermarketOrder order = orderList.get(position);
         
-        // Configurar el título según el tipo de orden
-        String titleText;
-        if ("TO_SUPPLIER".equals(order.getOrderType())) {
-            titleText = "🏪 " + order.getClientOrSupplier();
-        } else {
-            titleText = "👤 " + order.getClientOrSupplier();
-        }
-        holder.title.setText(titleText);
+        // El título ya viene con el icono desde el fragmento
+        holder.title.setText(order.getClientOrSupplier());
         
-        holder.products.setText("Productos: " + String.join(", ", order.getProducts()));
         holder.date.setText("Fecha: " + order.getDeliveryDate());
         holder.total.setText("Total: " + order.getTotal());
         holder.status.setText(getStatusDisplayName(order.getStatus()));
@@ -73,16 +66,12 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
     private void setupActionButtons(OrderViewHolder holder, SupermarketOrder order) {
         String status = order.getStatus().toLowerCase();
         
-        // Ocultar todos los botones por defecto
-        holder.actionButtonsLayout.setVisibility(View.GONE);
-        holder.cancelBtn.setVisibility(View.GONE);
-
         // Solo mostrar botón de cancelar para pedidos en curso
         if (status.contains("in_progress")) {
-            holder.actionButtonsLayout.setVisibility(View.VISIBLE);
             holder.cancelBtn.setVisibility(View.VISIBLE);
-            
             holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
+        } else {
+            holder.cancelBtn.setVisibility(View.GONE);
         }
     }
 
@@ -128,21 +117,17 @@ public class SupermarketOrderAdapter extends RecyclerView.Adapter<SupermarketOrd
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView title, products, date, total, status;
+        TextView title, date, total, status;
         Button detailsBtn;
-        LinearLayout actionButtonsLayout;
         Button cancelBtn;
 
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.order_title);
-            products = itemView.findViewById(R.id.order_products);
             date = itemView.findViewById(R.id.order_date);
             total = itemView.findViewById(R.id.order_total);
             status = itemView.findViewById(R.id.order_status);
             detailsBtn = itemView.findViewById(R.id.order_details_button);
-            
-            actionButtonsLayout = itemView.findViewById(R.id.action_buttons_layout);
             cancelBtn = itemView.findViewById(R.id.btn_cancel_order);
         }
     }

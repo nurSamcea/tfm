@@ -20,7 +20,7 @@ import com.example.frontend.model.SupermarketOrder;
 import com.example.frontend.models.Transaction;
 import com.example.frontend.ui.adapters.ConsumerOrderAdapter;
 import com.example.frontend.ui.adapters.SupermarketOrderAdapter;
-import com.example.frontend.ui.dialogs.OrderDetailsDialog;
+import com.example.frontend.ui.dialogs.OrderReceiptDialog;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.network.ApiClient;
 import com.example.frontend.utils.SessionManager;
@@ -195,11 +195,22 @@ public class ConsumerOrdersFragment extends Fragment {
                         // orderDetails es un String JSON, por ahora usamos datos básicos
                         products.add("Productos del pedido");
                         
+                        // Determinar el icono según el tipo de vendedor
+                        String sellerIcon = getSellerIcon(transaction.getSellerType());
+                        String sellerName = sellerIcon + " " + (transaction.getSellerName() != null ? transaction.getSellerName() : "Vendedor " + transaction.getSellerId());
+                        
+                        // Formatear fecha con hora
+                        String formattedDate = "N/A";
+                        if (transaction.getCreatedAt() != null) {
+                            java.text.SimpleDateFormat dateTimeFormat = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
+                            formattedDate = dateTimeFormat.format(transaction.getCreatedAt());
+                        }
+                        
                         SupermarketOrder order = new SupermarketOrder(
                             transaction.getId(),
-                            transaction.getSellerName() != null ? transaction.getSellerName() : "Vendedor " + transaction.getSellerId(),
+                            sellerName,
                             products,
-                            transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
+                            formattedDate,
                             String.format("%.2f €", transaction.getTotalPrice()),
                             transaction.getStatus(),
                             "FROM_SELLER"
@@ -230,16 +241,32 @@ public class ConsumerOrdersFragment extends Fragment {
     private void showOrderDetails(SupermarketOrder order) {
         Log.d(TAG, "showOrderDetails: " + order.getClientOrSupplier());
         
-        String orderTypeText = "FROM_SELLER".equals(order.getOrderType()) ? "Pedido de Vendedor" : "Pedido";
+        // Mostrar loading y cargar los detalles de la transacción
+        Toast.makeText(getContext(), "Cargando detalles del pedido...", Toast.LENGTH_SHORT).show();
+        loadTransactionDetails(order.getTransactionId());
+    }
+    
+    private void loadTransactionDetails(int transactionId) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
         
-        Toast.makeText(getContext(), 
-            orderTypeText + "\n" +
-            "Vendedor: " + order.getClientOrSupplier() + "\n" +
-            "Productos: " + String.join(", ", order.getProducts()) + "\n" +
-            "Fecha: " + order.getDeliveryDate() + "\n" +
-            "Total: " + order.getTotal() + "\n" +
-            "Estado: " + order.getStatus(),
-            Toast.LENGTH_LONG).show();
+        api.getTransactionById(transactionId).enqueue(new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Transaction transaction = response.body();
+                    OrderReceiptDialog dialog = new OrderReceiptDialog(requireContext(), transaction);
+                    dialog.show();
+                } else {
+                    Toast.makeText(getContext(), "No se pudieron cargar los detalles del pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
+                Log.e(TAG, "Error al obtener detalles de la transacción: " + t.getMessage());
+                Toast.makeText(getContext(), "Error al cargar los detalles del pedido", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void cancelOrder(SupermarketOrder order) {
@@ -273,5 +300,20 @@ public class ConsumerOrdersFragment extends Fragment {
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    
+    private String getSellerIcon(String sellerType) {
+        if (sellerType == null) return "🏪";
+        
+        switch (sellerType.toLowerCase()) {
+            case "farmer":
+                return "🌾"; // Icono para agricultor
+            case "supermarket":
+                return "🏪"; // Icono para supermercado
+            case "consumer":
+                return "👤"; // Icono para consumidor
+            default:
+                return "🏪"; // Icono por defecto
+        }
     }
 }
