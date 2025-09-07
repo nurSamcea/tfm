@@ -32,3 +32,4 @@ class User(Base):
     products = relationship("Product", back_populates="provider")
     shopping_lists = relationship("ShoppingList", back_populates="user")
     impact_metrics = relationship("ImpactMetric", back_populates="user")
+    sensor_zones = relationship("SensorZone", back_populates="farmer")

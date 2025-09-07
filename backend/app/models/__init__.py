@@ -3,6 +3,8 @@ from .impact_metric import ImpactMetric
 from .product import Product
 from .qr import QR
 from .sensor_reading import SensorReading
+from .sensor import Sensor, SensorZone, SensorTypeEnum, SensorStatusEnum
+from .sensor_alert import SensorAlert, AlertTypeEnum, AlertStatusEnum
 from .transaction import Transaction
 from .user import User
 from .shopping_list import ShoppingList

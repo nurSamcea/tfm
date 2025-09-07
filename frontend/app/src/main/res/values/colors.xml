@@ -6,6 +6,7 @@
     <color name="primary_dark">#388E3C</color>
     <color name="accent">#FF9800</color>
     <color name="accent_dark">#E65100</color>
+    <color name="accent_color">@color/accent</color>
     
     <!-- Colores secundarios -->
     <color name="secondary">#8BC34A</color>
@@ -105,4 +106,16 @@
     <!-- Colores adicionales para grises -->
     <color name="gray_600">#757575</color>
     <color name="gray_700">#616161</color>
+    
+    <!-- Colores para sensores IoT -->
+    <color name="status_online">#4CAF50</color>
+    <color name="status_offline">#F44336</color>
+    <color name="status_error">#FF9800</color>
+    <color name="status_maintenance">#9C27B0</color>
+    <color name="divider_color">#E0E0E0</color>
+    
+    <!-- Colores para métricas -->
+    <color name="success_color">#4CAF50</color>
+    <color name="error_color">#F44336</color>
+    <color name="warning_color">#FF9800</color>
 </resources>

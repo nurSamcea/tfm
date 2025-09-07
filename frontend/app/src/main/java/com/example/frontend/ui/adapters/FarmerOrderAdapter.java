@@ -67,12 +67,15 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
     private void setupActionButtons(OrderViewHolder holder, FarmerOrder order) {
         String status = order.getStatus().toLowerCase();
         
-        // Solo mostrar botón de cancelar para pedidos en curso
-        if (status.contains("in_progress")) {
-            holder.cancelBtn.setVisibility(View.VISIBLE);
-            holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
-        } else {
-            holder.cancelBtn.setVisibility(View.GONE);
+        // Verificar que el botón existe antes de usarlo
+        if (holder.cancelBtn != null) {
+            // Solo mostrar botón de cancelar para pedidos en curso
+            if (status.contains("in_progress")) {
+                holder.cancelBtn.setVisibility(View.VISIBLE);
+                holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
+            } else {
+                holder.cancelBtn.setVisibility(View.GONE);
+            }
         }
     }
 

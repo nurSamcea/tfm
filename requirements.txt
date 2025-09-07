@@ -16,3 +16,6 @@ eth-typing==4.0.0
 eth-utils==2.3.1
 email-validator
 requests
+numpy
+aiohttp
+python create_iot_tables.py

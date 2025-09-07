@@ -138,11 +138,17 @@ public class FarmerOrdersFragment extends Fragment {
     }
 
     private void resetFilterButtonStyle(Button button) {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
         button.setBackgroundResource(R.drawable.filter_background);
         button.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void setSelectedFilterButtonStyle(Button button) {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
         button.setBackgroundResource(R.drawable.filter_selected_background);
         button.setTextColor(getResources().getColor(android.R.color.white));
     }
@@ -167,6 +173,10 @@ public class FarmerOrdersFragment extends Fragment {
         call.enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                
                 if (response.isSuccessful() && response.body() != null) {
                     allOrders.clear();
                     
@@ -198,6 +208,9 @@ public class FarmerOrdersFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
                 Log.e(TAG, "Error de conexión: " + t.getMessage());
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -228,6 +241,10 @@ public class FarmerOrdersFragment extends Fragment {
         call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
             @Override
             public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado.", Toast.LENGTH_LONG).show();
                     loadOrders(); // Recargar la lista
@@ -238,6 +255,9 @@ public class FarmerOrdersFragment extends Fragment {
 
             @Override
             public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

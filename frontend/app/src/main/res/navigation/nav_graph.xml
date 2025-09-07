@@ -14,7 +14,7 @@
             app:destination="@id/navigation_register" />
         <action
             android:id="@+id/action_login_to_farmer_home"
-            app:destination="@id/navigation_farmer_products" />
+            app:destination="@id/navigation_farmer_stock" />
         <action
             android:id="@+id/action_login_to_supermarket_home"
             app:destination="@id/navigation_supermarket_search" />
@@ -35,6 +35,31 @@
 
     <!-- Navegación para Agricultores -->
     <fragment
+        android:id="@+id/navigation_farmer_stock"
+        android:name="com.example.frontend.ui.farmer.FarmerStockFragment"
+        android:label="@string/title_farmer_stock" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_orders"
+        android:name="com.example.frontend.ui.farmer.FarmerOrdersFragment"
+        android:label="@string/title_farmer_orders" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_statistics"
+        android:name="com.example.frontend.ui.farmer.FarmerStatisticsFragment"
+        android:label="@string/title_farmer_statistics" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_metrics"
+        android:name="com.example.frontend.ui.farmer.FarmerMetricsFragment"
+        android:label="@string/title_farmer_metrics" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_profile"
+        android:name="com.example.frontend.ui.farmer.FarmerProfileFragment"
+        android:label="@string/title_profile" />
+
+    <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.frontend.ui.fragments.ProductsFragment"
         android:label="Productos">
@@ -48,11 +73,6 @@
         android:id="@+id/navigation_farmer_certifications"
         android:name="com.example.frontend.ui.farmer.CertificationsFragment"
         android:label="@string/title_certifications" />
-
-    <fragment
-        android:id="@+id/navigation_farmer_profile"
-        android:name="com.example.frontend.ui.farmer.ProfileFragment"
-        android:label="@string/title_profile" />
 
     <!-- Navegación para Supermercados -->
 

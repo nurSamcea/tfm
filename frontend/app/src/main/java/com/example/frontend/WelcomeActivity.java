@@ -26,6 +26,7 @@ import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
 import com.example.frontend.ui.farmer.FarmerStatisticsFragment;
 import com.example.frontend.ui.farmer.FarmerStockFragment;
+import com.example.frontend.ui.farmer.FarmerMetricsFragment;
 import com.example.frontend.ui.supermarket.SupermarketStockFragment;
 import com.example.frontend.ui.supermarket.SupermarketOrdersFragment;
 import com.example.frontend.ui.supermarket.SupermarketSearchProductsFragment;
@@ -71,11 +72,6 @@ public class WelcomeActivity extends AppCompatActivity {
         fragmentContainer = findViewById(R.id.fragment_container);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Verificar si hay una sesión activa al iniciar (después de inicializar las vistas)
-        if (checkActiveSession()) {
-            return; // Si hay sesión activa, no continuar con la configuración normal
-        }
-        
         // Botón de Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +96,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 showUserSelectionFragment();
             }
         });
+
+        // Verificar si hay una sesión activa al iniciar (después de inicializar las vistas y listeners)
+        if (checkActiveSession()) {
+            return; // Si hay sesión activa, no continuar con la configuración normal
+        }
 
         // Configurar el manejo del botón atrás
         setupBackPressHandler();
@@ -259,6 +260,8 @@ public class WelcomeActivity extends AppCompatActivity {
                         selectedFragment = new FarmerOrdersFragment();
                     } else if (itemId == R.id.navigation_farmer_statistics) {
                         selectedFragment = new FarmerStatisticsFragment();
+                    } else if (itemId == R.id.navigation_farmer_metrics) {
+                        selectedFragment = new FarmerMetricsFragment();
                     } else if (itemId == R.id.navigation_farmer_profile) {
                         selectedFragment = new FarmerProfileFragment();
                     }

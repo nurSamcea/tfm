@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class AuthInterceptor implements Interceptor {
     
-    private static final String PREF_NAME = "ZeroAppPrefs";
-    private static final String KEY_TOKEN = "auth_token";
+    private static final String PREF_NAME = "FoodAppSession";
+    private static final String KEY_TOKEN = "access_token";
     
     private Context context;
     

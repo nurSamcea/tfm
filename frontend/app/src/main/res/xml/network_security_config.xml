@@ -11,5 +11,7 @@
         <!-- Dominios de desarrollo local -->
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">127.0.0.1</domain>
+        <!-- IP del emulador Android para desarrollo -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
     </domain-config>
 </network-security-config>

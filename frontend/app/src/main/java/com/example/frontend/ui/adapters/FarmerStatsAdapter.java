@@ -23,12 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FarmerStatsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final List<StatsItem> items;
+    private List<StatsItem> items;
     private static final int TYPE_GRAPH = 0;
     private static final int TYPE_KPI = 1;
 
     public FarmerStatsAdapter(List<StatsItem> items) {
         this.items = items;
+    }
+    
+    public void updateStats(List<StatsItem> newItems) {
+        this.items = newItems;
+        notifyDataSetChanged();
     }
 
     @Override

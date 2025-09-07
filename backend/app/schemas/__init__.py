@@ -3,6 +3,8 @@ from .product import *
 from .transaction import *
 from .qr import *
 from .sensor_reading import *
+from .sensor import *
+from .sensor_alert import *
 from .blockchain_log import *
 from .impact_metric import *
 from .shopping_list import *

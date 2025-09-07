@@ -99,6 +99,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <Button
+                android:id="@+id/btn_cancel_order"
+                android:text="Cancelar"
+                android:textAllCaps="false"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                android:backgroundTint="@android:color/holo_red_light"
+                style="@style/Widget.MaterialComponents.Button" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import dagger.hilt.android.HiltAndroidApp;
 import com.example.frontend.utils.Constants;
+import com.example.frontend.services.ApiClient;
 
 @HiltAndroidApp
 public class EcoMarketApplication extends Application {
@@ -30,6 +31,9 @@ public class EcoMarketApplication extends Application {
         try {
             // Inicializar constantes del .env PRIMERO
             Constants.init(this);
+            
+            // Inicializar ApiClient de sensores
+            ApiClient.init(this);
             
             // Configurar el modo estricto DESPUÉS de la inicialización
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

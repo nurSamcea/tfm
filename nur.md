@@ -22,3 +22,10 @@ alembic revision --autogenerate -m "update_product_category_to_enum"
 
 # Aplicar la nueva migración
 alembic upgrade head
+
+
+   # Modo test (6 sensores)
+   python iot/start_simulator.py --mode test
+   
+   # Modo completo (100 sensores)
+   python iot/start_simulator.py --mode full

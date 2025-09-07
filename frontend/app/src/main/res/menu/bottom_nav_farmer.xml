@@ -16,6 +16,11 @@
         android:title="@string/title_farmer_statistics" />
 
     <item
+        android:id="@+id/navigation_farmer_metrics"
+        android:icon="@drawable/ic_analytics"
+        android:title="@string/title_farmer_metrics" />
+
+    <item
         android:id="@+id/navigation_farmer_profile"
         android:icon="@drawable/icon_profile"
         android:title="@string/title_profile" />

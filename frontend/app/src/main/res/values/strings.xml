@@ -25,6 +25,7 @@
     <string name="title_farmer_stock">Stock</string>
     <string name="title_farmer_orders">Pedidos</string>
     <string name="title_farmer_statistics">Statistics</string>
+    <string name="title_farmer_metrics">Métricas</string>
     <string name="title_certifications">Certificaciones</string>
     <string name="title_products">Productos</string>
     <string name="title_profile">Perfil</string>
