@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from backend.app import schemas, database, models
+from backend.app import schemas, models
 from backend.app.database import get_db
 
 router = APIRouter(prefix="/qrs", tags=["Qrs"])

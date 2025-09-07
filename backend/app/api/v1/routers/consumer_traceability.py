@@ -2,18 +2,23 @@
 Router para que los consumidores puedan ver la trazabilidad de productos
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from typing import Optional, List
 from datetime import datetime
 
 from backend.app.database import get_db
 from backend.app.algorithms.traceability_service import TraceabilityService
-from backend.app.algorithms.qr_traceability_service import QRTraceabilityService
 from backend.app.models.product import Product
 
 router = APIRouter(prefix="/consumer", tags=["Consumer Traceability"])
+
+def get_product_or_404(product_id: int, db: Session) -> Product:
+    """Obtiene un producto por ID o lanza HTTPException 404 si no existe"""
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    return product
 
 @router.get("/products/{product_id}/trace", response_class=HTMLResponse)
 async def get_product_trace_for_consumer(
@@ -24,10 +29,7 @@ async def get_product_trace_for_consumer(
     Obtiene la trazabilidad completa de un producto para mostrar al consumidor
     """
     try:
-        # Verificar que el producto existe
-        product = db.query(Product).filter(Product.id == product_id).first()
-        if not product:
-            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        product = get_product_or_404(product_id, db)
         
         # Obtener la trazabilidad completa
         traceability_service = TraceabilityService(db)
@@ -41,6 +43,8 @@ async def get_product_trace_for_consumer(
         
         return HTMLResponse(content=html_content)
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener trazabilidad: {str(e)}")
 
@@ -53,10 +57,7 @@ async def get_product_trace_json(
     Obtiene la trazabilidad en formato JSON para aplicaciones móviles
     """
     try:
-        # Verificar que el producto existe
-        product = db.query(Product).filter(Product.id == product_id).first()
-        if not product:
-            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        product = get_product_or_404(product_id, db)
         
         # Obtener la trazabilidad completa
         traceability_service = TraceabilityService(db)
@@ -72,6 +73,8 @@ async def get_product_trace_json(
             else:
                 raise HTTPException(status_code=500, detail=f"Error al obtener trazabilidad: {str(e)}")
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener trazabilidad: {str(e)}")
 
@@ -84,10 +87,7 @@ async def get_product_trace_summary(
     Obtiene un resumen de la trazabilidad para mostrar en códigos QR
     """
     try:
-        # Verificar que el producto existe
-        product = db.query(Product).filter(Product.id == product_id).first()
-        if not product:
-            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        product = get_product_or_404(product_id, db)
         
         # Obtener la trazabilidad completa
         traceability_service = TraceabilityService(db)
@@ -101,6 +101,8 @@ async def get_product_trace_summary(
         
         return summary
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener resumen: {str(e)}")
 

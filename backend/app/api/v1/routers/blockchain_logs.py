@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Optional
 
-from backend.app import schemas, database, models
+from backend.app import schemas, models
 from backend.app.database import get_db
 from backend.app.algorithms.blockchain_manager import BlockchainManager
 from backend.app.core.config import settings

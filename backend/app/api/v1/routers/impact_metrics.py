@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from backend.app import schemas, database, models
+from backend.app import schemas, models
 from backend.app.database import get_db
 
 router = APIRouter(prefix="/impact_metrics", tags=["Impact Metrics"])
