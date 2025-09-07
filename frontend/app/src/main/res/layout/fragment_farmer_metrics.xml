@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@color/background_light"
             android:padding="16dp">
 
             <!-- Título -->
@@ -23,8 +24,44 @@
                 android:text="Dashboard de Métricas"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary_color"
+                android:textColor="@color/colorPrimaryVariant"
                 android:layout_marginBottom="24dp" />
+
+            <!-- Gráfica de Ventas -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center_horizontal">
+
+                    <!-- Título de la gráfica -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ventas - Últimos 7 días"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Gráfico -->
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/bar_chart_sales"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/white" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Métricas principales -->
             <com.google.android.material.card.MaterialCardView
@@ -46,7 +83,7 @@
                         android:text="Resumen General"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="8dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -59,7 +96,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginEnd="8dp">
+                            android:layout_marginEnd="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -84,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginStart="8dp">
+                            android:layout_marginStart="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -111,14 +148,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="2"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="4dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginEnd="8dp">
+                            android:layout_marginEnd="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -143,7 +180,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginStart="8dp">
+                            android:layout_marginStart="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -173,7 +210,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="4dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
@@ -189,7 +226,7 @@
                         android:text="Promedios Ambientales"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="4dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -202,7 +239,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginEnd="8dp">
+                            android:layout_marginEnd="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -227,7 +264,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginStart="8dp">
+                            android:layout_marginStart="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -254,7 +291,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="2"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="4dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -286,7 +323,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginStart="8dp">
+                            android:layout_marginStart="4dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -319,6 +356,8 @@
                 android:text="Zonas de Sensores"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimaryVariant"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp" />
 
             <LinearLayout

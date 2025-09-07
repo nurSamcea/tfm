@@ -24,7 +24,6 @@ import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
 import com.example.frontend.ui.consumer.ConsumerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;
-import com.example.frontend.ui.farmer.FarmerStatisticsFragment;
 import com.example.frontend.ui.farmer.FarmerStockFragment;
 import com.example.frontend.ui.farmer.FarmerMetricsFragment;
 import com.example.frontend.ui.supermarket.SupermarketStockFragment;
@@ -253,19 +252,17 @@ public class WelcomeActivity extends AppCompatActivity {
                         selectedFragment = new ConsumerProfileFragment();
                     }
                     break;
-                case "farmer":
-                    if (itemId == R.id.navigation_farmer_stock) {
-                        selectedFragment = new FarmerStockFragment();
-                    } else if (itemId == R.id.navigation_farmer_orders) {
-                        selectedFragment = new FarmerOrdersFragment();
-                    } else if (itemId == R.id.navigation_farmer_statistics) {
-                        selectedFragment = new FarmerStatisticsFragment();
-                    } else if (itemId == R.id.navigation_farmer_metrics) {
-                        selectedFragment = new FarmerMetricsFragment();
-                    } else if (itemId == R.id.navigation_farmer_profile) {
-                        selectedFragment = new FarmerProfileFragment();
-                    }
-                    break;
+                        case "farmer":
+                            if (itemId == R.id.navigation_farmer_stock) {
+                                selectedFragment = new FarmerStockFragment();
+                            } else if (itemId == R.id.navigation_farmer_orders) {
+                                selectedFragment = new FarmerOrdersFragment();
+                            } else if (itemId == R.id.navigation_farmer_metrics) {
+                                selectedFragment = new FarmerMetricsFragment();
+                            } else if (itemId == R.id.navigation_farmer_profile) {
+                                selectedFragment = new FarmerProfileFragment();
+                            }
+                            break;
                 case "supermarket":
                     if (itemId == R.id.navigation_supermarket_search) {
                         selectedFragment = new SupermarketSearchProductsFragment();

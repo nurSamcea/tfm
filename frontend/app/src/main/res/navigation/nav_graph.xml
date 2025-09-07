@@ -44,10 +44,6 @@
         android:name="com.example.frontend.ui.farmer.FarmerOrdersFragment"
         android:label="@string/title_farmer_orders" />
 
-    <fragment
-        android:id="@+id/navigation_farmer_statistics"
-        android:name="com.example.frontend.ui.farmer.FarmerStatisticsFragment"
-        android:label="@string/title_farmer_statistics" />
 
     <fragment
         android:id="@+id/navigation_farmer_metrics"
