@@ -43,19 +43,21 @@ public class ReceiptProductAdapter extends RecyclerView.Adapter<ReceiptProductAd
     static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView txtProductName;
         TextView txtProductQuantity;
+        TextView txtProductUnitPrice;
         TextView txtProductTotal;
         
         ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             txtProductName = itemView.findViewById(R.id.txt_product_name);
             txtProductQuantity = itemView.findViewById(R.id.txt_product_quantity);
+            txtProductUnitPrice = itemView.findViewById(R.id.txt_product_unit_price);
             txtProductTotal = itemView.findViewById(R.id.txt_product_total);
         }
         
         void bind(OrderItem item) {
             txtProductName.setText(item.getProduct_name());
-            txtProductQuantity.setText(String.format("%.1f kg x %.2f €", 
-                item.getQuantity(), item.getUnit_price()));
+            txtProductQuantity.setText(String.format("%.1f kg", item.getQuantity()));
+            txtProductUnitPrice.setText(String.format("%.2f €", item.getUnit_price()));
             txtProductTotal.setText(String.format("%.2f €", item.getTotal_price()));
         }
     }

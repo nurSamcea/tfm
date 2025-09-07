@@ -38,6 +38,15 @@ public class OrderReceiptDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_order_receipt);
         
+        // Configurar el tamaño del diálogo
+        Window window = getWindow();
+        if (window != null) {
+            window.setLayout(
+                (int) (context.getResources().getDisplayMetrics().widthPixels * 0.9),
+                (int) (context.getResources().getDisplayMetrics().heightPixels * 0.8)
+            );
+        }
+        
         initializeViews();
         populateData();
     }
@@ -78,17 +87,9 @@ public class OrderReceiptDialog extends Dialog {
         txtOrderStatus.setText("Estado: " + getStatusDisplayName(transaction.getStatus()));
         txtTotalAmount.setText(String.format("%.2f €", transaction.getTotalPrice()));
         
-        if (transaction.getPaymentMethod() != null) {
-            txtPaymentMethod.setText("Método de pago: " + transaction.getPaymentMethod());
-        } else {
-            txtPaymentMethod.setText("Método de pago: No especificado");
-        }
-        
-        if (transaction.getDeliveryAddress() != null) {
-            txtDeliveryAddress.setText("Dirección: " + transaction.getDeliveryAddress());
-        } else {
-            txtDeliveryAddress.setText("Dirección: No especificada");
-        }
+        // Como estos campos no existen en el modelo actual, mostrar valores por defecto
+        txtPaymentMethod.setText("Método de pago: No especificado");
+        txtDeliveryAddress.setText("Dirección: No especificada");
         
         // Configurar productos
         RecyclerView recyclerView = findViewById(R.id.recycler_order_items);

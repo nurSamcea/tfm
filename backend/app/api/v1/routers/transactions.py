@@ -538,3 +538,48 @@ def read_transactions(db: Session = Depends(get_db)):
         result.append(tx_data)
     
     return result
+
+
+@router.get("/{transaction_id}", response_model=schemas.TransactionOut)
+def get_transaction_by_id(transaction_id: int, db: Session = Depends(get_db)):
+    """Obtener una transacción específica por ID"""
+    transaction = db.query(models.Transaction).filter(
+        models.Transaction.id == transaction_id
+    ).first()
+    
+    if not transaction:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transacción no encontrada"
+        )
+    
+    # Obtener información del vendedor y comprador
+    seller = db.query(models.User).filter(models.User.id == transaction.seller_id).first()
+    buyer = db.query(models.User).filter(models.User.id == transaction.buyer_id).first()
+    
+    # Asegurar que order_details sea siempre una lista
+    order_details = transaction.order_details
+    if isinstance(order_details, dict):
+        order_details = [] if not order_details else [order_details]
+    elif not isinstance(order_details, list):
+        order_details = []
+    
+    # Crear diccionario con todos los campos necesarios
+    tx_data = {
+        'id': transaction.id,
+        'buyer_id': transaction.buyer_id,
+        'seller_id': transaction.seller_id,
+        'buyer_type': transaction.buyer_type,
+        'seller_type': transaction.seller_type,
+        'total_price': float(transaction.total_price) if transaction.total_price else 0.0,
+        'currency': transaction.currency,
+        'status': transaction.status,
+        'created_at': transaction.created_at,
+        'confirmed_at': transaction.confirmed_at,
+        'delivered_at': transaction.delivered_at,
+        'order_details': order_details,
+        'seller_name': seller.name if seller else None,
+        'buyer_name': buyer.name if buyer else None
+    }
+    
+    return tx_data

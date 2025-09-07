@@ -125,6 +125,10 @@ public class ConsumerOrdersFragment extends Fragment {
     }
 
     private void updateFilterButtons(String selectedStatus) {
+        if (!isAdded() || getContext() == null) {
+            return; // El fragmento no está adjunto, no hacer nada
+        }
+        
         // Reset all buttons
         resetFilterButtonStyle(filterAll);
         resetFilterButtonStyle(filterInProgress);
@@ -149,11 +153,17 @@ public class ConsumerOrdersFragment extends Fragment {
     }
 
     private void resetFilterButtonStyle(Button button) {
+        if (!isAdded() || getContext() == null) {
+            return; // El fragmento no está adjunto, no hacer nada
+        }
         button.setBackgroundResource(R.drawable.filter_background);
         button.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void setSelectedFilterButtonStyle(Button button) {
+        if (!isAdded() || getContext() == null) {
+            return; // El fragmento no está adjunto, no hacer nada
+        }
         button.setBackgroundResource(R.drawable.filter_selected_background);
         button.setTextColor(getResources().getColor(android.R.color.white));
     }
@@ -167,7 +177,9 @@ public class ConsumerOrdersFragment extends Fragment {
         Integer consumerId = sessionManager.getUserId();
         if (consumerId == null) {
             Log.e(TAG, "No se pudo obtener el ID del consumidor");
-            Toast.makeText(getContext(), "Error: No se pudo obtener el ID del consumidor", Toast.LENGTH_SHORT).show();
+            if (isAdded() && getContext() != null) {
+                Toast.makeText(getContext(), "Error: No se pudo obtener el ID del consumidor", Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 
@@ -179,6 +191,12 @@ public class ConsumerOrdersFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 Log.d(TAG, "Respuesta recibida - Código: " + response.code() + ", Exitoso: " + response.isSuccessful());
+                
+                // Verificar si el fragmento sigue adjunto antes de actualizar la UI
+                if (!isAdded() || getContext() == null) {
+                    Log.d(TAG, "Fragmento no adjunto, ignorando respuesta");
+                    return;
+                }
                 
                 if (response.isSuccessful() && response.body() != null) {
                     allOrders.clear();
@@ -226,20 +244,31 @@ public class ConsumerOrdersFragment extends Fragment {
                     if (response.body() == null) {
                         Log.e(TAG, "Response body es null");
                     }
-                    Toast.makeText(getContext(), "Error al cargar pedidos: " + response.code(), Toast.LENGTH_SHORT).show();
+                    if (isAdded() && getContext() != null) {
+                        Toast.makeText(getContext(), "Error al cargar pedidos: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
                 Log.e(TAG, "Error de conexión: " + t.getMessage());
-                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                
+                // Verificar si el fragmento sigue adjunto antes de mostrar Toast
+                if (isAdded() && getContext() != null) {
+                    Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void showOrderDetails(SupermarketOrder order) {
         Log.d(TAG, "showOrderDetails: " + order.getClientOrSupplier());
+        
+        // Verificar si el fragmento está adjunto antes de mostrar Toast
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
         
         // Mostrar loading y cargar los detalles de la transacción
         Toast.makeText(getContext(), "Cargando detalles del pedido...", Toast.LENGTH_SHORT).show();
@@ -252,6 +281,11 @@ public class ConsumerOrdersFragment extends Fragment {
         api.getTransactionById(transactionId).enqueue(new Callback<Transaction>() {
             @Override
             public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                // Verificar si el fragmento sigue adjunto antes de actualizar la UI
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                
                 if (response.isSuccessful() && response.body() != null) {
                     Transaction transaction = response.body();
                     OrderReceiptDialog dialog = new OrderReceiptDialog(requireContext(), transaction);
@@ -264,12 +298,20 @@ public class ConsumerOrdersFragment extends Fragment {
             @Override
             public void onFailure(Call<Transaction> call, Throwable t) {
                 Log.e(TAG, "Error al obtener detalles de la transacción: " + t.getMessage());
-                Toast.makeText(getContext(), "Error al cargar los detalles del pedido", Toast.LENGTH_SHORT).show();
+                
+                // Verificar si el fragmento sigue adjunto antes de mostrar Toast
+                if (isAdded() && getContext() != null) {
+                    Toast.makeText(getContext(), "Error al cargar los detalles del pedido", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void cancelOrder(SupermarketOrder order) {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
+        
         new android.app.AlertDialog.Builder(requireContext())
                 .setTitle("Cancelar Pedido")
                 .setMessage("¿Estás seguro de que quieres cancelar este pedido?")
@@ -287,6 +329,11 @@ public class ConsumerOrdersFragment extends Fragment {
         call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
             @Override
             public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                // Verificar si el fragmento sigue adjunto antes de actualizar la UI
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Pedido cancelado correctamente.", Toast.LENGTH_LONG).show();
                     loadOrders(); // Recargar la lista
@@ -297,7 +344,10 @@ public class ConsumerOrdersFragment extends Fragment {
 
             @Override
             public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                // Verificar si el fragmento sigue adjunto antes de mostrar Toast
+                if (isAdded() && getContext() != null) {
+                    Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
