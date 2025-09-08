@@ -56,6 +56,9 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
     private RecyclerView recyclerStock;
     private FarmerStockAdapter stockAdapter;
     private List<Product> stockList;
+    private List<Product> allStockList;
+    private android.widget.EditText searchEditText;
+    private String currentQuery = "";
     private ImageButton addProductButton;
     private Uri selectedImageUri = null;
     private String selectedCategory = "";
@@ -76,9 +79,11 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
         sessionManager = new SessionManager(requireContext());
         addProductButton = view.findViewById(R.id.add_product_button);
         recyclerStock = view.findViewById(R.id.recycler_stock);
+        searchEditText = view.findViewById(R.id.search_stock);
 
         // Inicializar lista y adapter
         stockList = new ArrayList<>();
+        allStockList = new ArrayList<>();
         stockAdapter = new FarmerStockAdapter(stockList);
         stockAdapter.setOnProductActionListener(this);
         recyclerStock.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,6 +91,9 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
 
         // Configurar botón de añadir
         addProductButton.setOnClickListener(v -> openAddProductDialog());
+
+        // Configurar buscador
+        setupSearch();
 
         // Inicializar el launcher para seleccionar imagen
         imagePickerLauncher = registerForActivityResult(
@@ -114,9 +122,9 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    stockList.clear();
-                    stockList.addAll(response.body());
-                    stockAdapter.updateProducts(stockList);
+                    allStockList.clear();
+                    allStockList.addAll(response.body());
+                    applyFilter(currentQuery);
                 }
             }
 
@@ -125,6 +133,42 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
                 Toast.makeText(getContext(), "Error al cargar productos: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setupSearch() {
+        if (searchEditText == null) return;
+        searchEditText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentQuery = s != null ? s.toString() : "";
+                applyFilter(currentQuery);
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) { }
+        });
+    }
+
+    private void applyFilter(String query) {
+        if (allStockList == null) return;
+        String q = query == null ? "" : query.trim().toLowerCase(java.util.Locale.getDefault());
+        if (q.isEmpty()) {
+            stockList = new ArrayList<>(allStockList);
+            stockAdapter.updateProducts(stockList);
+            return;
+        }
+        List<Product> filtered = new ArrayList<>();
+        for (Product p : allStockList) {
+            String name = p.getName() != null ? p.getName() : "";
+            if (name.toLowerCase(java.util.Locale.getDefault()).contains(q)) {
+                filtered.add(p);
+            }
+        }
+        stockList = filtered;
+        stockAdapter.updateProducts(stockList);
     }
 
     private void openAddProductDialog() {
