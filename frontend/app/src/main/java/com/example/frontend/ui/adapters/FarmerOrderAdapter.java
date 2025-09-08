@@ -23,6 +23,7 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
 
     public interface OnOrderActionListener {
         void onCancelOrder(FarmerOrder order);
+        void onDeliverOrder(FarmerOrder order);
     }
 
     private final List<FarmerOrder> orderList;
@@ -75,6 +76,16 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
                 holder.cancelBtn.setOnClickListener(v -> actionListener.onCancelOrder(order));
             } else {
                 holder.cancelBtn.setVisibility(View.GONE);
+            }
+        }
+
+        if (holder.deliverBtn != null) {
+            // Solo mostrar botón de entregar para pedidos en curso
+            if (status.contains("in_progress")) {
+                holder.deliverBtn.setVisibility(View.VISIBLE);
+                holder.deliverBtn.setOnClickListener(v -> actionListener.onDeliverOrder(order));
+            } else {
+                holder.deliverBtn.setVisibility(View.GONE);
             }
         }
     }
@@ -132,6 +143,7 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
         TextView orderId, buyerId, orderProducts, date, total, status;
         Button detailsBtn;
         Button cancelBtn;
+        Button deliverBtn;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,6 +155,7 @@ public class FarmerOrderAdapter extends RecyclerView.Adapter<FarmerOrderAdapter.
             status = itemView.findViewById(R.id.order_status);
             detailsBtn = itemView.findViewById(R.id.order_details_button);
             cancelBtn = itemView.findViewById(R.id.btn_cancel_order);
+            deliverBtn = itemView.findViewById(R.id.btn_deliver_order);
         }
     }
 }

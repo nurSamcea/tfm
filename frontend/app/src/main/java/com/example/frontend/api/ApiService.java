@@ -171,10 +171,18 @@ public interface ApiService {
     Call<Transaction> updateTransactionStatus(@Path("transactionId") int transactionId, @Body StatusUpdateRequest statusUpdate);
     
     @PATCH("transactions/{transactionId}/cancel")
-    Call<Transaction> cancelTransaction(@Path("transactionId") int transactionId);
+    Call<Transaction> cancelTransaction(
+            @Path("transactionId") int transactionId,
+            @Query("user_id") int userId,
+            @Query("user_type") String userType
+    );
     
     @PATCH("transactions/{transactionId}/deliver")
-    Call<Transaction> deliverTransaction(@Path("transactionId") int transactionId);
+    Call<Transaction> deliverTransaction(
+            @Path("transactionId") int transactionId,
+            @Query("user_id") int userId,
+            @Query("user_type") String userType
+    );
     
     // ===== TRAZABILIDAD =====
     @GET("traceability/product/{qr_hash}")

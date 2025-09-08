@@ -25,4 +25,6 @@ public class FarmerOrder {
     public String getDeliveryDate() { return deliveryDate; }
     public String getTotal() { return total; }
     public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
 }

@@ -81,6 +81,10 @@ public class FarmerOrdersFragment extends Fragment {
             public void onCancelOrder(FarmerOrder order) {
                 cancelOrder(order);
             }
+            @Override
+            public void onDeliverOrder(FarmerOrder order) {
+                deliverOrder(order);
+            }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -186,11 +190,17 @@ public class FarmerOrdersFragment extends Fragment {
                         // orderDetails es un String JSON, por ahora usamos datos básicos
                         products.add("Productos del pedido");
                         
+                        String formattedDate = "N/A";
+                        if (transaction.getCreatedAt() != null) {
+                            java.text.SimpleDateFormat dateTimeFormat = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
+                            formattedDate = dateTimeFormat.format(transaction.getCreatedAt());
+                        }
+
                         FarmerOrder order = new FarmerOrder(
                             transaction.getId(),
                             transaction.getBuyerName() != null ? transaction.getBuyerName() : "Comprador " + transaction.getBuyerId(),
                             products,
-                            transaction.getCreatedAt() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(transaction.getCreatedAt()) : "N/A",
+                            formattedDate,
                             String.format("%.2f €", transaction.getTotalPrice()),
                             transaction.getStatus()
                         );
@@ -227,17 +237,24 @@ public class FarmerOrdersFragment extends Fragment {
                 .setTitle("Cancelar Pedido")
                 .setMessage("¿Estás seguro de que quieres cancelar este pedido? El stock se restaurará.")
                 .setPositiveButton("Sí, cancelar", (dialog, which) -> {
-                    cancelOrderTransaction(order.getTransactionId());
+                    // Actualización optimista en UI
+                    String previousStatus = order.getStatus();
+                    order.setStatus("cancelled");
+                    adapter.notifyDataSetChanged();
+                    cancelOrderTransaction(order.getTransactionId(), previousStatus, order);
                 })
                 .setNegativeButton("No", null)
                 .show();
     }
 
-
-    private void cancelOrderTransaction(int transactionId) {
+    private void cancelOrderTransaction(int transactionId, String previousStatus, FarmerOrder orderRef) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        
-        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId);
+
+        int userId = sessionManager.getUserId();
+        String userType = sessionManager.getUserRole();
+        if (userType == null) userType = "farmer";
+
+        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId, userId, userType);
         call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
             @Override
             public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
@@ -249,6 +266,9 @@ public class FarmerOrdersFragment extends Fragment {
                     Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado.", Toast.LENGTH_LONG).show();
                     loadOrders(); // Recargar la lista
                 } else {
+                    // Revertir si falla
+                    orderRef.setStatus(previousStatus);
+                    adapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -258,6 +278,63 @@ public class FarmerOrdersFragment extends Fragment {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
+                // Revertir si falla
+                orderRef.setStatus(previousStatus);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void deliverOrder(FarmerOrder order) {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Confirmar Entrega")
+                .setMessage("¿Marcar este pedido como entregado? El stock pasará al comprador.")
+                .setPositiveButton("Sí, entregar", (dialog, which) -> {
+                    // Actualización optimista en UI
+                    String previousStatus = order.getStatus();
+                    order.setStatus("delivered");
+                    adapter.notifyDataSetChanged();
+                    deliverOrderTransaction(order.getTransactionId(), previousStatus, order);
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deliverOrderTransaction(int transactionId, String previousStatus, FarmerOrder orderRef) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+
+        int userId = sessionManager.getUserId();
+        String userType = sessionManager.getUserRole();
+        if (userType == null) userType = "farmer";
+
+        Call<com.example.frontend.models.Transaction> call = api.deliverTransaction(transactionId, userId, userType);
+        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Pedido marcado como entregado. Stock transferido.", Toast.LENGTH_LONG).show();
+                    loadOrders();
+                } else {
+                    // Revertir si falla
+                    orderRef.setStatus(previousStatus);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "Error al entregar el pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                // Revertir si falla
+                orderRef.setStatus(previousStatus);
+                adapter.notifyDataSetChanged();
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -419,8 +419,12 @@ public class SupermarketOrdersFragment extends Fragment {
 
     private void cancelOrderTransaction(int transactionId) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        
-        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId);
+
+        int userId = sessionManager.getUserId();
+        String userType = sessionManager.getUserRole();
+        if (userType == null) userType = isSuppliersTabSelected ? "supermarket" : "supermarket";
+
+        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId, userId, userType);
         call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
             @Override
             public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {

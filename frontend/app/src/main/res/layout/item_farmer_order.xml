@@ -13,35 +13,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/order_id"
-            android:text="Pedido #123"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/manrope_bold"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/order_id"
+                android:text="Pedido #123"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/order_status"
+                android:text="Pendiente"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:fontFamily="@font/manrope_bold"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:background="@drawable/status_available_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!-- Ocultar comprador y productos: se verán en detalles -->
         <TextView
             android:id="@+id/buyer_id"
-            android:text="Comprador: Supermercado Día"
-            android:textColor="#666666"
-            android:textSize="12sp"
-            android:fontFamily="@font/manrope_regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <TextView
             android:id="@+id/order_products"
-            android:text="Productos: Tomate (6kg), Lechuga (3)"
-            android:textColor="#666666"
-            android:textSize="12sp"
-            android:fontFamily="@font/manrope_regular"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +68,7 @@
 
             <TextView
                 android:id="@+id/order_date"
-                android:text="Fecha: 24/06"
+                android:text="Fecha: 24/06 12:34"
                 android:textColor="#666666"
                 android:textSize="12sp"
                 android:fontFamily="@font/manrope_regular"
@@ -71,45 +87,61 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        
+
+        <!-- Fila de botones separada para mejor distribución -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:id="@+id/order_status"
-                android:text="Pendiente"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:fontFamily="@font/manrope_bold"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:background="@drawable/status_available_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/order_details_button"
                 android:text="Ver detalles"
                 android:textAllCaps="false"
+                android:textSize="12sp"
                 android:fontFamily="@font/manrope_bold"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <Button
                 android:id="@+id/btn_cancel_order"
                 android:text="Cancelar"
                 android:textAllCaps="false"
+                android:textSize="12sp"
                 android:fontFamily="@font/manrope_bold"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
                 android:visibility="gone"
                 android:backgroundTint="@android:color/holo_red_light"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <Button
+                android:id="@+id/btn_deliver_order"
+                android:text="Entregar"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:visibility="gone"
+                android:backgroundTint="@color/colorOrganic"
                 style="@style/Widget.MaterialComponents.Button" />
         </LinearLayout>
     </LinearLayout>
