@@ -228,7 +228,37 @@ public class FarmerOrdersFragment extends Fragment {
     }
 
     private void showOrderDetails(FarmerOrder order) {
-        new FarmerOrderDetailsDialogFragment(order).show(getParentFragmentManager(), "details");
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
+        loadTransactionDetails(order.getTransactionId());
+    }
+
+    private void loadTransactionDetails(int transactionId) {
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+        api.getTransactionById(transactionId).enqueue(new Callback<com.example.frontend.models.Transaction>() {
+            @Override
+            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.frontend.models.Transaction transaction = response.body();
+                    com.example.frontend.ui.dialogs.OrderReceiptDialog dialog = new com.example.frontend.ui.dialogs.OrderReceiptDialog(requireContext(), transaction);
+                    dialog.show();
+                } else {
+                    Toast.makeText(getContext(), "No se pudieron cargar los detalles del pedido", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+                if (!isAdded() || getContext() == null) {
+                    return;
+                }
+                Toast.makeText(getContext(), "Error al cargar los detalles: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
