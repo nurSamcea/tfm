@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
 import com.example.frontend.R;
 import com.example.frontend.model.SupermarketOrder;
@@ -129,6 +130,10 @@ public class SupermarketOrdersFragment extends Fragment {
         }
         
         adapter.notifyDataSetChanged();
+        if (!isAdded()) {
+            Log.w(TAG, "Fragment not added; skipping updateFilterButtons");
+            return;
+        }
         updateFilterButtons(status);
     }
 
@@ -157,13 +162,23 @@ public class SupermarketOrdersFragment extends Fragment {
     }
 
     private void resetFilterButtonStyle(Button button) {
+        if (button == null) return;
+        if (!isAdded()) return;
         button.setBackgroundResource(R.drawable.filter_background);
-        button.setTextColor(getResources().getColor(R.color.text_secondary));
+        android.content.Context context = getContext();
+        if (context != null) {
+            button.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+        }
     }
 
     private void setSelectedFilterButtonStyle(Button button) {
+        if (button == null) return;
+        if (!isAdded()) return;
         button.setBackgroundResource(R.drawable.filter_selected_background);
-        button.setTextColor(getResources().getColor(android.R.color.white));
+        android.content.Context context = getContext();
+        if (context != null) {
+            button.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+        }
     }
 
     private void switchToSuppliersTab() {
@@ -179,16 +194,19 @@ public class SupermarketOrdersFragment extends Fragment {
     }
 
     private void updateTabStyles() {
+        if (!isAdded()) return;
+        android.content.Context context = getContext();
+        if (context == null) return;
         if (isSuppliersTabSelected) {
             tabSuppliers.setBackgroundResource(R.drawable.tab_selected_background);
-            tabSuppliers.setTextColor(getResources().getColor(android.R.color.white));
+            tabSuppliers.setTextColor(ContextCompat.getColor(context, android.R.color.white));
             tabClients.setBackgroundResource(android.R.color.transparent);
-            tabClients.setTextColor(getResources().getColor(R.color.text_secondary));
+            tabClients.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
         } else {
             tabClients.setBackgroundResource(R.drawable.tab_selected_background);
-            tabClients.setTextColor(getResources().getColor(android.R.color.white));
+            tabClients.setTextColor(ContextCompat.getColor(context, android.R.color.white));
             tabSuppliers.setBackgroundResource(android.R.color.transparent);
-            tabSuppliers.setTextColor(getResources().getColor(R.color.text_secondary));
+            tabSuppliers.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
         }
     }
 
@@ -396,6 +414,7 @@ public class SupermarketOrdersFragment extends Fragment {
             participantLabel = "Cliente";
         }
         
+        if (getContext() == null) return;
         Toast.makeText(getContext(), 
             orderTypeText + "\n" +
             participantLabel + ": " + order.getClientOrSupplier() + "\n" +
@@ -407,7 +426,9 @@ public class SupermarketOrdersFragment extends Fragment {
     }
 
     private void cancelOrder(SupermarketOrder order) {
-        new android.app.AlertDialog.Builder(requireContext())
+        android.content.Context context = getContext();
+        if (context == null) return;
+        new android.app.AlertDialog.Builder(context)
                 .setTitle("Cancelar Pedido")
                 .setMessage("¿Estás seguro de que quieres cancelar este pedido? El stock se restaurará al vendedor.")
                 .setPositiveButton("Sí, cancelar", (dialog, which) -> {
@@ -429,16 +450,22 @@ public class SupermarketOrdersFragment extends Fragment {
             @Override
             public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado al vendedor.", Toast.LENGTH_LONG).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado al vendedor.", Toast.LENGTH_LONG).show();
+                    }
                     loadOrders(); // Recargar la lista
                 } else {
-                    Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Error al cancelar el pedido", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

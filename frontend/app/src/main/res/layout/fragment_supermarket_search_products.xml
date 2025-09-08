@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/gradient_background"
-    android:padding="16dp">
+    android:padding="4dp">
 
     <!-- Header con título mejorado -->
     <LinearLayout
@@ -14,21 +14,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
-        android:layout_marginBottom="8dp">
+        android:padding="4dp">
 
         <!-- Campo de búsqueda mejorado -->
         <LinearLayout
             android:id="@+id/search_input"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/search_bar_background"
-            android:padding="16dp"
-            android:elevation="4dp"
-            android:layout_marginEnd="12dp">
+            android:padding="12dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -55,25 +52,23 @@
         <!-- Botón de filtros mejorado -->
         <ImageButton
             android:id="@+id/filter_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_filters"
             android:background="@drawable/search_bar_background"
             android:tint="@color/primary"
-            android:contentDescription="Filtros"
-            android:elevation="4dp" />
+            android:contentDescription="Filtros" />
 
         <!-- Botón de ordenar mejorado -->
         <ImageButton
             android:id="@+id/sort_button"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_filters"
             android:background="@drawable/search_bar_background"
             android:tint="@color/primary"
-            android:contentDescription="Ordenar"
-            android:elevation="4dp" />
+            android:contentDescription="Ordenar" />
     </LinearLayout>
 
     <!-- Chips de filtros mejorados -->
@@ -81,8 +76,8 @@
         android:id="@+id/filters_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:scrollbars="none"
         android:visibility="gone"
         android:paddingHorizontal="4dp">
@@ -179,27 +174,21 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="@color/background_light"
-        android:layout_marginBottom="8dp">
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_products"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="8dp"
+            android:padding="4dp"
             android:scrollbars="vertical"
             android:overScrollMode="never" />
 
     </LinearLayout>
 
     <!-- Separador mejorado -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@drawable/gradient_background"
-        android:alpha="0.5"
-        android:layout_marginVertical="4dp" />
+    
 
     <!-- Carrito de compras (mitad inferior) -->
     <LinearLayout
@@ -208,8 +197,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="@color/background_light"
-        android:elevation="2dp">
+        >
 
         <!-- Header del carrito mejorado -->
         <LinearLayout
@@ -217,9 +205,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:padding="16dp"
-            android:background="@drawable/gradient_background"
-            android:elevation="4dp">
+            android:padding="8dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -276,7 +262,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:padding="8dp"
+            android:padding="4dp"
             android:scrollbars="vertical"
             android:overScrollMode="never" />
 
@@ -285,11 +271,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@android:color/white"
-            android:padding="16dp"
-            android:elevation="6dp"
-            android:layout_margin="8dp"
-            android:layout_marginBottom="0dp">
+            android:padding="8dp">
 
 
             <LinearLayout
@@ -303,13 +285,17 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Vaciar carrito"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/manrope_regular"
+                    android:minWidth="0dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
                     app:backgroundTint="@color/error"
                     app:cornerRadius="24dp"
                     app:icon="@drawable/ic_delete"
-                    app:iconSize="18dp"
+                    app:iconSize="16dp"
                     app:iconGravity="textStart"
                     android:elevation="2dp" />
 
@@ -319,13 +305,17 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Realizar pedido"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/manrope_regular"
+                    android:minWidth="0dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="24dp"
                     app:icon="@drawable/ic_cart"
-                    app:iconSize="18dp"
+                    app:iconSize="16dp"
                     app:iconGravity="textStart"
                     android:elevation="2dp" />
 
