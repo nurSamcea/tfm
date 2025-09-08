@@ -584,8 +584,8 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
                         public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                             if (response.isSuccessful()) {
                                 String message = product.isHidden() ? 
-                                    "✅ Producto ahora es VISIBLE para usuarios" : 
-                                    "🔒 Producto ahora está OCULTO para usuarios";
+                                    "Producto VISIBLE para usuarios" :
+                                    "Producto OCULTO para usuarios";
                                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                                 loadFarmerProducts(); // Recargar lista
                             } else {
