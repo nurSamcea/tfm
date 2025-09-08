@@ -589,13 +589,13 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
                                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                                 loadFarmerProducts(); // Recargar lista
                             } else {
-                                Toast.makeText(getContext(), "❌ Error al cambiar visibilidad", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Error al cambiar visibilidad", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                            Toast.makeText(getContext(), "❌ Error de conexión al cambiar visibilidad", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Error de conexión al cambiar visibilidad", Toast.LENGTH_SHORT).show();
                         }
                     });
                 })
