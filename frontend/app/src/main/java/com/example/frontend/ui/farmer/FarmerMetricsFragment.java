@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.frontend.R;
 import com.example.frontend.models.FarmerDashboard;
 import com.example.frontend.services.ApiClient;
@@ -42,7 +41,7 @@ import retrofit2.Response;
 public class FarmerMetricsFragment extends Fragment {
     private static final String TAG = "FarmerMetricsFragment";
     
-    private SwipeRefreshLayout swipeRefreshLayout;
+    // Eliminado SwipeRefreshLayout para simplificar el layout
     private TextView tvTotalZones, tvTotalSensors, tvOnlineSensors, tvOfflineSensors;
     private TextView tvAvgTemperature, tvAvgHumidity, tvAvgSoilMoisture, tvActiveAlerts;
     private TextView tvLastUpdate;
@@ -65,7 +64,7 @@ public class FarmerMetricsFragment extends Fragment {
         autoRefreshHandler = new Handler(Looper.getMainLooper());
         
         initViews(view);
-        setupSwipeRefresh();
+        // Swipe-to-refresh eliminado
         setupSalesChart();
         setupAutoRefresh();
         
@@ -101,7 +100,7 @@ public class FarmerMetricsFragment extends Fragment {
     }
     
     private void initViews(View view) {
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        // Contenedor raíz simple; ya no se usa SwipeRefreshLayout
         
         // Métricas principales
         tvTotalZones = view.findViewById(R.id.tv_total_zones);
@@ -125,9 +124,7 @@ public class FarmerMetricsFragment extends Fragment {
         barChartSales = view.findViewById(R.id.bar_chart_sales);
     }
     
-    private void setupSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(this::loadDashboard);
-    }
+    // Swipe-to-refresh eliminado
     
     private void setupAutoRefresh() {
         if (!RefreshConfig.isAutoRefreshEnabled()) {
@@ -222,7 +219,7 @@ public class FarmerMetricsFragment extends Fragment {
     
     private void loadDashboard() {
         Log.d(TAG, "loadDashboard: Iniciando carga de dashboard");
-        swipeRefreshLayout.setRefreshing(true);
+        // Indicador de refresco eliminado
         
         FarmerMetricsApiService apiService = ApiClient.getFarmerMetricsApiService();
         Log.d(TAG, "loadDashboard: ApiService creado: " + (apiService != null));
@@ -241,7 +238,7 @@ public class FarmerMetricsFragment extends Fragment {
                 Log.d(TAG, "onResponse: Exitoso: " + response.isSuccessful());
                 Log.d(TAG, "onResponse: Body: " + (response.body() != null));
                 
-                swipeRefreshLayout.setRefreshing(false);
+                // Indicador de refresco eliminado
                 
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "onResponse: Actualizando dashboard");
@@ -266,7 +263,7 @@ public class FarmerMetricsFragment extends Fragment {
             @Override
             public void onFailure(Call<FarmerDashboard> call, Throwable t) {
                 Log.e(TAG, "onFailure: Error en la llamada", t);
-                swipeRefreshLayout.setRefreshing(false);
+                // Indicador de refresco eliminado
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 }
