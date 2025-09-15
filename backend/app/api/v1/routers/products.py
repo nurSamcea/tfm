@@ -7,7 +7,7 @@ import json
 
 from backend.app import schemas, database, models
 from backend.app.schemas.product import ProductFilterRequest, ProductOptimizedResponse
-from backend.app.api.v1.routers.dependencies import get_current_user
+from backend.app.api.v1.routers.dependencies import get_current_user, get_current_user_optional
 from backend.app.models.product import ProductCategory
 from backend.app.algorithms.optimize_products import sort_products_by_priority, calculate_product_score
 
@@ -235,7 +235,7 @@ def get_farmer_products(farmer_id: int, db: Session = Depends(database.get_db)):
 def get_products_optimized(
     request: ProductFilterRequest = Body(...),
     db: Session = Depends(database.get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: models.User | None = Depends(get_current_user_optional)
 ):
     # 1. Obtener productos base (join con User para tener coordenadas del proveedor)
     # Solo productos visibles para consumidores y con stock disponible
@@ -271,7 +271,8 @@ def get_products_optimized(
             "is_gluten_free": getattr(p, "is_gluten_free", False),
             "provider_id": p.provider_id,
             "stock_available": float(p.stock_available) if p.stock_available is not None else 0.0,
-            "stock": float(p.stock) if p.stock is not None else 0.0,
+            # Exponer también 'stock' para compatibilidad con clientes/algoritmos
+            "stock": float(p.stock_available) if p.stock_available is not None else 0.0,
             "score": getattr(p, "score", 0) or 0,  # Score de sostenibilidad del producto
             "distance_km": None,
             "provider_lat": None,

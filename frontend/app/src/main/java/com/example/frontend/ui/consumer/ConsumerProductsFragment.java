@@ -316,11 +316,7 @@ public class ConsumerProductsFragment extends Fragment {
             }
             req.weights.put("sustainability", 0.2f); // Siempre incluir sostenibilidad
             
-            // Añadir ubicación si está disponible
-            if (userLat != null && userLon != null) {
-                req.user_lat = userLat;
-                req.user_lon = userLon;
-            }
+            // No enviar user_lat/user_lon: el backend usará la ubicación guardada del usuario autenticado
         } else {
             // Usar pesos por defecto para algoritmo óptimo
             req.weights = new HashMap<>();
@@ -330,10 +326,7 @@ public class ConsumerProductsFragment extends Fragment {
             req.weights.put("eco", 0.15f);
             req.weights.put("stock", 0.1f);
             
-            if (userLat != null && userLon != null) {
-                req.user_lat = userLat;
-                req.user_lon = userLon;
-            }
+            // No enviar user_lat/user_lon: el backend usará la ubicación guardada del usuario autenticado
         }
         return req;
     }

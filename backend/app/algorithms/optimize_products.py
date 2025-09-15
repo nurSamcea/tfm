@@ -195,7 +195,11 @@ def sort_products_by_priority(
     elif sort_criteria == "price_desc":
         return sorted(products, key=lambda p: p.get("price", 0), reverse=True)
     elif sort_criteria == "distance":
-        return sorted(products, key=lambda p: p.get("distance_km", float('inf')))
+        # Ordenar por distancia, poniendo al final los que no tienen distancia calculada
+        return sorted(
+            products,
+            key=lambda p: (p.get("distance_km") if p.get("distance_km") is not None else float('inf'))
+        )
     elif sort_criteria == "sustainability":
         return sorted(products, key=lambda p: p.get("score", 0), reverse=True)
     elif sort_criteria == "stock":

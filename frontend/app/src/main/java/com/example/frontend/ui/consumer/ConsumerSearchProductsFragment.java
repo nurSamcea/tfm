@@ -334,7 +334,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
             }
         }
 
-        // Aplicar algoritmo de optimización
+        // Aplicar algoritmo de optimización (el backend ya usa la ubicación guardada del usuario)
         applyOptimizationAlgorithm();
         
         productAdapter.updateProducts(filteredProducts);
@@ -470,7 +470,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
 
     private void sortProducts(int sortType) {
         String sortCriteria;
-        
+
         switch (sortType) {
             case 0: // Precio menor a mayor
                 sortCriteria = "price";
@@ -479,8 +479,10 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
                 sortCriteria = "price_desc";
                 break;
             case 2: // Distancia más cerca
-                sortCriteria = "distance";
-                break;
+                // Para distancia, pedir al backend la lista optimizada con distancia calculada
+                Log.d("Curr LocationService", "Ordenar por distancia: solicitando al backend /products/optimized/ con sort_criteria=distance");
+                fetchOptimizedProductsSortedByDistance();
+                return;
             case 3: // Sostenibilidad mayor
                 sortCriteria = "sustainability";
                 break;
@@ -494,15 +496,77 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
                 sortCriteria = "optimal";
                 break;
         }
-        
-        // Aplicar ordenación según el criterio seleccionado
+
+        // Aplicar ordenación local para criterios distintos de distancia
         Collections.sort(filteredProducts, (p1, p2) -> {
             double score1 = calculateProductScore(p1, sortCriteria);
             double score2 = calculateProductScore(p2, sortCriteria);
-            return Double.compare(score2, score1); // Orden descendente (mejor primero)
+            return Double.compare(score2, score1);
         });
-        
+
         productAdapter.updateProducts(filteredProducts);
+    }
+
+    private void fetchOptimizedProductsSortedByDistance() {
+        try {
+            ApiService.ProductFilterRequest req = new ApiService.ProductFilterRequest();
+            req.search = searchProducts.getText() != null ? searchProducts.getText().toString() : null;
+            req.sort_criteria = "distance";
+            req.filters = new java.util.HashMap<>();
+            req.weights = new java.util.HashMap<>();
+
+            // Si NO hay sesión, enviar user_lat/user_lon desde ubicación actual para evitar depender de token
+            boolean loggedIn = (sessionManager != null && sessionManager.isLoggedIn());
+            if (!loggedIn) {
+                Log.d("Curr LocationService", "No logueado: enviando lat/lon en la petición para ordenar por distancia");
+                LocationService ls = new LocationService(requireContext());
+                ls.getCurrentLocationWithFallback().thenAccept(loc -> {
+                    if (loc != null) {
+                        req.user_lat = loc.getLatitude();
+                        req.user_lon = loc.getLongitude();
+                        Log.d("Curr LocationService", String.format("Adjuntando coords en request: %.6f, %.6f", req.user_lat, req.user_lon));
+                    } else {
+                        Log.w("Curr LocationService", "No se obtuvo ubicación para adjuntar en request (se enviará sin coords)");
+                    }
+                    // Ejecutar llamada una vez resuelta la ubicación
+                    executeDistanceRequest(req);
+                }).exceptionally(ex -> {
+                    Log.e("Curr LocationService", "Error obteniendo ubicación para request distance: " + ex.getMessage());
+                    executeDistanceRequest(req);
+                    return null;
+                });
+                return;
+            }
+
+            // Si hay sesión, el backend usará la ubicación guardada -> ejecutamos directamente
+            executeDistanceRequest(req);
+        } catch (Exception ignored) {}
+    }
+
+    private void executeDistanceRequest(ApiService.ProductFilterRequest req) {
+        // Usar RetrofitClient (con token si existe)
+        ApiService api = com.example.frontend.api.RetrofitClient.getInstance(requireContext()).getRetrofit().create(ApiService.class);
+        retrofit2.Call<java.util.List<Product>> call = api.getProductsOptimized(req);
+        Log.d("Curr LocationService", "Enviando petición de productos optimizados (distance). search=" + req.search +
+                (req.user_lat != null ? (", lat/lon adjuntos") : ", sin lat/lon"));
+        call.enqueue(new retrofit2.Callback<java.util.List<Product>>() {
+            @Override
+            public void onResponse(retrofit2.Call<java.util.List<Product>> call, retrofit2.Response<java.util.List<Product>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Curr LocationService", "Respuesta OK (distance). Productos recibidos=" + response.body().size());
+                    filteredProducts.clear();
+                    filteredProducts.addAll(response.body());
+                    productAdapter.updateProducts(filteredProducts);
+                } else {
+                    Log.w("Curr LocationService", "Respuesta no exitosa al ordenar por distance. code=" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<java.util.List<Product>> call, Throwable t) {
+                Log.e("Curr LocationService", "Fallo al solicitar orden por distance: " + t.getMessage());
+            }
+        });
     }
 
     // Implementación de OnProductActionListener
