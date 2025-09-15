@@ -48,6 +48,7 @@ import android.location.Location;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
+import com.example.frontend.services.LocationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,7 @@ public class ConsumerProductsFragment extends Fragment {
     private Double userLon = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private Call<List<Product>> pendingApiCall = null; // Para cancelar llamadas pendientes
+    private LocationService locationService;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -209,7 +211,18 @@ public class ConsumerProductsFragment extends Fragment {
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        locationService = new LocationService(requireContext());
+        Log.d("Curr LocationService", "Entrando en ConsumerProductsFragment: inicializando ubicación");
+        showSafeToast("Inicializando ubicación...");
         obtenerUbicacionUsuario();
+
+        // Iniciar logging continuo y enviar ubicación si hay permisos
+        try {
+            if (locationService.hasLocationPermissions()) {
+                locationService.startLocationLogging(5000L, 5.0f);
+                locationService.sendCurrentLocationToBackend();
+            }
+        } catch (Exception ignored) {}
 
         return view;
         
@@ -227,9 +240,16 @@ public class ConsumerProductsFragment extends Fragment {
         }
         
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            // Usar el método del Fragment para que el callback llegue a este Fragment
+            Log.d("Curr LocationService", "Solicitando permisos de ubicación desde Fragment");
+            showSafeToast("Solicitando permisos de ubicación...");
+            requestPermissions(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            }, LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
+        Log.d("Curr LocationService", "Permisos ya concedidos. Solicitando última ubicación conocida...");
         fusedLocationClient.getLastLocation()
             .addOnSuccessListener(location -> {
                 // Verificar que el fragmento siga adjunto antes de procesar la ubicación
@@ -240,6 +260,9 @@ public class ConsumerProductsFragment extends Fragment {
                 if (location != null) {
                     userLat = location.getLatitude();
                     userLon = location.getLongitude();
+                    Log.d("Curr LocationService", "Última ubicación conocida: lat=" + userLat + ", lon=" + userLon);
+                    // Intentar enviar al backend también aquí
+                    try { if (locationService != null) locationService.sendCurrentLocationToBackend(); } catch (Exception ignored) {}
                     // Si el filtro de distancia está marcado, recarga productos
                     if (filterDistance != null && filterDistance.isChecked()) {
                         loadSampleProducts();
@@ -253,7 +276,18 @@ public class ConsumerProductsFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Curr LocationService", "Permisos concedidos por el usuario");
+                showSafeToast("Permisos de ubicación concedidos");
                 obtenerUbicacionUsuario();
+                // Tras conceder permisos, iniciar logging y enviar ubicación
+                try {
+                    if (locationService != null) {
+                        Log.d("Curr LocationService", "Iniciando logging tras conceder permisos");
+                        showSafeToast("Iniciando logging de ubicación...");
+                        locationService.startLocationLogging(5000L, 5.0f);
+                        locationService.sendCurrentLocationToBackend();
+                    }
+                } catch (Exception ignored) {}
             }
         }
     }

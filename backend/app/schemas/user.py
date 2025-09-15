@@ -47,3 +47,9 @@ class UserSelect(BaseModel):
     class Config:
         from_attributes = True
         use_enum_values = True
+
+
+class UserLocationUpdate(BaseModel):
+    """Payload para actualizar la ubicación del usuario autenticado"""
+    location_lat: float
+    location_lon: float

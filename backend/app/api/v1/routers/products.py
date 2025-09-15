@@ -7,6 +7,7 @@ import json
 
 from backend.app import schemas, database, models
 from backend.app.schemas.product import ProductFilterRequest, ProductOptimizedResponse
+from backend.app.api.v1.routers.dependencies import get_current_user
 from backend.app.models.product import ProductCategory
 from backend.app.algorithms.optimize_products import sort_products_by_priority, calculate_product_score
 
@@ -233,7 +234,8 @@ def get_farmer_products(farmer_id: int, db: Session = Depends(database.get_db)):
 @router.post("/optimized/", response_model=list[ProductOptimizedResponse])
 def get_products_optimized(
     request: ProductFilterRequest = Body(...),
-    db: Session = Depends(database.get_db)
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(get_current_user)
 ):
     # 1. Obtener productos base (join con User para tener coordenadas del proveedor)
     # Solo productos visibles para consumidores y con stock disponible
@@ -253,6 +255,11 @@ def get_products_optimized(
     user_location = None
     if request.user_lat and request.user_lon:
         user_location = (request.user_lat, request.user_lon)
+    elif current_user and current_user.location_lat and current_user.location_lon:
+        try:
+            user_location = (float(current_user.location_lat), float(current_user.location_lon))
+        except Exception:
+            user_location = None
     
     for p in productos:
         prod = {

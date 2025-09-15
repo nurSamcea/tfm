@@ -4,6 +4,7 @@ from sqlalchemy import text
 from backend.app import models, schemas, database
 from backend.app.models.user import UserRoleEnum
 from backend.app.core.security import get_password_hash
+from backend.app.api.v1.routers.dependencies import get_current_user
 from typing import List, Optional
 import enum
 
@@ -117,3 +118,25 @@ def delete_user(user_id: int, db: Session = Depends(database.get_db)):
     db.delete(db_item)
     db.commit()
     return {"message": "User deleted"}
+
+
+@router.put("/me/location", response_model=schemas.UserRead)
+def update_my_location(
+    payload: schemas.UserLocationUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Actualizar la ubicación del usuario autenticado (solo consumer rastreable)."""
+    # Si se quiere restringir, se puede permitir solo a consumers
+    if current_user.role not in [UserRoleEnum.consumer, UserRoleEnum.farmer, UserRoleEnum.supermarket]:
+        raise HTTPException(status_code=400, detail="Rol de usuario inválido")
+
+    user = db.query(models.User).get(current_user.id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.location_lat = payload.location_lat
+    user.location_lon = payload.location_lon
+    db.commit()
+    db.refresh(user)
+    return user

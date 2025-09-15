@@ -261,6 +261,19 @@ public interface ApiService {
         public String entity_name;
         public String message;
     }
+    // ===== GEOLOCALIZACIÓN USUARIO =====
+    public static class UserLocationUpdate {
+        public double location_lat;
+        public double location_lon;
+
+        public UserLocationUpdate(double lat, double lon) {
+            this.location_lat = lat;
+            this.location_lon = lon;
+        }
+    }
+
+    @PUT("users/me/location")
+    Call<Void> updateMyLocation(@Body UserLocationUpdate payload);
     
     // Product classes
     

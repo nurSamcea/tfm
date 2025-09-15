@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.content.Intent;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +21,7 @@ import android.text.Editable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
 import com.example.frontend.R;
 import com.example.frontend.model.Product;
@@ -34,6 +40,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.button.MaterialButton;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import com.example.frontend.services.LocationService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +56,7 @@ import retrofit2.Response;
 public class ConsumerSearchProductsFragment extends Fragment implements SupermarketProductAdapter.OnProductActionListener, CartAdapter.OnCartItemActionListener {
 
     private static final String TAG = "ConsumerSearchProducts";
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
     private RecyclerView recyclerProducts;
     private SupermarketProductAdapter productAdapter;
@@ -71,6 +79,7 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     private final List<Product> filteredProducts = new ArrayList<>();
     private final List<CartItem> cartItems = new ArrayList<>();
     private SessionManager sessionManager;
+    private LocationService locationService;
 
     @Nullable
     @Override
@@ -84,6 +93,26 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
 
             // Inicializar SessionManager
             sessionManager = new SessionManager(requireContext());
+            // Inicializar servicio de ubicación y solicitar permisos/logging
+            locationService = new LocationService(requireContext());
+            Log.d("Curr LocationService", "Entrando en ConsumerSearchProductsFragment: inicializando ubicación");
+            ensureLocationSetup();
+            // Verificar ajustes de ubicación (GPS/Alta precisión) y mostrar diálogo si procede
+            try { locationService.checkAndPromptEnableLocation(requireActivity(), 5000L, 5.0f); } catch (Exception ignored) {}
+            // Forzar un intento con fallback y log
+            locationService.getCurrentLocationWithFallback().thenAccept(loc -> {
+                if (loc != null) {
+                    Log.d("Curr LocationService", String.format("fallback ok: lat=%.6f, lon=%.6f", loc.getLatitude(), loc.getLongitude()));
+                    try {
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(requireContext(), String.format("Ubicación: %.5f, %.5f", loc.getLatitude(), loc.getLongitude()), Toast.LENGTH_SHORT).show();
+                        });
+                    } catch (Exception ignored) {}
+                }
+            }).exceptionally(ex -> {
+                Log.e("Curr LocationService", "fallback error: "+ex.getMessage());
+                return null;
+            });
 
             // Referencias UI
             recyclerProducts = view.findViewById(R.id.recycler_products);
@@ -126,6 +155,73 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
         } catch (Exception e) {
             Log.e(TAG, "Error en ConsumerSearchProductsFragment: " + e.getMessage(), e);
             return null;
+        }
+    }
+
+    private void ensureLocationSetup() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Curr LocationService", "Solicitando permisos desde ConsumerSearchProductsFragment");
+            requestPermissions(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            }, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        // Permisos concedidos. Verificar si la ubicación del sistema está activada
+        try {
+            LocationManager lm = (LocationManager) requireContext().getSystemService(android.content.Context.LOCATION_SERVICE);
+            boolean gpsOn = lm != null && lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean netOn = lm != null && lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            if (!gpsOn && !netOn) {
+                Log.w("Curr LocationService", "Ubicación del sistema desactivada. Abriendo ajustes");
+                Toast.makeText(requireContext(), "Activa la ubicación del dispositivo", Toast.LENGTH_LONG).show();
+                try {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception ignored) {}
+        try {
+            Log.d("Curr LocationService", "Permisos ya concedidos en ConsumerSearchProducts. Iniciando logging y envío");
+            locationService.startLocationLogging(5000L, 5.0f);
+            // Obtener ubicación puntual y registrar resultado
+            locationService.getCurrentLocation().thenAccept(loc -> {
+                if (loc != null) {
+                    Log.d("Curr LocationService", String.format("getCurrentLocation ok: lat=%.6f, lon=%.6f", loc.getLatitude(), loc.getLongitude()));
+                } else {
+                    Log.w("Curr LocationService", "getCurrentLocation devolvió null");
+                }
+            }).exceptionally(ex -> {
+                Log.e("Curr LocationService", "Error en getCurrentLocation: " + ex.getMessage());
+                return null;
+            });
+            locationService.sendCurrentLocationToBackend();
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Curr LocationService", "Permisos concedidos en ConsumerSearchProducts");
+                try {
+                    locationService.startLocationLogging(5000L, 5.0f);
+                    locationService.sendCurrentLocationToBackend();
+                } catch (Exception ignored) {}
+            } else {
+                // Si el usuario denegó y marcó "no volver a preguntar", guiar a ajustes de la app
+                boolean showRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
+                if (!showRationale) {
+                    Toast.makeText(requireContext(), "Concede el permiso de ubicación en Ajustes de la app", Toast.LENGTH_LONG).show();
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(android.net.Uri.parse("package:" + requireContext().getPackageName()));
+                        startActivity(intent);
+                    } catch (Exception ignored) {}
+                } else {
+                    Toast.makeText(requireContext(), "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 

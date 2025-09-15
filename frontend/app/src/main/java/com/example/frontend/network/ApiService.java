@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -185,6 +186,20 @@ public interface ApiService {
         public Double location_lat;
         public Double location_lon;
     }
+
+    // ===== GEOLOCALIZACIÓN USUARIO =====
+    public static class UserLocationUpdate {
+        public double location_lat;
+        public double location_lon;
+
+        public UserLocationUpdate(double lat, double lon) {
+            this.location_lat = lat;
+            this.location_lon = lon;
+        }
+    }
+
+    @PUT("users/me/location")
+    Call<User> updateMyLocation(@Body UserLocationUpdate payload);
     
     // Product History
     public static class ProductHistory {
