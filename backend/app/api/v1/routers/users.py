@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from backend.app import models, schemas, database
+from backend.app.models.user import UserRoleEnum
 from backend.app.core.security import get_password_hash
 from typing import List, Optional
+import enum
 
 router = APIRouter(prefix="/users", tags=["User"]) 
 
@@ -49,9 +52,27 @@ def get_users_by_role(
                 detail=f"Rol debe ser uno de: {', '.join(valid_roles)}"
             )
         
-        # Buscar usuarios por rol
-        users = db.query(models.User).filter(models.User.role == role).limit(limit).all()
-        return users
+        # Consulta SQL directa para evitar problemas de mapeo Enum
+        sql = text(
+            """
+            SELECT id, name, email, role
+            FROM users
+            WHERE role = :role
+            LIMIT :limit
+            """
+        )
+        rows = db.execute(sql, {"role": role, "limit": int(limit)}).all()
+
+        return [
+            schemas.UserSelect(
+                id=row[0],
+                name=row[1],
+                email=row[2],
+                entity_name=None,
+                role=str(row[3]),
+            )
+            for row in rows
+        ]
         
     except HTTPException:
         raise

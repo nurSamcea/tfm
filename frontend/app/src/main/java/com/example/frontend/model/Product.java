@@ -36,6 +36,14 @@ public class Product implements Serializable {
     
     // Campo para almacenar el tipo de vendedor (farmer/supermarket)
     private String sellerType;
+    
+    // Campos para ubicación del proveedor
+    @SerializedName("provider_name")
+    private String providerName;
+    @SerializedName("provider_lat")
+    private Double providerLat;
+    @SerializedName("provider_lon")
+    private Double providerLon;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -233,5 +241,30 @@ public class Product implements Serializable {
 
     public void setSellerType(String sellerType) {
         this.sellerType = sellerType;
+    }
+
+    // Getters y setters para ubicación del proveedor
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public Double getProviderLat() {
+        return providerLat;
+    }
+
+    public void setProviderLat(Double providerLat) {
+        this.providerLat = providerLat;
+    }
+
+    public Double getProviderLon() {
+        return providerLon;
+    }
+
+    public void setProviderLon(Double providerLon) {
+        this.providerLon = providerLon;
     }
 }

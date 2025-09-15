@@ -15,7 +15,8 @@ from backend.app.api.v1.routers import (
     shopping_list_items, transactions, sensor_readings,
     sensors, sensor_zones, sensor_alerts, farmer_metrics,
     qrs, blockchain_logs, impact_metrics, traceability,
-    qr_traceability, iot_traceability_integration, consumer_traceability, consumer_home
+    qr_traceability, iot_traceability_integration, consumer_traceability, consumer_home,
+    iot_ingest
 )
 
 app = FastAPI(title="Zero Platform API", version="1.0.0")
@@ -50,6 +51,7 @@ app.include_router(qr_traceability.router)
 app.include_router(iot_traceability_integration.router)
 app.include_router(consumer_traceability.router)
 app.include_router(consumer_home.router)
+app.include_router(iot_ingest.router)
 
 
 @app.get("/")

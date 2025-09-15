@@ -11,13 +11,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.frontend.R;
-import com.example.frontend.model.FarmerSensorReading;
+import com.example.frontend.models.Sensor;
 
 public class FarmerSensorDetailsDialogFragment extends DialogFragment {
 
-    private final FarmerSensorReading sensor;
+    private final Sensor sensor;
 
-    public FarmerSensorDetailsDialogFragment(FarmerSensorReading sensor) {
+    public FarmerSensorDetailsDialogFragment(Sensor sensor) {
         this.sensor = sensor;
     }
 
@@ -31,8 +31,8 @@ public class FarmerSensorDetailsDialogFragment extends DialogFragment {
         TextView info = view.findViewById(R.id.sensor_detail_extra);
 
         title.setText(sensor.getName());
-        value.setText("Valor: " + sensor.getValue());
-        info.setText(sensor.getExtraInfo());
+        value.setText("Estado: " + sensor.getStatus());
+        info.setText("Tipo: " + sensor.getSensorType() + " | Device ID: " + sensor.getDeviceId());
 
         return new AlertDialog.Builder(requireContext())
                 .setView(view)

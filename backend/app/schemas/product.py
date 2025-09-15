@@ -1,7 +1,7 @@
 from pydantic import BaseModel, validator
-from typing import Optional, Dict, List, Union
-from datetime import date, datetime
 from backend.app.models.product import ProductCategory
+from datetime import date, datetime
+from typing import Optional, Dict, List, Union
 
 class ProductBase(BaseModel):
     name: str

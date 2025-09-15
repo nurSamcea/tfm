@@ -20,13 +20,7 @@ import com.example.frontend.services.ApiClient;
 import com.example.frontend.services.FarmerMetricsApiService;
 import com.example.frontend.utils.RefreshConfig;
 import com.example.frontend.utils.SessionManager;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+ 
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +40,7 @@ public class FarmerMetricsFragment extends Fragment {
     private TextView tvAvgTemperature, tvAvgHumidity, tvAvgSoilMoisture, tvActiveAlerts;
     private TextView tvLastUpdate;
     private LinearLayout linearLayoutZones;
-    private BarChart barChartSales;
+    
     private SessionManager sessionManager;
     
     private Handler autoRefreshHandler;
@@ -65,7 +59,7 @@ public class FarmerMetricsFragment extends Fragment {
         
         initViews(view);
         // Swipe-to-refresh eliminado
-        setupSalesChart();
+        
         setupAutoRefresh();
         
         // Logs de debug
@@ -120,8 +114,7 @@ public class FarmerMetricsFragment extends Fragment {
         // Lista de zonas
         linearLayoutZones = view.findViewById(R.id.linear_layout_zones);
         
-        // Gráfica de ventas
-        barChartSales = view.findViewById(R.id.bar_chart_sales);
+        
     }
     
     // Swipe-to-refresh eliminado
@@ -176,46 +169,7 @@ public class FarmerMetricsFragment extends Fragment {
               ", Intervalo: " + RefreshConfig.getIntervalDescription());
     }
     
-    private void setupSalesChart() {
-        // Configurar la gráfica de ventas
-        List<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 12f));
-        entries.add(new BarEntry(1, 8f));
-        entries.add(new BarEntry(2, 14f));
-        entries.add(new BarEntry(3, 10f));
-        entries.add(new BarEntry(4, 9f));
-        entries.add(new BarEntry(5, 7f));
-        entries.add(new BarEntry(6, 13f));
-
-        BarDataSet dataSet = new BarDataSet(entries, "Ingresos diarios");
-        dataSet.setColor(Color.parseColor("#4CAF50")); // Verde del tema
-        dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(12f);
-
-        BarData data = new BarData(dataSet);
-        barChartSales.setData(data);
-
-        String[] days = {"L", "M", "X", "J", "V", "S", "D"};
-        XAxis xAxis = barChartSales.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return days[(int) value % days.length];
-            }
-        });
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-        xAxis.setTextColor(Color.BLACK);
-
-        YAxis leftAxis = barChartSales.getAxisLeft();
-        leftAxis.setTextColor(Color.BLACK);
-        barChartSales.getAxisRight().setEnabled(false);
-        barChartSales.getDescription().setEnabled(false);
-        barChartSales.setTouchEnabled(true);
-        barChartSales.setDragEnabled(true);
-        barChartSales.setScaleEnabled(true);
-        barChartSales.invalidate();
-    }
+    
     
     private void loadDashboard() {
         Log.d(TAG, "loadDashboard: Iniciando carga de dashboard");

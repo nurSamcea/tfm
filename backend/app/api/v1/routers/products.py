@@ -332,3 +332,164 @@ def get_products_optimized(
             )
 
     return productos_ordenados
+
+
+@router.get("/nearby/", response_model=list[dict])
+def get_products_by_distance(
+    user_lat: float,
+    user_lon: float,
+    max_distance_km: float = 50.0,
+    limit: int = 100,
+    db: Session = Depends(database.get_db)
+):
+    """
+    Obtener productos de proveedores cercanos a la ubicación del usuario.
+    
+    Args:
+        user_lat: Latitud del usuario
+        user_lon: Longitud del usuario
+        max_distance_km: Distancia máxima en kilómetros (por defecto 50km)
+        limit: Número máximo de productos a retornar (por defecto 100)
+    
+    Returns:
+        Lista de productos con información de distancia y proveedor
+    """
+    try:
+        # Obtener todos los productos con sus proveedores
+        products_query = db.query(models.Product, models.User).join(
+            models.User, models.Product.provider_id == models.User.id
+        ).filter(
+            models.Product.stock_available > 0,
+            models.User.location_lat.isnot(None),
+            models.User.location_lon.isnot(None)
+        )
+        
+        products_with_providers = products_query.all()
+        
+        # Calcular distancias y filtrar
+        nearby_products = []
+        user_location = (user_lat, user_lon)
+        
+        for product, provider in products_with_providers:
+            try:
+                provider_location = (float(provider.location_lat), float(provider.location_lon))
+                distance_km = geodesic(user_location, provider_location).km
+                
+                if distance_km <= max_distance_km:
+                    product_data = {
+                        "id": product.id,
+                        "name": product.name,
+                        "description": product.description,
+                        "price": float(product.price),
+                        "stock_available": float(product.stock_available),
+                        "category": product.category,
+                        "is_eco": product.is_eco,
+                        "image_url": product.image_url,
+                        "provider_id": provider.id,
+                        "provider_name": provider.name,
+                        "provider_entity_name": provider.entity_name,
+                        "provider_lat": float(provider.location_lat),
+                        "provider_lon": float(provider.location_lon),
+                        "distance_km": round(distance_km, 2),
+                        "provider_role": provider.role.value
+                    }
+                    nearby_products.append(product_data)
+                    
+            except (ValueError, TypeError) as e:
+                logging.warning(f"Error calculando distancia para producto {product.id}: {e}")
+                continue
+        
+        # Ordenar por distancia
+        nearby_products.sort(key=lambda x: x["distance_km"])
+        
+        # Limitar resultados
+        return nearby_products[:limit]
+        
+    except Exception as e:
+        logging.error(f"Error obteniendo productos cercanos: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor al obtener productos cercanos"
+        )
+
+
+@router.get("/providers/nearby/", response_model=list[dict])
+def get_providers_by_distance(
+    user_lat: float,
+    user_lon: float,
+    max_distance_km: float = 50.0,
+    provider_role: str = None,
+    limit: int = 50,
+    db: Session = Depends(database.get_db)
+):
+    """
+    Obtener proveedores (granjeros/supermercados) cercanos a la ubicación del usuario.
+    
+    Args:
+        user_lat: Latitud del usuario
+        user_lon: Longitud del usuario
+        max_distance_km: Distancia máxima en kilómetros (por defecto 50km)
+        provider_role: Tipo de proveedor ('farmer' o 'supermarket')
+        limit: Número máximo de proveedores a retornar (por defecto 50)
+    
+    Returns:
+        Lista de proveedores con información de distancia
+    """
+    try:
+        # Construir query base
+        query = db.query(models.User).filter(
+            models.User.location_lat.isnot(None),
+            models.User.location_lon.isnot(None)
+        )
+        
+        # Filtrar por rol si se especifica
+        if provider_role:
+            query = query.filter(models.User.role == provider_role)
+        
+        providers = query.all()
+        
+        # Calcular distancias y filtrar
+        nearby_providers = []
+        user_location = (user_lat, user_lon)
+        
+        for provider in providers:
+            try:
+                provider_location = (float(provider.location_lat), float(provider.location_lon))
+                distance_km = geodesic(user_location, provider_location).km
+                
+                if distance_km <= max_distance_km:
+                    # Contar productos disponibles del proveedor
+                    products_count = db.query(models.Product).filter(
+                        models.Product.provider_id == provider.id,
+                        models.Product.stock_available > 0
+                    ).count()
+                    
+                    provider_data = {
+                        "id": provider.id,
+                        "name": provider.name,
+                        "entity_name": provider.entity_name,
+                        "role": provider.role.value,
+                        "lat": float(provider.location_lat),
+                        "lon": float(provider.location_lon),
+                        "distance_km": round(distance_km, 2),
+                        "products_available": products_count,
+                        "email": provider.email
+                    }
+                    nearby_providers.append(provider_data)
+                    
+            except (ValueError, TypeError) as e:
+                logging.warning(f"Error calculando distancia para proveedor {provider.id}: {e}")
+                continue
+        
+        # Ordenar por distancia
+        nearby_providers.sort(key=lambda x: x["distance_km"])
+        
+        # Limitar resultados
+        return nearby_providers[:limit]
+        
+    except Exception as e:
+        logging.error(f"Error obteniendo proveedores cercanos: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor al obtener proveedores cercanos"
+        )

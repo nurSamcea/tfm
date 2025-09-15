@@ -11,20 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.model.FarmerSensorReading;
+import com.example.frontend.models.Sensor;
 
 import java.util.List;
 
 public class FarmerSensorAdapter extends RecyclerView.Adapter<FarmerSensorAdapter.SensorViewHolder> {
 
     public interface OnSensorClickListener {
-        void onClick(FarmerSensorReading sensor);
+        void onClick(Sensor sensor);
     }
 
-    private final List<FarmerSensorReading> sensorList;
+    private final List<Sensor> sensorList;
     private final OnSensorClickListener listener;
 
-    public FarmerSensorAdapter(List<FarmerSensorReading> sensorList, OnSensorClickListener listener) {
+    public FarmerSensorAdapter(List<Sensor> sensorList, OnSensorClickListener listener) {
         this.sensorList = sensorList;
         this.listener = listener;
     }
@@ -39,9 +39,9 @@ public class FarmerSensorAdapter extends RecyclerView.Adapter<FarmerSensorAdapte
 
     @Override
     public void onBindViewHolder(@NonNull SensorViewHolder holder, int position) {
-        FarmerSensorReading sensor = sensorList.get(position);
+        Sensor sensor = sensorList.get(position);
         holder.name.setText(sensor.getName());
-        holder.value.setText(sensor.getValue());
+        holder.value.setText(sensor.getStatus());
         holder.moreButton.setOnClickListener(v -> listener.onClick(sensor));
     }
 

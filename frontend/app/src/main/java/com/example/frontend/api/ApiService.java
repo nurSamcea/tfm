@@ -15,6 +15,7 @@ import com.example.frontend.model.LoginRequest;
 import com.example.frontend.model.OrderItem;
 import com.example.frontend.model.OrderRequest;
 import com.example.frontend.models.Transaction;
+import com.example.frontend.api.ProductFilterRequest;
 
 public interface ApiService {
     @POST("auth/login")
@@ -89,7 +90,31 @@ public interface ApiService {
     Call<List<com.example.frontend.model.Product>> getProductsFiltered(@Query("search") String search, @Query("provider_role") String providerRole);
 
     @POST("/products/optimized/")
+    Call<List<Map<String, Object>>> getOptimizedProducts(@Body Map<String, Object> request);
+    
+    @POST("/products/optimized/")
     Call<List<com.example.frontend.model.Product>> getProductsOptimized(@Body ProductFilterRequest request);
+    
+    // Nuevos endpoints para geolocalización
+    @GET("products/nearby/")
+    Call<List<Map<String, Object>>> getNearbyProducts(
+            @Query("user_lat") double userLat,
+            @Query("user_lon") double userLon,
+            @Query("max_distance_km") double maxDistanceKm,
+            @Query("limit") int limit
+    );
+    
+    @GET("products/providers/nearby/")
+    Call<List<Map<String, Object>>> getNearbyProviders(
+            @Query("user_lat") double userLat,
+            @Query("user_lon") double userLon,
+            @Query("max_distance_km") double maxDistanceKm,
+            @Query("provider_role") String providerRole,
+            @Query("limit") int limit
+    );
+    
+    @POST("shopping-lists/optimize/")
+    Call<Map<String, Object>> optimizeShoppingList(@Body Map<String, Object> request);
 
     // Crear producto con imagen (multipart)
     @Multipart

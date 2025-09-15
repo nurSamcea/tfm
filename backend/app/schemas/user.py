@@ -33,6 +33,7 @@ class UserRead(UserBase):
 
     class Config:
         from_attributes = True
+        use_enum_values = True
 
 
 class UserSelect(BaseModel):
@@ -45,3 +46,4 @@ class UserSelect(BaseModel):
     
     class Config:
         from_attributes = True
+        use_enum_values = True

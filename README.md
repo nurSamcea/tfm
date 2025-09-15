@@ -18,14 +18,26 @@ Sistema inteligente para la distribución eficiente, sostenible y trazable de pr
 
 ```
 .
-├── backend/           # API REST con FastAPI
-├── frontend/         # Aplicación móvil Android
-├── iot/             # Código para sensores y dispositivos IoT
-├── database/        # Scripts y modelos de base de datos
+├── backend/           # API REST con FastAPI (coherente con IoT y Frontend)
+├── frontend/         # Aplicación móvil Android (coherente con Backend)
+├── iot/             # Sensores IoT (ESP32 real + Simulador Python)
+├── database/        # Base de datos PostgreSQL (esquema unificado)
 ├── docs/            # Documentación del proyecto
 ├── tests/           # Tests unitarios y de integración
+├── SISTEMA_UNIFICADO.md # Documentación de coherencia total
 └── docker-compose.yml # Configuración de contenedores
 ```
+
+## 🎯 Sistema Completamente Coherente
+
+El proyecto mantiene **coherencia total** entre todos los componentes:
+
+- **IoT**: ESP32 (María García) + Simulador Python (otros farmers)
+- **Database**: Esquema unificado con tablas coherentes
+- **Backend**: API REST con endpoints estándar
+- **Frontend**: Android con modelos coherentes
+
+Ver [SISTEMA_UNIFICADO.md](SISTEMA_UNIFICADO.md) para detalles completos.
 
 ## Requisitos
 
