@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.frontend.R;
 import com.example.frontend.model.FarmerDashboard;
-import com.example.frontend.services.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.services.FarmerMetricsApiService;
 import com.example.frontend.utils.RefreshConfig;
 import com.example.frontend.utils.SessionManager;
@@ -172,7 +172,7 @@ public class FarmerMetricsFragment extends Fragment {
         Log.d(TAG, "loadDashboard: Iniciando carga de dashboard");
         // Indicador de refresco eliminado
         
-        FarmerMetricsApiService apiService = ApiClient.getFarmerMetricsApiService();
+        FarmerMetricsApiService apiService = ApiClient.getFarmerMetricsApiService(requireContext());
         Log.d(TAG, "loadDashboard: ApiService creado: " + (apiService != null));
         
         int farmerId = sessionManager.getUserId();

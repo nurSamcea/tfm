@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.frontend.R;
 import com.example.frontend.WelcomeActivity;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.model.User;
 import com.example.frontend.utils.SessionManager;
 
@@ -54,7 +54,7 @@ public class UserSelectionFragment extends Fragment implements UserSelectionAdap
         View view = inflater.inflate(R.layout.fragment_user_selection, container, false);
         
         // Inicializar servicios
-        apiService = RetrofitClient.getInstance(requireContext()).getApiService();
+        apiService = ApiClient.getApiService(requireContext());
         sessionManager = new SessionManager(requireContext());
         
         // Inicializar vistas

@@ -27,9 +27,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
-import com.example.frontend.api.AuthService;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import retrofit2.Call;
@@ -57,7 +56,7 @@ public class RegisterFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView errorText;
     
-    private AuthService authService;
+    private ApiService apiService;
     private SessionManager sessionManager;
 
     @Nullable
@@ -66,7 +65,7 @@ public class RegisterFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         
         // Inicializar servicios
-        authService = RetrofitClient.getInstance(requireContext()).getAuthService();
+        apiService = ApiClient.getApiService(requireContext());
         sessionManager = new SessionManager(requireContext());
         
         // Inicializar vistas
@@ -282,7 +281,7 @@ public class RegisterFragment extends Fragment {
         }
         
         // Realizar petición
-        authService.register(registerRequest).enqueue(new Callback<ApiService.RegisterResponse>() {
+        apiService.register(registerRequest).enqueue(new Callback<ApiService.RegisterResponse>() {
             @Override
             public void onResponse(Call<ApiService.RegisterResponse> call, Response<ApiService.RegisterResponse> response) {
                 setLoading(false);

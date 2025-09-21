@@ -542,8 +542,8 @@ public class ConsumerSearchProductsFragment extends Fragment implements Supermar
     }
 
     private void executeDistanceRequest(ApiService.ProductFilterRequest req) {
-        // Usar RetrofitClient (con token si existe)
-        ApiService api = com.example.frontend.api.RetrofitClient.getInstance(requireContext()).getRetrofit().create(ApiService.class);
+        // Usar ApiClient (con token si existe)
+        ApiService api = ApiClient.getApiService(requireContext());
         retrofit2.Call<java.util.List<Product>> call = api.getProductsOptimized(req);
         Log.d("Curr LocationService", "Enviando petición de productos optimizados (distance). search=" + req.search +
                 (req.user_lat != null ? (", lat/lon adjuntos") : ", sin lat/lon"));

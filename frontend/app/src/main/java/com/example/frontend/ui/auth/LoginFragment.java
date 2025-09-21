@@ -18,9 +18,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.frontend.WelcomeActivity;
 import com.example.frontend.R;
-import com.example.frontend.api.AuthService;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import retrofit2.Call;
@@ -37,7 +36,7 @@ public class LoginFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView errorText;
     
-    private AuthService authService;
+    private ApiService apiService;
     private SessionManager sessionManager;
 
     @Nullable
@@ -47,7 +46,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         
         // Inicializar servicios
-        authService = RetrofitClient.getInstance(requireContext()).getAuthService();
+        apiService = ApiClient.getApiService(requireContext());
         sessionManager = new SessionManager(requireContext());
         
         // No verificar automáticamente si está logueado
@@ -103,7 +102,7 @@ public class LoginFragment extends Fragment {
         ApiService.LoginRequest loginRequest = new ApiService.LoginRequest(email, password);
         
         // Realizar petición
-        authService.login(loginRequest).enqueue(new Callback<ApiService.LoginResponse>() {
+        apiService.login(loginRequest).enqueue(new Callback<ApiService.LoginResponse>() {
             @Override
             public void onResponse(Call<ApiService.LoginResponse> call, Response<ApiService.LoginResponse> response) {
                 setLoading(false);

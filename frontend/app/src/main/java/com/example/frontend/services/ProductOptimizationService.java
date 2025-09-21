@@ -5,7 +5,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.example.frontend.api.ApiService;
-import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.model.Product;
 
 import java.util.ArrayList;
@@ -24,8 +24,7 @@ public class ProductOptimizationService {
     private final ApiService apiService;
     
     public ProductOptimizationService(Context context) {
-        RetrofitClient retrofitClient = RetrofitClient.getInstance(context);
-        this.apiService = retrofitClient.getApiService();
+        this.apiService = ApiClient.getApiService(context);
     }
     
     /**

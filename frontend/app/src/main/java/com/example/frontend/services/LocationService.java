@@ -8,7 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.Criteria;
 import android.util.Log;
-import com.example.frontend.api.RetrofitClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.api.ApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -133,7 +133,7 @@ public class LocationService {
         } catch (Exception ignored) {}
 
         getCurrentLocation().thenAccept(location -> {
-            ApiService api = RetrofitClient.getInstance(context).getRetrofit().create(ApiService.class);
+            ApiService api = ApiClient.getApiService(context);
             ApiService.UserLocationUpdate payload = new ApiService.UserLocationUpdate(
                     location.getLatitude(), location.getLongitude()
             );

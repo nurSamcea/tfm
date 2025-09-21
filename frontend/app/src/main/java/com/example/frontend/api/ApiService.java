@@ -15,10 +15,10 @@ import com.example.frontend.model.Transaction;
 
 public interface ApiService {
     @POST("auth/login")
-    Call<User> login(@Body LoginRequest request);
+    Call<LoginResponse> login(@Body LoginRequest request);
 
     @POST("auth/register")
-    Call<User> register(@Body RegisterRequest request);
+    Call<RegisterResponse> register(@Body RegisterRequest request);
 
     // Endpoints para Agricultores
     @GET("farmers/{id}/products")
