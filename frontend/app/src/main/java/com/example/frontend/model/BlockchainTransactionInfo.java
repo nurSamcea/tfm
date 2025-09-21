@@ -1,4 +1,4 @@
-package com.example.frontend.api;
+package com.example.frontend.model;
 
 public class BlockchainTransactionInfo {
     private String transactionId;

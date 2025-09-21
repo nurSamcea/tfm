@@ -16,16 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
 import com.example.frontend.model.FarmerOrder;
-import com.example.frontend.models.Transaction;
+import com.example.frontend.model.Transaction;
 import com.example.frontend.ui.adapters.FarmerOrderAdapter;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -236,14 +234,14 @@ public class FarmerOrdersFragment extends Fragment {
 
     private void loadTransactionDetails(int transactionId) {
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        api.getTransactionById(transactionId).enqueue(new Callback<com.example.frontend.models.Transaction>() {
+        api.getTransactionById(transactionId).enqueue(new Callback<Transaction>() {
             @Override
-            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
                 if (response.isSuccessful() && response.body() != null) {
-                    com.example.frontend.models.Transaction transaction = response.body();
+                    Transaction transaction = response.body();
                     com.example.frontend.ui.dialogs.OrderReceiptDialog dialog = new com.example.frontend.ui.dialogs.OrderReceiptDialog(requireContext(), transaction);
                     dialog.show();
                 } else {
@@ -252,7 +250,7 @@ public class FarmerOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
@@ -284,10 +282,10 @@ public class FarmerOrdersFragment extends Fragment {
         String userType = sessionManager.getUserRole();
         if (userType == null) userType = "farmer";
 
-        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId, userId, userType);
-        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+        Call<Transaction> call = api.cancelTransaction(transactionId, userId, userType);
+        call.enqueue(new Callback<Transaction>() {
             @Override
-            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
@@ -304,7 +302,7 @@ public class FarmerOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
@@ -338,10 +336,10 @@ public class FarmerOrdersFragment extends Fragment {
         String userType = sessionManager.getUserRole();
         if (userType == null) userType = "farmer";
 
-        Call<com.example.frontend.models.Transaction> call = api.deliverTransaction(transactionId, userId, userType);
-        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+        Call<Transaction> call = api.deliverTransaction(transactionId, userId, userType);
+        call.enqueue(new Callback<Transaction>() {
             @Override
-            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }
@@ -358,7 +356,7 @@ public class FarmerOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 if (!isAdded() || getContext() == null) {
                     return;
                 }

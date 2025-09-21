@@ -17,10 +17,8 @@ import android.widget.Toast;
 
 import com.example.frontend.ui.auth.LoginFragment;
 import com.example.frontend.ui.auth.RegisterFragment;
-import com.example.frontend.ui.consumer.ConsumerProductsFragment;
 import com.example.frontend.ui.consumer.ConsumerSearchProductsFragment;
 import com.example.frontend.ui.consumer.ConsumerProfileFragment;
-import com.example.frontend.ui.consumer.ConsumerPurchasesFragment;
 import com.example.frontend.ui.consumer.ConsumerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerOrdersFragment;
 import com.example.frontend.ui.farmer.FarmerProfileFragment;

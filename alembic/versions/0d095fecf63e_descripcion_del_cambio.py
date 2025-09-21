@@ -29,7 +29,7 @@ def upgrade() -> None:
 
     # 2. Eliminar tablas dependientes
     op.execute('DROP TABLE IF EXISTS nutritional_info CASCADE')
-    op.drop_table('logistics_route_stops')
+    op.execute('DROP TABLE IF EXISTS logistics_route_stops CASCADE')
 
     # 3. Convertir columnas a TEXT antes de ENUM (patrón seguro)
     op.execute("ALTER TABLE blockchain_logs ALTER COLUMN entity_type TYPE text")

@@ -30,7 +30,7 @@ import com.example.frontend.R;
 import com.example.frontend.model.Product;
 import com.example.frontend.ui.adapters.FarmerStockAdapter;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import okhttp3.MediaType;

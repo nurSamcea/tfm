@@ -28,7 +28,7 @@ import com.example.frontend.model.FullTraceabilityResponse;
 import com.example.frontend.model.Product;
 import com.example.frontend.model.TraceabilityEvent;
 import com.example.frontend.services.TraceabilityApiService;
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

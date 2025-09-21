@@ -1,4 +1,4 @@
-package com.example.frontend.network;
+package com.example.frontend.api;
 
 import android.util.Log;
 import okhttp3.Interceptor;

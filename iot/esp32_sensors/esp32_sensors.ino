@@ -24,7 +24,7 @@ const char* WIFI_SSID = "work";
 const char* WIFI_PASSWORD = "Albert@Marta1990";
 
 // Backend
-const char* BACKEND_URL = "http://192.168.68.116:8000/iot/ingest";
+const char* BACKEND_URL = "http://10.35.89.237:8000/iot/ingest";
 const char* IOT_INGEST_TOKEN = "dev_iot_token_2024";
 
 // Dispositivo

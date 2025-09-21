@@ -1,10 +1,9 @@
-package com.example.frontend.models;
+package com.example.frontend.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import com.example.frontend.model.OrderItem;
 
 public class Transaction implements Serializable {
     @SerializedName("id")

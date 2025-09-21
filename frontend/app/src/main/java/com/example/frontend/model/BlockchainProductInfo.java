@@ -1,4 +1,4 @@
-package com.example.frontend.api;
+package com.example.frontend.model;
 
 import java.util.List;
 

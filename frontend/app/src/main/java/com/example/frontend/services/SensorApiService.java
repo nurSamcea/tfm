@@ -1,18 +1,16 @@
 package com.example.frontend.services;
 
-import com.example.frontend.models.Sensor;
-import com.example.frontend.models.SensorReading;
-import com.example.frontend.models.SensorAlert;
-import com.example.frontend.models.SensorZone;
+import com.example.frontend.model.Sensor;
+import com.example.frontend.model.SensorReading;
+import com.example.frontend.model.SensorAlert;
+import com.example.frontend.model.SensorZone;
 
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Body;
 
 public interface SensorApiService {
     

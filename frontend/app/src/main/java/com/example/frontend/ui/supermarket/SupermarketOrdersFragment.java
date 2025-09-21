@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,14 +17,13 @@ import androidx.core.content.ContextCompat;
 
 import com.example.frontend.R;
 import com.example.frontend.model.SupermarketOrder;
-import com.example.frontend.models.Transaction;
+import com.example.frontend.model.Transaction;
 import com.example.frontend.ui.adapters.SupermarketOrderAdapter;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -445,10 +443,10 @@ public class SupermarketOrdersFragment extends Fragment {
         String userType = sessionManager.getUserRole();
         if (userType == null) userType = isSuppliersTabSelected ? "supermarket" : "supermarket";
 
-        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId, userId, userType);
-        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+        Call<Transaction> call = api.cancelTransaction(transactionId, userId, userType);
+        call.enqueue(new Callback<Transaction>() {
             @Override
-            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 if (response.isSuccessful()) {
                     if (getContext() != null) {
                         Toast.makeText(getContext(), "Pedido cancelado correctamente. Stock restaurado al vendedor.", Toast.LENGTH_LONG).show();
@@ -462,7 +460,7 @@ public class SupermarketOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }

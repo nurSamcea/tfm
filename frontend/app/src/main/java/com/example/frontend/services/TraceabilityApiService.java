@@ -1,6 +1,6 @@
 package com.example.frontend.services;
 
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.model.TraceabilityEvent;
 import com.example.frontend.model.ProductTraceabilityChain;
 import com.example.frontend.model.FullTraceabilityResponse;

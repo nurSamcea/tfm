@@ -10,7 +10,7 @@ public class Constants {
     // CONFIGURACIÓN CENTRALIZADA
     // ========================================
     // Para cambiar la IP del backend, modifica únicamente el archivo .env en la raíz del proyecto
-    private static final String DEFAULT_BACKEND_IP = "192.168.68.116"; // Esta IP se lee desde .env
+    private static final String DEFAULT_BACKEND_IP = "10.35.89.237"; // Esta IP se lee desde .env
     private static final String DEFAULT_BACKEND_PORT = "8000";
     private static final String DEFAULT_BACKEND_PROTOCOL = "http";
     

@@ -1,4 +1,4 @@
-package com.example.frontend.models;
+package com.example.frontend.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Map;

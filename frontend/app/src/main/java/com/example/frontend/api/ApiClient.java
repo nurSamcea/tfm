@@ -1,4 +1,4 @@
-package com.example.frontend.network;
+package com.example.frontend.api;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,7 +25,7 @@ public class ApiClient {
             return baseUrl;
         } catch (Exception e) {
             // Fallback a URL por defecto si hay problemas
-            return "http://192.168.68.116:8000/";
+            return "http://10.35.89.237:8000/";
         }
     }
 

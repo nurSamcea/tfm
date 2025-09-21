@@ -10,12 +10,8 @@ import okhttp3.RequestBody;
 import java.util.List;
 import java.util.Map;
 
-import com.example.frontend.model.RegisterRequest;
-import com.example.frontend.model.LoginRequest;
-import com.example.frontend.model.OrderItem;
 import com.example.frontend.model.OrderRequest;
-import com.example.frontend.models.Transaction;
-import com.example.frontend.api.ProductFilterRequest;
+import com.example.frontend.model.Transaction;
 
 public interface ApiService {
     @POST("auth/login")

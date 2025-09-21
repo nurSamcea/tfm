@@ -1,4 +1,4 @@
-package com.example.frontend.models;
+package com.example.frontend.model;
 
 public class FarmerAlert {
     public int id;

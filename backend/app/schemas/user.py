@@ -1,12 +1,13 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, Literal
 from datetime import datetime
+from backend.app.models.user import UserRoleEnum
 
 
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    role: Literal['consumer', 'farmer', 'supermarket']
+    role: UserRoleEnum
     entity_name: Optional[str]
     location_lat: Optional[float]
     location_lon: Optional[float]
@@ -19,7 +20,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     name: Optional[str]
-    role: Optional[Literal['consumer', 'farmer', 'supermarket']]
+    role: Optional[UserRoleEnum]
     entity_name: Optional[str]
     location_lat: Optional[float]
     location_lon: Optional[float]

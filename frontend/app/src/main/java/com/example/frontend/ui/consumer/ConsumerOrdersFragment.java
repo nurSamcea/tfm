@@ -15,19 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.frontend.R;
-import com.example.frontend.model.ConsumerOrder;
 import com.example.frontend.model.SupermarketOrder;
-import com.example.frontend.models.Transaction;
-import com.example.frontend.ui.adapters.ConsumerOrderAdapter;
+import com.example.frontend.model.Transaction;
 import com.example.frontend.ui.adapters.SupermarketOrderAdapter;
 import com.example.frontend.ui.dialogs.OrderReceiptDialog;
 import com.example.frontend.api.ApiService;
-import com.example.frontend.network.ApiClient;
+import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -329,10 +326,10 @@ public class ConsumerOrdersFragment extends Fragment {
         String userType = sessionManager.getUserRole();
         if (userType == null) userType = "consumer";
 
-        Call<com.example.frontend.models.Transaction> call = api.cancelTransaction(transactionId, userId, userType);
-        call.enqueue(new Callback<com.example.frontend.models.Transaction>() {
+        Call<Transaction> call = api.cancelTransaction(transactionId, userId, userType);
+        call.enqueue(new Callback<Transaction>() {
             @Override
-            public void onResponse(Call<com.example.frontend.models.Transaction> call, Response<com.example.frontend.models.Transaction> response) {
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                 // Verificar si el fragmento sigue adjunto antes de actualizar la UI
                 if (!isAdded() || getContext() == null) {
                     return;
@@ -347,7 +344,7 @@ public class ConsumerOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<com.example.frontend.models.Transaction> call, Throwable t) {
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 // Verificar si el fragmento sigue adjunto antes de mostrar Toast
                 if (isAdded() && getContext() != null) {
                     Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();

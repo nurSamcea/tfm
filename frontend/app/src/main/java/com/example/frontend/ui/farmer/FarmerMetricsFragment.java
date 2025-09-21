@@ -1,6 +1,5 @@
 package com.example.frontend.ui.farmer;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.frontend.R;
-import com.example.frontend.models.FarmerDashboard;
+import com.example.frontend.model.FarmerDashboard;
 import com.example.frontend.services.ApiClient;
 import com.example.frontend.services.FarmerMetricsApiService;
 import com.example.frontend.utils.RefreshConfig;
@@ -23,9 +22,7 @@ import com.example.frontend.utils.SessionManager;
  
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;

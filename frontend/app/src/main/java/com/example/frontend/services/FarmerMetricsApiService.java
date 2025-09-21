@@ -1,9 +1,9 @@
 package com.example.frontend.services;
 
-import com.example.frontend.models.FarmerDashboard;
-import com.example.frontend.models.ZoneStatistics;
-import com.example.frontend.models.SensorHistory;
-import com.example.frontend.models.FarmerAlert;
+import com.example.frontend.model.FarmerDashboard;
+import com.example.frontend.model.ZoneStatistics;
+import com.example.frontend.model.SensorHistory;
+import com.example.frontend.model.FarmerAlert;
 
 import java.util.List;
 import retrofit2.Call;
