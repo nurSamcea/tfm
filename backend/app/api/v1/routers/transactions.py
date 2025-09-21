@@ -360,75 +360,155 @@ def update_transaction_status(
 
 def _create_buyer_products(transaction, db):
     """Crear productos para el comprador cuando se entrega el pedido"""
-    for item_data in transaction.order_details:
-        # Buscar el producto original del vendedor
-        original_product = db.query(models.Product).filter(
-            models.Product.id == item_data['product_id']
-        ).first()
-        
-        if not original_product:
-            continue
-            
-        # Verificar si ya existe un producto similar en el comprador
-        existing_product = db.query(models.Product).filter(
-            and_(
-                models.Product.provider_id == transaction.buyer_id,
-                models.Product.name == original_product.name,
-                models.Product.category == original_product.category
-            )
-        ).first()
-        
-        if existing_product:
-            # Si existe, actualizar stock
-            existing_product.stock_available += item_data['quantity']
-        else:
-            # Si no existe, crear nuevo producto
-            # Calcular precio según el tipo de comprador
-            if transaction.buyer_type == "supermarket":
-                # Supermercado: margen del 30%
-                new_price = original_product.price * 1.3
-            else:
-                # Consumidor: precio original (compra directa)
-                new_price = original_product.price
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Validar y normalizar order_details
+    order_details = transaction.order_details
+    logger.info(f"Processing order_details for transaction {transaction.id}: {order_details}")
+    
+    # Asegurar que order_details sea una lista
+    if isinstance(order_details, dict):
+        # Si es un diccionario, convertirlo a lista
+        order_details = [order_details]
+    elif not isinstance(order_details, list):
+        logger.error(f"Invalid order_details format for transaction {transaction.id}: {type(order_details)}")
+        raise ValueError(f"order_details debe ser una lista o diccionario, recibido: {type(order_details)}")
+    
+    logger.info(f"Normalized order_details: {order_details}")
+    
+    for item_data in order_details:
+        try:
+            # Validar que item_data tenga las claves necesarias
+            if not isinstance(item_data, dict):
+                logger.error(f"Invalid item_data format: {type(item_data)}")
+                continue
                 
-            new_product = models.Product(
-                name=original_product.name,
-                description=original_product.description,
-                price=new_price,
-                currency=original_product.currency,
-                unit=original_product.unit,
-                category=original_product.category,
-                stock_available=item_data['quantity'],
-                expiration_date=original_product.expiration_date,
-                is_eco=original_product.is_eco,
-                image_url=original_product.image_url,
-                provider_id=transaction.buyer_id,
-                is_hidden=False,
-                certifications=original_product.certifications
-            )
-            db.add(new_product)
-        
-        # Eliminar el producto del vendedor si el stock llega a 0
-        # (El stock ya se redujo al crear la transacción)
-        if original_product.stock_available <= 0:
-            db.delete(original_product)
+            if 'product_id' not in item_data or 'quantity' not in item_data:
+                logger.error(f"Missing required keys in item_data: {item_data}")
+                continue
+            
+            product_id = item_data['product_id']
+            quantity = item_data['quantity']
+            
+            logger.info(f"Processing product {product_id} with quantity {quantity}")
+            
+            # Buscar el producto original del vendedor
+            original_product = db.query(models.Product).filter(
+                models.Product.id == product_id
+            ).first()
+            
+            if not original_product:
+                logger.warning(f"Product {product_id} not found, skipping")
+                continue
+                
+            logger.info(f"Found original product: {original_product.name}")
+            
+            # Verificar si ya existe un producto similar en el comprador
+            existing_product = db.query(models.Product).filter(
+                and_(
+                    models.Product.provider_id == transaction.buyer_id,
+                    models.Product.name == original_product.name,
+                    models.Product.category == original_product.category
+                )
+            ).first()
+            
+            if existing_product:
+                # Si existe, actualizar stock
+                logger.info(f"Updating existing product {existing_product.id} stock by {quantity}")
+                existing_product.stock_available += quantity
+            else:
+                # Si no existe, crear nuevo producto
+                # Calcular precio según el tipo de comprador
+                if transaction.buyer_type == "supermarket":
+                    # Supermercado: margen del 30%
+                    new_price = original_product.price * 1.3
+                else:
+                    # Consumidor: precio original (compra directa)
+                    new_price = original_product.price
+                    
+                logger.info(f"Creating new product for buyer {transaction.buyer_id} with price {new_price}")
+                
+                new_product = models.Product(
+                    name=original_product.name,
+                    description=original_product.description,
+                    price=new_price,
+                    currency=original_product.currency,
+                    unit=original_product.unit,
+                    category=original_product.category,
+                    stock_available=quantity,
+                    expiration_date=original_product.expiration_date,
+                    is_eco=original_product.is_eco,
+                    image_url=original_product.image_url,
+                    provider_id=transaction.buyer_id,
+                    is_hidden=False,
+                    certifications=original_product.certifications
+                )
+                db.add(new_product)
+                logger.info(f"Created new product: {new_product.name}")
+            
+            # Eliminar el producto del vendedor si el stock llega a 0
+            # (El stock ya se redujo al crear la transacción)
+            if original_product.stock_available <= 0:
+                logger.info(f"Deleting original product {original_product.id} (stock <= 0)")
+                db.delete(original_product)
+                
+        except Exception as e:
+            logger.error(f"Error processing item_data {item_data}: {str(e)}")
+            # Continuar con el siguiente item en lugar de fallar completamente
+            continue
 
 
 def _restore_seller_stock(transaction, db):
     """Restaurar stock del vendedor cuando se cancela una transacción"""
-    for item_data in transaction.order_details:
-        # Buscar el producto original del vendedor
-        product = db.query(models.Product).filter(
-            models.Product.id == item_data['product_id']
-        ).first()
-        
-        if product:
-            # Restaurar el stock
-            product.stock_available += item_data['quantity']
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Validar y normalizar order_details
+    order_details = transaction.order_details
+    logger.info(f"Restoring stock for transaction {transaction.id}: {order_details}")
+    
+    # Asegurar que order_details sea una lista
+    if isinstance(order_details, dict):
+        order_details = [order_details]
+    elif not isinstance(order_details, list):
+        logger.error(f"Invalid order_details format for transaction {transaction.id}: {type(order_details)}")
+        return
+    
+    for item_data in order_details:
+        try:
+            # Validar que item_data tenga las claves necesarias
+            if not isinstance(item_data, dict):
+                logger.error(f"Invalid item_data format: {type(item_data)}")
+                continue
+                
+            if 'product_id' not in item_data or 'quantity' not in item_data:
+                logger.error(f"Missing required keys in item_data: {item_data}")
+                continue
             
-            # Si el producto estaba oculto (stock = 0), hacerlo visible nuevamente
-            if product.is_hidden:
-                product.is_hidden = False
+            product_id = item_data['product_id']
+            quantity = item_data['quantity']
+            
+            # Buscar el producto original del vendedor
+            product = db.query(models.Product).filter(
+                models.Product.id == product_id
+            ).first()
+            
+            if product:
+                # Restaurar el stock
+                logger.info(f"Restoring {quantity} units to product {product_id}")
+                product.stock_available += quantity
+                
+                # Si el producto estaba oculto (stock = 0), hacerlo visible nuevamente
+                if product.is_hidden:
+                    product.is_hidden = False
+                    logger.info(f"Making product {product_id} visible again")
+            else:
+                logger.warning(f"Product {product_id} not found for stock restoration")
+                
+        except Exception as e:
+            logger.error(f"Error restoring stock for item_data {item_data}: {str(e)}")
+            continue
 
 
 @router.patch("/{transaction_id}/cancel", response_model=schemas.TransactionOut)
