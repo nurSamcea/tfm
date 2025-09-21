@@ -9,121 +9,112 @@
     android:padding="8dp">
 
     <!-- Tabs para Proveedores y Clientes -->
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_search_field"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="8dp"
+        android:scrollbars="none">
 
-        <Button
-            android:id="@+id/tab_suppliers"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Proveedores"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/manrope_bold"
-            android:background="@drawable/tab_selected_background"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-        <Button
-            android:id="@+id/tab_clients"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Clientes"
-            android:textAllCaps="false"
-            android:textColor="@color/text_secondary"
-            android:fontFamily="@font/manrope_bold"
-            android:background="@android:color/transparent"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-    </LinearLayout>
-
-    <!-- Filtros de estado (dinámicos según el tab seleccionado) -->
-    <LinearLayout
-        android:id="@+id/status_filters"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
-
-        <TextView
-            android:id="@+id/title_filters"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Filtros:"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:fontFamily="@font/manrope_bold"
-            android:layout_marginEnd="12dp" />
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-        <HorizontalScrollView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:id="@+id/filters_container"
+            <Button
+                android:id="@+id/tab_suppliers"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="40dp"
+                android:text="Proveedores"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/manrope_bold"
+                android:textSize="12sp"
+                android:background="@drawable/filter_selected_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
-                <Button
-                    android:id="@+id/filter_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Todos"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:fontFamily="@font/manrope_bold"
-                    android:background="@drawable/filter_selected_background"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+            <Button
+                android:id="@+id/tab_clients"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Clientes"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:paddingHorizontal="16dp" />
 
-                <Button
-                    android:id="@+id/filter_in_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="En Curso"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular"
-                    android:background="@drawable/filter_background"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
-                <Button
-                    android:id="@+id/filter_delivered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="Entregado"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular"
-                    android:background="@drawable/filter_background"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+    <!-- Filtros de estado -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="none">
 
-                <Button
-                    android:id="@+id/filter_cancelled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="Cancelado"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_secondary"
-                    android:fontFamily="@font/manrope_regular"
-                    android:background="@drawable/filter_background"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
 
-            </LinearLayout>
+            <Button
+                android:id="@+id/filter_all"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Todos"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
-        </HorizontalScrollView>
+            <Button
+                android:id="@+id/filter_in_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="En curso"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/filter_delivered"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Entregados"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
+
+            <Button
+                android:id="@+id/filter_cancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Cancelados"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:paddingHorizontal="16dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- RecyclerView para mostrar los pedidos -->
     <androidx.recyclerview.widget.RecyclerView

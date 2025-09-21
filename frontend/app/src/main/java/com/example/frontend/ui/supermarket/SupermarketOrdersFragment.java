@@ -163,6 +163,7 @@ public class SupermarketOrdersFragment extends Fragment {
         if (button == null) return;
         if (!isAdded()) return;
         button.setBackgroundResource(R.drawable.filter_background);
+        button.setTypeface(android.graphics.Typeface.DEFAULT);
         android.content.Context context = getContext();
         if (context != null) {
             button.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
@@ -173,6 +174,7 @@ public class SupermarketOrdersFragment extends Fragment {
         if (button == null) return;
         if (!isAdded()) return;
         button.setBackgroundResource(R.drawable.filter_selected_background);
+        button.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         android.content.Context context = getContext();
         if (context != null) {
             button.setTextColor(ContextCompat.getColor(context, android.R.color.white));
@@ -196,15 +198,19 @@ public class SupermarketOrdersFragment extends Fragment {
         android.content.Context context = getContext();
         if (context == null) return;
         if (isSuppliersTabSelected) {
-            tabSuppliers.setBackgroundResource(R.drawable.tab_selected_background);
+            tabSuppliers.setBackgroundResource(R.drawable.filter_selected_background);
             tabSuppliers.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-            tabClients.setBackgroundResource(android.R.color.transparent);
+            tabSuppliers.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+            tabClients.setBackgroundResource(R.drawable.filter_background);
             tabClients.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+            tabClients.setTypeface(android.graphics.Typeface.DEFAULT);
         } else {
-            tabClients.setBackgroundResource(R.drawable.tab_selected_background);
+            tabClients.setBackgroundResource(R.drawable.filter_selected_background);
             tabClients.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-            tabSuppliers.setBackgroundResource(android.R.color.transparent);
+            tabClients.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+            tabSuppliers.setBackgroundResource(R.drawable.filter_background);
             tabSuppliers.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+            tabSuppliers.setTypeface(android.graphics.Typeface.DEFAULT);
         }
     }
 
