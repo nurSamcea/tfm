@@ -1,121 +1,291 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/white">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="@string/name"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextName"
+        <!-- Título -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
+            android:text="Crear Cuenta"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="@string/email"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutName">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextEmail"
+        <!-- Nombre completo -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
+            android:text="Nombre completo *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Ingresa tu nombre completo"
+            android:inputType="textPersonName"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="@string/password"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
-        app:passwordToggleEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextPassword"
+        <!-- Email -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:text="Email *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextAddress"
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="tu@email.com"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Contraseña -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:text="Contraseña *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Mínimo 6 caracteres"
+            android:inputType="textPassword"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupUserType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword">
+        <!-- Confirmar contraseña -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmar contraseña *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
 
-        <RadioButton
-            android:id="@+id/radioButtonFarmer"
+        <EditText
+            android:id="@+id/confirm_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Repite tu contraseña"
+            android:inputType="textPassword"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tipo de usuario -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de usuario *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/role_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Selecciona tu rol"
+            android:inputType="none"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Nombre de la entidad (para agricultores y supermercados) -->
+        <TextView
+            android:id="@+id/entity_name_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la empresa/entidad"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/entity_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Nombre de tu empresa o entidad"
+            android:inputType="text"
+            android:background="@drawable/edit_text_background"
+            android:padding="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Ubicación -->
+        <TextView
+            android:id="@+id/location_title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubicación *"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Campo de búsqueda de dirección -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/address_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Buscar dirección (ej: Calle Mayor 123, Madrid)"
+                    android:inputType="text"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/search_address_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:text="Buscar"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_primary"
+                    android:minWidth="80dp" />
+
+            </LinearLayout>
+
+            <!-- Coordenadas (solo lectura) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/location_lat_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Latitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginEnd="8dp"
+                    android:focusable="false"
+                    android:clickable="false" />
+
+                <EditText
+                    android:id="@+id/location_lon_input"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:hint="Longitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginStart="8dp"
+                    android:focusable="false"
+                    android:clickable="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Botón de registro -->
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Crear Cuenta"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_primary"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Botón para volver al login -->
+        <Button
+            android:id="@+id/back_to_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Ya tengo cuenta"
+            android:textSize="16sp"
+            android:textColor="@color/primary"
+            android:background="@drawable/btn_outline" />
+
+        <!-- Barra de progreso -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/farmer" />
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="16dp" />
 
-        <RadioButton
-            android:id="@+id/radioButtonSupermarket"
-            android:layout_width="wrap_content"
+        <!-- Texto de error -->
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/supermarket" />
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/error"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="16dp" />
 
-    </RadioGroup>
+    </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/register"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupUserType" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/register"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupUserType" />
-
-    <TextView
-        android:id="@+id/textViewLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/already_have_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout> 
+</ScrollView> 

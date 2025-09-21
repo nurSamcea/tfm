@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_orders"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+    android:padding="8dp">
+
+    <!-- Barra de filtros horizontal -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <Button
+                android:id="@+id/filter_all"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Todos"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
+
+            <Button
+                android:id="@+id/filter_in_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="En curso"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
+
+            <Button
+                android:id="@+id/filter_delivered"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Entregados"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
+
+            <Button
+                android:id="@+id/filter_cancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Cancelados"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="12sp"
+                android:background="@drawable/filter_background"
+                android:paddingHorizontal="16dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Lista de pedidos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_orders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

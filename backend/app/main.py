@@ -1,14 +1,37 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+import os
+import logging
+from fastapi.middleware.cors import CORSMiddleware
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 from backend.app.api.v1.routers import (
-    users, products, shopping_lists, shopping_list_groups,
+    auth, users, products, shopping_lists, shopping_list_groups,
     shopping_list_items, transactions, sensor_readings,
-    qrs, blockchain_logs, impact_metrics
+    sensors, sensor_zones, sensor_alerts, farmer_metrics,
+    blockchain_logs, impact_metrics, traceability,
+    iot_traceability_integration, consumer_traceability, consumer_home,
+    iot_ingest
 )
 
 app = FastAPI(title="Zero Platform API", version="1.0.0")
 
+# Configurar CORS para permitir conexiones desde la aplicación Android
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En producción, especificar las IPs específicas
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Registrar rutas
+app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(products.router)
 app.include_router(shopping_lists.router)
@@ -16,11 +39,24 @@ app.include_router(shopping_list_groups.router)
 app.include_router(shopping_list_items.router)
 app.include_router(transactions.router)
 app.include_router(sensor_readings.router)
-app.include_router(qrs.router)
+app.include_router(sensors.router)
+app.include_router(sensor_zones.router)
+app.include_router(sensor_alerts.router)
+app.include_router(farmer_metrics.router)
 app.include_router(blockchain_logs.router)
 app.include_router(impact_metrics.router)
+app.include_router(traceability.router)
+app.include_router(iot_traceability_integration.router)
+app.include_router(consumer_traceability.router)
+app.include_router(consumer_home.router)
+app.include_router(iot_ingest.router)
 
 
 @app.get("/")
 def root():
     return {"message": "Welcome to the Zero Platform API 🚀"}
+
+# Montar archivos estáticos para servir imágenes subidas
+# Asegurar que el directorio existe para evitar errores en el arranque
+os.makedirs("media", exist_ok=True)
+app.mount("/media", StaticFiles(directory="media"), name="media")

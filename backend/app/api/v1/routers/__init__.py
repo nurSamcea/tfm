@@ -1,4 +1,5 @@
 from . import (
+    auth,
     users,
     products,
     shopping_lists,
@@ -6,7 +7,14 @@ from . import (
     shopping_list_items,
     transactions,
     sensor_readings,
-    qrs,
+    sensors,
+    sensor_zones,
+    sensor_alerts,
+    farmer_metrics,
     blockchain_logs,
     impact_metrics,
+    traceability,
+    iot_traceability_integration,
+    consumer_traceability,
+    consumer_home,
 )

@@ -1,80 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    android:backgroundTint="@android:color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Imagen del producto -->
         <ImageView
             android:id="@+id/imageViewProduct"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_products"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="4dp"/>
+            android:contentDescription="Imagen del producto"
+            android:src="@drawable/icon_stock"
+            android:background="@drawable/image_rounded_bg"
+            android:clipToOutline="true" />
 
-        <TextView
-            android:id="@+id/productName"
+        <!-- Información central del producto -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/imageViewProduct"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="8dp" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="5dp">
 
-        <TextView
-            android:id="@+id/productDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imageViewProduct"
-            app:layout_constraintTop_toBottomOf="@id/productName" />
+            <!-- Precio prominente -->
+            <TextView
+                android:id="@+id/productPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="€2.50"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorOrganic"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_marginBottom="4dp" />
 
-        <TextView
-            android:id="@+id/productPrice"
+            <!-- Nombre del producto -->
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tomates Cherry"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Stock disponible -->
+            <TextView
+                android:id="@+id/productStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stock: 25 kg"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:fontFamily="@font/manrope_regular" />
+
+        </LinearLayout>
+
+        <!-- Columna derecha: descuento y botón -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primary"
-            android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@id/imageViewProduct"
-            app:layout_constraintTop_toBottomOf="@id/productDescription"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp" />
+            android:orientation="vertical"
+            android:gravity="end">
 
-        <TextView
-            android:id="@+id/productStock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toEndOf="@id/imageViewProduct"
-            app:layout_constraintTop_toBottomOf="@id/productPrice"
-            android:layout_marginStart="8dp" />
+            <!-- Descuento -->
+            <TextView
+                android:id="@+id/productDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20% OFF"
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:fontFamily="@font/manrope_regular"
+                android:layout_marginBottom="8dp"
+                android:gravity="end" />
 
-        <Button
-            android:id="@+id/addToCartButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Añadir"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDescription" />
+            <!-- Botones -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/viewDetailsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:backgroundTint="@color/secondary"
+                    android:minHeight="32dp"
+                    android:text="Detalles"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:paddingHorizontal="12dp"
+                    android:layout_marginEnd="4dp" />
 
-</com.google.android.material.card.MaterialCardView> 
+                <Button
+                    android:id="@+id/addToCartButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:backgroundTint="@color/primary"
+                    android:minHeight="32dp"
+                    android:text="Añadir"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:paddingHorizontal="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

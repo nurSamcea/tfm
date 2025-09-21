@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilos de botones -->
+    <style name="Widget.Zero.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="Widget.Zero.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <!-- Estilos de tarjetas -->
+    <style name="Widget.Zero.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/colorCard</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- Estilos de chips -->
+    <style name="Widget.Zero.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/primary</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="chipStrokeColor">@color/primary</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">16dp</item>
+    </style>
+
+    <style name="Widget.Zero.Chip.Eco" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/colorEco</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="chipStrokeColor">@color/colorEco</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">16dp</item>
+    </style>
+
+    <style name="Widget.Zero.Chip.Local" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/colorLocal</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="chipStrokeColor">@color/colorLocal</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">16dp</item>
+    </style>
+
+    <!-- Estilos de campos de texto -->
+    <style name="Widget.Zero.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/primary</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+    </style>
+
+    <!-- Estilos de BottomNavigationView -->
+    <style name="Widget.Zero.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/colorBottomNav</item>
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+        <item name="elevation">8dp</item>
+    </style>
+
+    <!-- Estilos de Toolbar -->
+    <style name="Widget.Zero.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="titleTextColor">@color/colorOnPrimary</item>
+        <item name="subtitleTextColor">@color/colorOnPrimary</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Estilos de FAB -->
+    <style name="Widget.Zero.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorSecondary</item>
+        <item name="tint">@color/colorOnSecondary</item>
+        <item name="elevation">6dp</item>
+    </style>
+
+    <!-- Estilos de ProgressBar -->
+    <style name="Widget.Zero.ProgressBar" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/primary</item>
+        <item name="trackColor">@color/colorDivider</item>
+    </style>
+
+    <!-- Estilos de Switch -->
+    <style name="Widget.Zero.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb_colors</item>
+        <item name="trackTint">@color/switch_track_colors</item>
+    </style>
+    
+    <!-- Estilos para diálogos -->
+    <style name="DialogTheme" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+</resources>

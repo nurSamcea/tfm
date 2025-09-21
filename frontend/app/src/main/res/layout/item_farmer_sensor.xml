@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="6dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    android:backgroundTint="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Bloque con temperatura + botón morado -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/sensor_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24.6ºC"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                android:textColor="@color/colorOrganic"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <ImageButton
+                android:id="@+id/sensor_more_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/bg_search_field"
+                android:src="@drawable/ic_add"
+                android:tint="@android:color/white"
+                android:contentDescription="Ver detalles del sensor" />
+        </RelativeLayout>
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/sensor_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Temperatura"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/manrope_bold"
+            android:layout_marginTop="12dp"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

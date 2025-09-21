@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    CONFIGURACIÓN CENTRALIZADA DE RED
+    Para cambiar la IP del backend, modifica únicamente el valor en Constants.java
+    Este archivo se actualiza automáticamente basado en la configuración centralizada
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- IP del backend - se lee desde .env en la raíz del proyecto -->
+        <domain includeSubdomains="true">10.35.89.237</domain>
+        <!-- Dominios de desarrollo local -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <!-- IP del emulador Android para desarrollo -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

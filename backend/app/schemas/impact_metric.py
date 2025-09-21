@@ -44,12 +44,12 @@ class ImpactMetricRead(ImpactMetricBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ImpactMetricOut(ImpactMetricRead):
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             float: lambda v: round(v, 2) if isinstance(v, float) else v
         }

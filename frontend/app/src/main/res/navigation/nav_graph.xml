@@ -14,10 +14,10 @@
             app:destination="@id/navigation_register" />
         <action
             android:id="@+id/action_login_to_farmer_home"
-            app:destination="@id/navigation_farmer_products" />
+            app:destination="@id/navigation_farmer_stock" />
         <action
             android:id="@+id/action_login_to_supermarket_home"
-            app:destination="@id/navigation_supermarket_inventory" />
+            app:destination="@id/navigation_supermarket_search" />
         <action
             android:id="@+id/action_login_to_consumer_home"
             app:destination="@id/navigation_consumer_products" />
@@ -35,6 +35,27 @@
 
     <!-- Navegación para Agricultores -->
     <fragment
+        android:id="@+id/navigation_farmer_stock"
+        android:name="com.example.frontend.ui.farmer.FarmerStockFragment"
+        android:label="@string/title_farmer_stock" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_orders"
+        android:name="com.example.frontend.ui.farmer.FarmerOrdersFragment"
+        android:label="@string/title_farmer_orders" />
+
+
+    <fragment
+        android:id="@+id/navigation_farmer_metrics"
+        android:name="com.example.frontend.ui.farmer.FarmerMetricsFragment"
+        android:label="@string/title_farmer_metrics" />
+
+    <fragment
+        android:id="@+id/navigation_farmer_profile"
+        android:name="com.example.frontend.ui.farmer.FarmerProfileFragment"
+        android:label="@string/title_profile" />
+
+    <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.frontend.ui.fragments.ProductsFragment"
         android:label="Productos">
@@ -44,30 +65,23 @@
             app:destination="@id/addProductFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_farmer_certifications"
-        android:name="com.example.frontend.ui.farmer.CertificationsFragment"
-        android:label="@string/title_certifications" />
-
-    <fragment
-        android:id="@+id/navigation_farmer_profile"
-        android:name="com.example.frontend.ui.farmer.ProfileFragment"
-        android:label="@string/title_profile" />
 
     <!-- Navegación para Supermercados -->
-    <fragment
-        android:id="@+id/navigation_supermarket_inventory"
-        android:name="com.example.frontend.ui.supermarket.InventoryFragment"
-        android:label="@string/title_supermarket_orders">
-        <action
-            android:id="@+id/action_inventory_to_product_detail"
-            app:destination="@id/navigation_product_detail" />
-    </fragment>
 
     <fragment
-        android:id="@+id/navigation_supermarket_suppliers"
-        android:name="com.example.frontend.ui.supermarket.SuppliersFragment"
-        android:label="@string/title_suppliers" />
+        android:id="@+id/navigation_supermarket_search"
+        android:name="com.example.frontend.ui.supermarket.SupermarketSearchProductsFragment"
+        android:label="@string/title_search" />
+
+    <fragment
+        android:id="@+id/navigation_supermarket_orders"
+        android:name="com.example.frontend.ui.supermarket.SupermarketOrdersFragment"
+        android:label="@string/title_orders" />
+
+    <fragment
+        android:id="@+id/navigation_supermarket_stock"
+        android:name="com.example.frontend.ui.supermarket.SupermarketStockFragment"
+        android:label="@string/title_stock" />
 
     <fragment
         android:id="@+id/navigation_supermarket_profile"

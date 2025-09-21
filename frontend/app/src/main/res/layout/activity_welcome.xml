@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
+
+    <!-- Contenedor de selección de modo -->
+    <ScrollView
+        android:id="@+id/mode_selection_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <!-- Header con logo y título -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="48dp">
+
+                <!-- Logo de la app -->
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_app_logo"
+                    android:contentDescription="Logo EcoMarket"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Título principal -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¡Bienvenido a EcoMarket!"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+            </LinearLayout>
+
+            <!-- Botones de autenticación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp"
+                android:gravity="center_horizontal">
+
+                <!-- Botón Login -->
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
+                    android:text="Iniciar Sesión"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_primary"
+                    android:layout_marginBottom="16dp"
+                    android:drawableStart="@drawable/ic_login"
+                    android:drawablePadding="12dp" />
+
+                <!-- Botón Registro -->
+                <Button
+                    android:id="@+id/btn_register"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
+                    android:text="Crear Cuenta"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_accent"
+                    android:layout_marginBottom="16dp"
+                    android:drawableStart="@drawable/ic_register"
+                    android:drawablePadding="12dp" />
+
+                <!-- Botón Usuarios Existentes -->
+                <Button
+                    android:id="@+id/btn_existing_users"
+                    android:layout_width="280dp"
+                    android:layout_height="56dp"
+                    android:text="Usar Usuario Existente (Demo)"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary"
+                    android:background="@drawable/btn_outline"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Footer -->
+    <TextView
+        android:id="@+id/footer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2025 EcoMarket"
+        android:textSize="10sp"
+        android:textColor="@color/text_hint"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Contenedor de fragmentos (inicialmente oculto) -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation"
+        android:visibility="gone" />
+
+    <!-- Navegación inferior (inicialmente oculta) -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors" />
+
+</RelativeLayout>

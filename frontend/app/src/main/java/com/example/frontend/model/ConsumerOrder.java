@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 public class ConsumerOrder {
     public enum OrderStatus {
-        PENDING,
-        CONFIRMED,
-        IN_TRANSIT,
-        DELIVERED,
-        CANCELLED
+        IN_PROGRESS,  // En curso
+        DELIVERED,    // Entregado
+        CANCELLED     // Cancelado
     }
 
     private String id;
@@ -29,7 +27,7 @@ public class ConsumerOrder {
         this.consumerId = consumerId;
         this.sellerId = sellerId;
         this.orderDate = new Date();
-        this.status = OrderStatus.PENDING;
+        this.status = OrderStatus.IN_PROGRESS;
         this.items = new ArrayList<>();
     }
 

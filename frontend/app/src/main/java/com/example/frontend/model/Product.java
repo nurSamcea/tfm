@@ -1,8 +1,10 @@
 package com.example.frontend.model;
 
+import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Product {
+public class Product implements Serializable {
     private String id;
     private String name;
     private String category;
@@ -15,6 +17,35 @@ public class Product {
     private Integer farmerId;
     private Date harvestDate;
     private boolean sustainable;
+    private Double distance_km;
+    private Double score;
+    @SerializedName("is_hidden")
+    private boolean isHidden;
+    
+    // Campos adicionales para compatibilidad con el backend
+    @SerializedName("stock_available")
+    private Double stockAvailable;
+    @SerializedName("is_eco")
+    private Boolean isEco;
+    @SerializedName("expiration_date")
+    private Date expirationDate;
+    @SerializedName("provider_id")
+    private Integer providerId;
+    @SerializedName("image_url")
+    private String imageUrl;
+    @SerializedName("unit")
+    private String unit;
+    
+    // Campo para almacenar el tipo de vendedor (farmer/supermarket)
+    private String sellerType;
+    
+    // Campos para ubicación del proveedor
+    @SerializedName("provider_name")
+    private String providerName;
+    @SerializedName("provider_lat")
+    private Double providerLat;
+    @SerializedName("provider_lon")
+    private Double providerLon;
 
 
     public Product(String id, String name, String category, double price, int quantity, int stock,
@@ -31,6 +62,7 @@ public class Product {
         this.farmerId = farmerId;
         this.harvestDate = harvestDate;
         this.sustainabilityMetrics = sustainabilityMetrics;
+        this.isHidden = false;
     }
 
     public Product(String id, String name, String category, double price, int quantity, int stock) {
@@ -39,6 +71,7 @@ public class Product {
 
     public Product() {
         // necesario para Retrofit, Gson o inicialización manual
+        this.isHidden = false;
     }
 
     // Getters y setters
@@ -115,8 +148,16 @@ public class Product {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Integer getFarmerId() {
         return farmerId;
+    }
+
+    public void setFarmerId(Integer farmerId) {
+        this.farmerId = farmerId;
     }
 
     public Date getHarvestDate() {
@@ -129,5 +170,111 @@ public class Product {
 
     public void setSustainable(boolean sustainable) {
         this.sustainable = sustainable;
+    }
+
+    public Double getDistance_km() {
+        return distance_km;
+    }
+
+    public void setDistance_km(Double distance_km) {
+        this.distance_km = distance_km;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
+    }
+
+    // Getters y setters para compatibilidad con backend
+    public Double getStockAvailable() {
+        return stockAvailable;
+    }
+
+    public void setStockAvailable(Double stockAvailable) {
+        this.stockAvailable = stockAvailable;
+    }
+
+    public Boolean getIsEco() {
+        return isEco;
+    }
+
+    public void setIsEco(Boolean isEco) {
+        this.isEco = isEco;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Integer getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Integer providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getSellerType() {
+        return sellerType;
+    }
+
+    public void setSellerType(String sellerType) {
+        this.sellerType = sellerType;
+    }
+
+    // Getters y setters para ubicación del proveedor
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public Double getProviderLat() {
+        return providerLat;
+    }
+
+    public void setProviderLat(Double providerLat) {
+        this.providerLat = providerLat;
+    }
+
+    public Double getProviderLon() {
+        return providerLon;
+    }
+
+    public void setProviderLon(Double providerLon) {
+        this.providerLon = providerLon;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

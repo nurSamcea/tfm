@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_supermarket_search_products"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+    android:padding="4dp">
+
+    <!-- Header con título mejorado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="4dp">
+
+        <!-- Campo de búsqueda mejorado -->
+        <LinearLayout
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/search_bar_background"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search"
+                android:tint="@color/primary"
+                android:layout_marginEnd="12dp" />
+
+            <EditText
+                android:id="@+id/search_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_regular"
+                android:hint="Buscar productos de agricultores..."
+                android:textColorHint="@color/text_secondary"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:background="@null"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+        <!-- Botón de filtros mejorado -->
+        <ImageButton
+            android:id="@+id/filter_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_filters"
+            android:background="@drawable/search_bar_background"
+            android:tint="@color/primary"
+            android:contentDescription="Filtros" />
+
+        <!-- Botón de ordenar mejorado -->
+        <ImageButton
+            android:id="@+id/sort_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_filters"
+            android:background="@drawable/search_bar_background"
+            android:tint="@color/primary"
+            android:contentDescription="Ordenar" />
+    </LinearLayout>
+
+    <!-- Chips de filtros mejorados -->
+    <HorizontalScrollView
+        android:id="@+id/filters_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:scrollbars="none"
+        android:visibility="gone"
+        android:paddingHorizontal="4dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:singleSelection="false"
+            app:selectionRequired="false"
+            android:padding="4dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_precio_bajo"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Precio bajo"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/manrope_regular"
+                app:chipBackgroundColor="@color/background_light"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="18dp"
+                app:chipMinHeight="36dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_distancia_cerca"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Cerca"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/manrope_regular"
+                app:chipBackgroundColor="@color/background_light"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="18dp"
+                app:chipMinHeight="36dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_disponible"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Disponible"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/manrope_regular"
+                app:chipBackgroundColor="@color/background_light"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="18dp"
+                app:chipMinHeight="36dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_sostenible"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Sostenible"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/manrope_regular"
+                app:chipBackgroundColor="@color/background_light"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="18dp"
+                app:chipMinHeight="36dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_eco"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Ecológico"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/manrope_regular"
+                app:chipBackgroundColor="@color/background_light"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="18dp"
+                app:chipMinHeight="36dp"
+                android:layout_marginEnd="8dp" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Lista de productos disponibles (mitad superior) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_products"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            android:overScrollMode="never" />
+
+    </LinearLayout>
+
+    <!-- Separador mejorado -->
+    
+
+    <!-- Carrito de compras (mitad inferior) -->
+    <LinearLayout
+        android:id="@+id/cart_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <!-- Header del carrito mejorado -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mi Carrito"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/manrope_bold"
+                android:shadowColor="@android:color/black"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/cart_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00 €"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:fontFamily="@font/manrope_bold"
+                    android:shadowColor="@android:color/black"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2" />
+
+                <TextView
+                    android:id="@+id/cart_item_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 productos"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:alpha="0.9" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Lista del carrito -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_cart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            android:overScrollMode="never" />
+
+        <!-- Footer del carrito con total y botones mejorado -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_clear_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="Vaciar carrito"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:minWidth="0dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    app:backgroundTint="@color/error"
+                    app:cornerRadius="24dp"
+                    app:icon="@drawable/ic_delete"
+                    app:iconSize="16dp"
+                    app:iconGravity="textStart"
+                    android:elevation="2dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_checkout"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="Realizar pedido"
+                    android:textSize="12sp"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:minWidth="0dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="24dp"
+                    app:icon="@drawable/ic_cart"
+                    app:iconSize="16dp"
+                    app:iconGravity="textStart"
+                    android:elevation="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

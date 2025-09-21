@@ -4,9 +4,9 @@ import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
-import dagger.hilt.android.HiltAndroidApp;
+import com.example.frontend.utils.Constants;
+import com.example.frontend.api.ApiClient;
 
-@HiltAndroidApp
 public class EcoMarketApplication extends Application {
     private static final String TAG = "EcoMarketApplication";
 
@@ -27,7 +27,12 @@ public class EcoMarketApplication extends Application {
 
     private void initializeApp() {
         try {
-            // Configurar el modo estricto para detectar problemas
+            // Inicializar constantes del .env PRIMERO
+            Constants.init(this);
+            
+            // ApiClient se inicializa automáticamente cuando se necesita
+            
+            // Configurar el modo estricto DESPUÉS de la inicialización
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                         .detectAll()

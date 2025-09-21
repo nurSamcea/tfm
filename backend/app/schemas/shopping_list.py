@@ -60,7 +60,6 @@ class OptimizationResponse(BaseModel):
 
 
 class ShoppingListBase(BaseModel):
-    name: str
     user_id: int
     total_price: Optional[float]
     currency: Optional[str]
@@ -76,7 +75,7 @@ class ShoppingListRead(ShoppingListBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProductInput(BaseModel):
@@ -88,22 +87,3 @@ class FilterInput(BaseModel):
     eco: bool = False
     gluten_free: bool = False
     max_distance_km: float = 50.0
-
-
-class ShoppingListBase(BaseModel):
-    user_id: int
-    total_price: Optional[float]
-    currency: Optional[str]
-    status: Optional[str]
-
-
-class ShoppingListCreate(ShoppingListBase):
-    pass
-
-
-class ShoppingListRead(ShoppingListBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        orm_mode = True

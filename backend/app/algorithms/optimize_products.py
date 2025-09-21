@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from geopy.distance import geodesic
 from collections import defaultdict
 import math
@@ -93,6 +93,178 @@ def evaluate_basket(basket: List[Dict], criteria: Dict) -> float:
     return total_cost
 
 
+def calculate_product_score(
+    product: Dict, 
+    user_location: Optional[Tuple[float, float]] = None,
+    weights: Optional[Dict[str, float]] = None,
+    filters: Optional[Dict[str, bool]] = None
+) -> float:
+    """
+    Calcula la puntuación de un producto basada en múltiples criterios.
+    Puntuación más alta = mejor producto.
+    
+    Variables consideradas:
+    - Precio: menor precio = mayor puntuación
+    - Distancia: menor distancia = mayor puntuación
+    - Sostenibilidad/Huella de carbono: menor impacto ambiental = mayor puntuación
+    """
+    if weights is None:
+        weights = {
+            "price": 0.5,
+            "distance": 0.3,
+            "sustainability": 0.2
+        }
+    
+    score = 0.0
+    
+    # 1. Puntuación por precio (más bajo = mejor)
+    # Normalizar precio entre 0-100 (asumiendo rango 0-10€)
+    price_score = max(0, 100 - (product.get("price", 0) * 10))
+    score += weights.get("price", 0.3) * price_score
+    
+    # 2. Puntuación por distancia (más cerca = mejor)
+    distance_km = None
+    if user_location and product.get("distance_km") is not None:
+        distance_km = product["distance_km"]
+    elif user_location and product.get("provider_lat") and product.get("provider_lon"):
+        # Calcular distancia si no está precalculada
+        try:
+            distance_km = geodesic(
+                user_location, 
+                (product["provider_lat"], product["provider_lon"])
+            ).km
+        except:
+            distance_km = None
+    
+    if distance_km is not None:
+        distance_score = max(0, 100 - (distance_km * 2))  # Penalizar distancia
+        score += weights.get("distance", 0.25) * distance_score
+    
+    # 3. Puntuación por sostenibilidad/huella de carbono
+    sustainability_score = calculate_sustainability_score(product, distance_km)
+    score += weights.get("sustainability", 0.2) * sustainability_score
+    
+    # 4. Bonus por filtros activos
+    if filters:
+        if filters.get("eco") and product.get("is_eco", False):
+            score += 20  # Bonus extra por cumplir filtro ecológico
+        if filters.get("gluten_free") and product.get("is_gluten_free", False):
+            score += 15  # Bonus por ser sin gluten
+    
+    return round(score, 2)
+
+
+def calculate_sustainability_score(product: Dict, distance_km: Optional[float] = None) -> float:
+    """
+    Calcula la puntuación de sostenibilidad/huella de carbono de un producto.
+    
+    Considera:
+    - Score base del producto (0-100)
+    - Impacto de la distancia de transporte
+    - Tipo de producto y su impacto ambiental
+    - Certificaciones ecológicas
+    """
+    base_score = product.get("score", 0) or 0
+    
+    # Factores de huella de carbono por categoría de producto (kg CO2 por kg)
+    co2_factors = {
+        "frutas": 0.5,
+        "verduras": 0.4,
+        "carnes": 2.5,
+        "pescados": 1.8,
+        "lacteos": 1.2,
+        "cereales": 0.3,
+        "legumbres": 0.2,
+        "otros": 0.8
+    }
+    
+    # Obtener categoría del producto
+    category = product.get("category", "otros")
+    if hasattr(category, 'value'):
+        category = category.value
+    category = str(category).lower()
+    
+    # Factor de CO2 del producto
+    co2_factor = co2_factors.get(category, co2_factors["otros"])
+    
+    # Penalización por distancia de transporte (0.1 kg CO2 por km)
+    transport_penalty = 0
+    if distance_km is not None:
+        transport_co2 = distance_km * 0.1
+        # Penalizar productos que vienen de lejos (máximo 10 kg CO2 de transporte = -20 puntos)
+        transport_penalty = min(20, transport_co2 * 2)
+    
+    # Calcular puntuación final de sostenibilidad
+    sustainability_score = base_score - transport_penalty
+    
+    # Asegurar que esté en el rango 0-100
+    return max(0, min(100, sustainability_score))
+
+
+def sort_products_by_priority(
+    products: List[Dict],
+    user_location: Optional[Tuple[float, float]] = None,
+    weights: Optional[Dict[str, float]] = None,
+    filters: Optional[Dict[str, bool]] = None,
+    sort_criteria: Optional[str] = None
+) -> List[Dict]:
+    """
+    Ordena productos según criterios de prioridad.
+    
+    Args:
+        products: Lista de productos a ordenar
+        user_location: Ubicación del usuario (lat, lon)
+        weights: Pesos para cada criterio
+        filters: Filtros activos
+        sort_criteria: Criterio específico de ordenación ("price", "distance", "sustainability", "optimal")
+    """
+    if not products:
+        return products
+    
+    # Si no hay criterio específico, usar algoritmo óptimo
+    if not sort_criteria or sort_criteria == "optimal":
+        # Calcular puntuación para cada producto
+        for product in products:
+            product["optimization_score"] = calculate_product_score(
+                product, user_location, weights, filters
+            )
+        
+        # Ordenar por puntuación descendente
+        return sorted(products, key=lambda p: p["optimization_score"], reverse=True)
+    
+    # Ordenación por criterio específico
+    if sort_criteria == "price":
+        # Ordenar por precio (menor a mayor)
+        return sorted(products, key=lambda p: p.get("price", 0))
+    elif sort_criteria == "price_desc":
+        # Ordenar por precio (mayor a menor)
+        return sorted(products, key=lambda p: p.get("price", 0), reverse=True)
+    elif sort_criteria == "distance":
+        # Ordenar por distancia (más cerca primero)
+        return sorted(
+            products,
+            key=lambda p: (p.get("distance_km") if p.get("distance_km") is not None else float('inf'))
+        )
+    elif sort_criteria == "sustainability":
+        # Ordenar por sostenibilidad/huella de carbono (mejor sostenibilidad primero)
+        # Usar la función mejorada de cálculo de sostenibilidad
+        for product in products:
+            if "sustainability_score" not in product:
+                product["sustainability_score"] = calculate_sustainability_score(
+                    product, product.get("distance_km")
+                )
+        return sorted(products, key=lambda p: p.get("sustainability_score", 0), reverse=True)
+    elif sort_criteria == "stock":
+        # Ordenar por stock disponible (mayor stock primero)
+        return sorted(products, key=lambda p: p.get("stock_available", 0) or p.get("stock", 0), reverse=True)
+    elif sort_criteria == "eco":
+        # Ordenar por productos ecológicos primero
+        return sorted(products, key=lambda p: p.get("is_eco", False), reverse=True)
+    
+    # Por defecto, usar algoritmo óptimo
+    return sort_products_by_priority(products, user_location, weights, filters, "optimal")
+
+
 def generate_optimal_basket(
     user_location: Tuple[float, float],
     requested_products: List[Dict],
@@ -120,12 +292,10 @@ def generate_optimal_basket(
                         alternatives[request["name"]] = alt_candidates[:3]  # Top 3 alternativas
             continue
 
-        best_option = min(
+        # Usar el nuevo algoritmo de puntuación para seleccionar el mejor producto
+        best_option = max(
             candidates,
-            key=lambda p: (
-                criteria["price_weight"] * p["price"] +
-                criteria["distance_weight"] * geodesic(user_location, (p["provider_lat"], p["provider_lon"])).km
-            )
+            key=lambda p: calculate_product_score(p, user_location, criteria.get("weights", {}), filters)
         )
 
         distance_km = geodesic(user_location, (best_option["provider_lat"], best_option["provider_lon"])).km

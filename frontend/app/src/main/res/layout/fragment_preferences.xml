@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+    <!-- Header con botón de volver -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Volver"
+            android:tint="@android:color/black"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Preferencias"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/manrope_bold"
+            android:textColor="@color/text_primary"
+            android:gravity="center"/>
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
+
+    <!-- Foto de perfil -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Foto de Perfil"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/manrope_bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp"/>
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/img_profile_consumer"
+                android:background="@drawable/circle_background"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:backgroundTint="@android:color/black"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cambiar Foto"
+                android:textSize="14sp"
+                app:cornerRadius="20dp"
+                app:backgroundTint="@color/primary"
+                android:textColor="@android:color/white"
+                app:icon="@drawable/ic_settings"
+                app:iconGravity="textStart"
+                android:fontFamily="@font/manrope_bold" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Preferencias alimentarias -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preferencias Alimentarias"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/manrope_bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Alergias -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alergias"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/allergiesGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="false"
+                    android:padding="2dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGluten"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌾 Sin gluten"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipLactose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🥛 Sin lactosa"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNuts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🥜 Sin frutos secos"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+            <!-- Preferencias dietéticas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preferencias Dietéticas"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/dietGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="false"
+                    android:padding="2dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipVegetarian"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🥬 Vegetariano"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipVegan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌱 Vegano"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipOrganic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌿 Ecológico"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+            <!-- Preferencias de origen -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preferencias de Origen"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/originGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="false"
+                    android:padding="2dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipLocal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏠 Productos locales"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFairTrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤝 Comercio justo"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        app:chipBackgroundColor="@android:color/white"
+                        app:chipStrokeColor="#E0E0E0"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="16dp" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Configuraciones adicionales -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configuraciones"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/manrope_bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Notificaciones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notificaciones"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/manrope_bold"
+                        android:textColor="@color/text_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recibir notificaciones sobre ofertas"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:textColor="@color/text_secondary"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true" />
+
+            </LinearLayout>
+
+            <!-- Ubicación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ubicación"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/manrope_bold"
+                        android:textColor="@color/text_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Usar ubicación para productos cercanos"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:textColor="@color/text_secondary"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Botón de guardar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSavePreferences"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Guardar Preferencias"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        app:elevation="4dp"
+        app:icon="@drawable/ic_settings"
+        app:iconGravity="textStart"
+        android:fontFamily="@font/manrope_bold" />
+
+</LinearLayout>

@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Edificio del supermercado -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M8,8L40,8L40,40L8,40L8,8Z"/>
+    
+    <!-- Techo -->
+    <path
+        android:fillColor="#E65100"
+        android:pathData="M6,8L24,2L42,8L40,8L40,8L6,8Z"/>
+    
+    <!-- Puerta principal -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,24L28,24L28,40L20,40L20,24Z"/>
+    
+    <!-- Ventanas -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,16L18,16L18,22L12,22L12,16Z"/>
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,16L36,16L36,22L30,22L30,16Z"/>
+    
+    <!-- Letrero del supermercado -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M16,12L32,12L32,14L16,14L16,12Z"/>
+    
+    <!-- Texto del letrero -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,13m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,13m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M22,13m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0"/>
+</vector>

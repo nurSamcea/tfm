@@ -48,7 +48,7 @@ def crear_usuarios_y_productos(n_consumidores=20, n_proveedores=10, n_productos=
             name=fake.company(),
             email=fake.unique.email(),
             password_hash="hashed_password",
-            role=random.choice(["farmer", "retailer"]),
+            role=random.choice(["farmer", "supermarket"]),
             location_lat=round(random.uniform(40.4, 40.5), 6),
             location_lon=round(random.uniform(-3.7, -3.6), 6)
         )

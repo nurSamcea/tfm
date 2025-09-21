@@ -1,19 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Colores principales de EcoMarket -->
     <color name="primary">#4CAF50</color>
+    <color name="primary_color">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
-    <color name="primary_light">#E3F2FD</color>
-    <color name="accent">#8BC34A</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="accent">#FF9800</color>
+    <color name="accent_dark">#E65100</color>
+    <color name="accent_color">@color/accent</color>
+    
+    <!-- Colores secundarios -->
+    <color name="secondary">#8BC34A</color>
+    <color name="secondary_dark">#689F38</color>
+
+    <!-- Colores de fondo -->
+    <color name="background">#FFFFFF</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#F5F5F5</color>
+    
+    <!-- Colores de texto -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    
+    <!-- Colores de estado -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
     <color name="error">#F44336</color>
-    <color name="teal_700">#018786</color>
-    <color name="darker_gray">#B0B0B0</color>
-    <color name="orange">#E25F30</color>
-    <color name="red">#B61515</color>
-    <color name="green">#2E7D32</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Colores del sistema -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Colores de la marca -->
+    <color name="ecomarket_green">#4CAF50</color>
+    <color name="ecomarket_orange">#FF9800</color>
+    <color name="ecomarket_light_green">#8BC34A</color>
+    <color name="ecomarket_dark_green">#388E3C</color>
+    
+    <!-- Colores adicionales para adaptadores -->
+    <color name="orange">#FF9800</color>
+    <color name="teal_700">#00796B</color>
+    <color name="green">#4CAF50</color>
+    <color name="darker_gray">#424242</color>
+    
+    <!-- Colores de compatibilidad (para layouts existentes) -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryVariant">@color/primary_dark</color>
+    <color name="colorSecondary">@color/accent</color>
+    <color name="colorSecondaryVariant">@color/accent_dark</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <color name="colorOnSecondary">@color/black</color>
+    <color name="colorBackground">@color/background</color>
+    <color name="colorSurface">@color/surface</color>
+    <color name="colorOnBackground">@color/text_primary</color>
+    <color name="colorOnSurface">@color/text_primary</color>
+    <color name="colorError">@color/error</color>
+    <color name="colorOnError">@color/white</color>
+    <color name="colorSuccess">@color/success</color>
+    <color name="colorWarning">@color/warning</color>
+    <color name="colorInfo">@color/info</color>
+    <color name="colorCard">@color/card_background</color>
+    <color name="colorCardBorder">@color/card_background</color>
+    <color name="colorDivider">@color/card_background</color>
+    <color name="colorBottomNav">@color/white</color>
+    <color name="colorBottomNavSelected">@color/primary</color>
+    <color name="colorBottomNavUnselected">@color/text_secondary</color>
+    
+    <!-- Colores de texto de compatibilidad -->
+    <color name="textPrimary">@color/text_primary</color>
+    <color name="textSecondary">@color/text_secondary</color>
+    <color name="textHint">@color/text_hint</color>
+    
+    <!-- Colores específicos para chips -->
+    <color name="colorEco">@color/ecomarket_green</color>
+    <color name="colorLocal">@color/ecomarket_orange</color>
+    <color name="colorOrganic">@color/ecomarket_light_green</color>
+
+    <!-- Verde para chips (diferente al del buscador) -->
+    <color name="chip_green">#66BB6A</color>
+    
+    <!-- Colores adicionales para la pantalla de bienvenida -->
+    <color name="accent_light">#FFE0B2</color>
+    <color name="primary_light">#C8E6C9</color>
+    <color name="secondary_light">#DCEDC8</color>
+    
+    <!-- Colores faltantes para layouts existentes -->
+    <color name="purple">#6200EE</color>
+    <color name="gray">#757575</color>
+    
+    <!-- Colores para el nuevo diseño del consumidor -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="chip_background">#F5F5F5</color>
+    
+    <!-- Color azul faltante -->
+    <color name="blue">#2196F3</color>
+    
+    <!-- Colores de estado para pedidos -->
+    <color name="status_in_progress">#2196F3</color>
+    <color name="status_delivered">#4CAF50</color>
+    <color name="status_cancelled">#F44336</color>
+    <color name="status_completed">#4CAF50</color>
+    
+    <!-- Colores adicionales para grises -->
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    
+    <!-- Colores para sensores IoT -->
+    <color name="status_online">#4CAF50</color>
+    <color name="status_offline">#F44336</color>
+    <color name="status_error">#FF9800</color>
+    <color name="status_maintenance">#9C27B0</color>
+    <color name="divider_color">#E0E0E0</color>
+    
+    <!-- Colores para métricas -->
+    <color name="success_color">#4CAF50</color>
+    <color name="error_color">#F44336</color>
+    <color name="warning_color">#FF9800</color>
 </resources>

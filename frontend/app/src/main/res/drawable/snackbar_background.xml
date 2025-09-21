@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Fondo con esquinas redondeadas más suaves -->
+    <solid android:color="@color/primary" />
+
+    <!-- Esquinas redondeadas más elegantes -->
+    <corners android:radius="8dp" />
+
+    <!-- Sombra sutil y elegante -->
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/primary_dark" />
+</shape>
