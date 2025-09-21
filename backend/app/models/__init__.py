@@ -5,7 +5,6 @@ from .blockchain_traceability import (
 )
 from .impact_metric import ImpactMetric
 from .product import Product
-from .qr import QR
 from .sensor_reading import SensorReading
 from .sensor import Sensor, SensorZone, SensorTypeEnum, SensorStatusEnum
 from .sensor_alert import SensorAlert, AlertTypeEnum, AlertStatusEnum

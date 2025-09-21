@@ -4,11 +4,9 @@ import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
-import dagger.hilt.android.HiltAndroidApp;
 import com.example.frontend.utils.Constants;
 import com.example.frontend.api.ApiClient;
 
-@HiltAndroidApp
 public class EcoMarketApplication extends Application {
     private static final String TAG = "EcoMarketApplication";
 

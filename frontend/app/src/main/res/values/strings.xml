@@ -12,7 +12,6 @@
     
     <!-- Strings de navegación -->
     <string name="nav_products">Productos</string>
-    <string name="nav_certification">Certificación</string>
     <string name="nav_profile">Perfil</string>
     <string name="nav_inventory">Inventario</string>
     <string name="nav_orders">Pedidos</string>
@@ -26,7 +25,6 @@
     <string name="title_farmer_orders">Pedidos</string>
     <string name="title_farmer_statistics">Statistics</string>
     <string name="title_farmer_metrics">Métricas</string>
-    <string name="title_certifications">Certificaciones</string>
     <string name="title_products">Productos</string>
     <string name="title_profile">Perfil</string>
     <string name="title_stock">Stock</string>

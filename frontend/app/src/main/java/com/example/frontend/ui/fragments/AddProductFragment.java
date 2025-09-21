@@ -14,19 +14,15 @@ import com.example.frontend.databinding.FragmentAddProductBinding;
 import com.example.frontend.model.Product;
 import com.example.frontend.model.SustainabilityMetrics;
 import com.example.frontend.api.ApiService;
-import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import javax.inject.Inject;
 
-@AndroidEntryPoint
 public class AddProductFragment extends Fragment {
     private FragmentAddProductBinding binding;
     private static final String TAG = "Curr.ERROR FragmentAddProductBinding";
 
-    @Inject
-    ApiService apiService;
+    private ApiService apiService;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -39,6 +35,9 @@ public class AddProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: Iniciando la aplicación");
         super.onViewCreated(view, savedInstanceState);
+
+        // Inicializar ApiService
+        apiService = com.example.frontend.api.ApiClient.getApiService(requireContext());
 
         binding.buttonSave.setOnClickListener(v -> saveProduct());
         binding.buttonCancel.setOnClickListener(v -> navigateBack());

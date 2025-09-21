@@ -85,18 +85,6 @@ public class FarmerProfileFragment extends Fragment {
             });
         }
 
-        // Certificaciones
-        View certifications = view.findViewById(R.id.optionCertifications);
-        if (certifications != null) {
-            ImageView certificationIcon = certifications.findViewById(R.id.optionIcon);
-            TextView certificationsText = certifications.findViewById(R.id.optionText);
-            if (certificationIcon != null) certificationIcon.setImageResource(R.drawable.ic_certification);
-            if (certificationsText != null) certificationsText.setText("Certificaciones");
-            
-            certifications.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Certificaciones próximamente", Toast.LENGTH_SHORT).show();
-            });
-        }
     }
 
     private void performLogout() {

@@ -24,14 +24,42 @@ def upgrade() -> None:
     # Las tablas 'sensor_zones', 'sensors' y 'sensor_alerts' ya existen en el entorno actual.
     # Esta migración solo debe ajustar la tabla 'sensor_readings'.
     # Añadir como nullable para no romper filas antiguas; luego se puede backfillear y poner NOT NULL
-    op.add_column('sensor_readings', sa.Column('sensor_id', sa.Integer(), nullable=True))
-    op.add_column('sensor_readings', sa.Column('soil_moisture', sa.Float(), nullable=True))
-    op.add_column('sensor_readings', sa.Column('ph_level', sa.Float(), nullable=True))
-    op.add_column('sensor_readings', sa.Column('reading_quality', sa.Float(), nullable=True))
-    op.add_column('sensor_readings', sa.Column('is_processed', sa.Boolean(), nullable=True))
-    op.add_column('sensor_readings', sa.Column('extra_data', sa.JSON(), nullable=True))
-    op.create_foreign_key(None, 'sensor_readings', 'sensors', ['sensor_id'], ['id'])
-    op.drop_column('sensor_readings', 'sensor_type')
+    
+    # Verificar y añadir columnas solo si no existen
+    connection = op.get_bind()
+    
+    # Verificar si las columnas ya existen
+    result = connection.execute(sa.text("""
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'sensor_readings' AND table_schema = 'public'
+    """))
+    existing_columns = [row[0] for row in result]
+    
+    # Añadir columnas solo si no existen
+    if 'sensor_id' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('sensor_id', sa.Integer(), nullable=True))
+    if 'soil_moisture' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('soil_moisture', sa.Float(), nullable=True))
+    if 'ph_level' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('ph_level', sa.Float(), nullable=True))
+    if 'reading_quality' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('reading_quality', sa.Float(), nullable=True))
+    if 'is_processed' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('is_processed', sa.Boolean(), nullable=True))
+    if 'extra_data' not in existing_columns:
+        op.add_column('sensor_readings', sa.Column('extra_data', sa.JSON(), nullable=True))
+    
+    # Crear foreign key solo si no existe
+    try:
+        op.create_foreign_key(None, 'sensor_readings', 'sensors', ['sensor_id'], ['id'])
+    except Exception:
+        # La foreign key ya existe, continuar
+        pass
+    
+    # Eliminar columna sensor_type solo si existe
+    if 'sensor_type' in existing_columns:
+        op.drop_column('sensor_readings', 'sensor_type')
     # ### end Alembic commands ###
 
 

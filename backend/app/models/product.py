@@ -36,12 +36,10 @@ class Product(Base):
     image_url = Column(Text)
     provider_id = Column(Integer, ForeignKey("users.id"))
     is_hidden = Column(Boolean, default=False)  # Nuevo campo para ocultar productos
-    certifications = Column(JSON)  # Ejemplo: eco, local, etc.
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relaciones
     provider = relationship("User", back_populates="products")
     sensor_readings = relationship("SensorReading", back_populates="product")
-    qrs = relationship("QR", back_populates="product")
     traceability_events = relationship("TraceabilityEvent", back_populates="product")
     traceability_chain = relationship("ProductTraceabilityChain", back_populates="product", uselist=False)

@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_products"
         android:title="@string/title_products" />
 
-    <item
-        android:id="@+id/navigation_farmer_certifications"
-        android:icon="@drawable/ic_certification"
-        android:title="@string/title_certifications" />
 
     <item
         android:id="@+id/navigation_farmer_profile"

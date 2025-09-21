@@ -33,6 +33,8 @@ public class Product implements Serializable {
     private Integer providerId;
     @SerializedName("image_url")
     private String imageUrl;
+    @SerializedName("unit")
+    private String unit;
     
     // Campo para almacenar el tipo de vendedor (farmer/supermarket)
     private String sellerType;
@@ -266,5 +268,13 @@ public class Product implements Serializable {
 
     public void setProviderLon(Double providerLon) {
         this.providerLon = providerLon;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

@@ -1,7 +1,6 @@
 from .user import *
 from .product import *
 from .transaction import *
-from .qr import *
 from .sensor_reading import *
 from .sensor import *
 from .sensor_alert import *

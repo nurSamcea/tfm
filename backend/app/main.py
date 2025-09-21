@@ -14,8 +14,8 @@ from backend.app.api.v1.routers import (
     auth, users, products, shopping_lists, shopping_list_groups,
     shopping_list_items, transactions, sensor_readings,
     sensors, sensor_zones, sensor_alerts, farmer_metrics,
-    qrs, blockchain_logs, impact_metrics, traceability,
-    qr_traceability, iot_traceability_integration, consumer_traceability, consumer_home,
+    blockchain_logs, impact_metrics, traceability,
+    iot_traceability_integration, consumer_traceability, consumer_home,
     iot_ingest
 )
 
@@ -43,11 +43,9 @@ app.include_router(sensors.router)
 app.include_router(sensor_zones.router)
 app.include_router(sensor_alerts.router)
 app.include_router(farmer_metrics.router)
-app.include_router(qrs.router)
 app.include_router(blockchain_logs.router)
 app.include_router(impact_metrics.router)
 app.include_router(traceability.router)
-app.include_router(qr_traceability.router)
 app.include_router(iot_traceability_integration.router)
 app.include_router(consumer_traceability.router)
 app.include_router(consumer_home.router)

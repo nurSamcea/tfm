@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs")
 }
 
@@ -57,14 +56,6 @@ dependencies {
     // Gson para serialización JSON
     implementation("com.google.code.gson:gson:2.10.1")
     
-    // ViewModel y LiveData
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
-    
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    annotationProcessor("com.google.dagger:hilt-android-compiler:2.50")
-    implementation("androidx.hilt:hilt-navigation-fragment:1.1.0")
     
     
     // Testing
@@ -72,9 +63,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.palette:palette:1.0.0")
-    
-    // ZXing para escáner QR
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     
     // Glide para cargar imágenes
     implementation("com.github.bumptech.glide:glide:4.16.0")

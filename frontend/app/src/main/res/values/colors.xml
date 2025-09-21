@@ -14,6 +14,7 @@
 
     <!-- Colores de fondo -->
     <color name="background">#FFFFFF</color>
+    <color name="background_color">#FFFFFF</color>
     <color name="surface">#FFFFFF</color>
     <color name="card_background">#F5F5F5</color>
     

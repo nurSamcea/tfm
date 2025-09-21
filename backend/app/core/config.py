@@ -32,9 +32,6 @@ class Settings(BaseSettings):
     TRACEABILITY_SENSOR_READING_INTERVAL_SECONDS: int = 30
     TRACEABILITY_TEMPERATURE_VIOLATION_THRESHOLD: float = 2.0
     TRACEABILITY_VERIFICATION_SCORE_THRESHOLD: float = 0.8
-    TRACEABILITY_QR_ERROR_CORRECTION: str = "L"
-    TRACEABILITY_QR_BOX_SIZE: int = 10
-    TRACEABILITY_QR_BORDER: int = 4
     
     # Variables de modo demo
     DEMO_MODE: str = "false"  # Por defecto deshabilitado

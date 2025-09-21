@@ -55,11 +55,6 @@ public class SupermarketProfileFragment extends Fragment {
         orderIcon.setImageResource(R.drawable.ic_purchases);
         orderText.setText("Customer orders history");
 
-        View certifications = view.findViewById(R.id.optionCertifications);
-        ImageView certificationIcon = certifications.findViewById(R.id.optionIcon);
-        TextView certificationsText = certifications.findViewById(R.id.optionText);
-        certificationIcon.setImageResource(R.drawable.ic_certification);
-        certificationsText.setText("Certifications");
 
         // Botón de logout
         Button logoutButton = view.findViewById(R.id.logout_button);

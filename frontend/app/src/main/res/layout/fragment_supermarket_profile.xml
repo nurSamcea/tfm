@@ -84,7 +84,6 @@
         <include layout="@layout/item_profile_option" android:id="@+id/optionPersonalInfo"/>
         <include layout="@layout/item_profile_option" android:id="@+id/optionSupplierOrders"/>
         <include layout="@layout/item_profile_option" android:id="@+id/optionCustomerOrders"/>
-        <include layout="@layout/item_profile_option" android:id="@+id/optionCertifications"/>
 
     </LinearLayout>
 

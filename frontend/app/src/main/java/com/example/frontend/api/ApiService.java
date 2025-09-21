@@ -36,11 +36,6 @@ public interface ApiService {
     @POST("products")
     Call<com.example.frontend.model.Product> createProduct(@Body com.example.frontend.model.Product product);
 
-    @GET("farmers/{id}/certifications")
-    Call<List<Certification>> getFarmerCertifications(@Path("id") String farmerId);
-
-    @POST("farmers/{id}/certifications")
-    Call<Certification> addCertification(@Path("id") String farmerId, @Body Certification certification);
 
     // Endpoints para Supermercados
     @GET("supermarkets/{id}/inventory")
@@ -206,8 +201,6 @@ public interface ApiService {
     );
     
     // ===== TRAZABILIDAD =====
-    @GET("traceability/product/{qr_hash}")
-    Call<ProductTraceability> getProductTraceability(@Path("qr_hash") String qrHash);
     
     // ===== CLASES DE REQUEST/RESPONSE =====
     

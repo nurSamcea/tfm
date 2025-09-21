@@ -84,7 +84,7 @@ async def get_product_trace_summary(
     db: Session = Depends(get_db)
 ):
     """
-    Obtiene un resumen de la trazabilidad para mostrar en códigos QR
+    Obtiene un resumen de la trazabilidad del producto
     """
     try:
         product = get_product_or_404(product_id, db)
@@ -433,7 +433,7 @@ def format_trace_for_consumer(trace_data: dict, product: Product) -> dict:
     }
 
 def generate_trace_summary(trace_data: dict, product: Product) -> dict:
-    """Genera un resumen de la trazabilidad para códigos QR"""
+    """Genera un resumen de la trazabilidad del producto"""
     
     events = trace_data.get('events', [])
     chain_data = trace_data.get('chain', {})

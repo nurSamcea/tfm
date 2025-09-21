@@ -135,29 +135,6 @@ async def consumer_home(request: Request):
                 font-size: 0.9em;
             }
             
-            .qr-scanner {
-                background: #f0f8ff;
-                border: 2px dashed #4CAF50;
-                border-radius: 15px;
-                padding: 30px;
-                margin: 20px 0;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            
-            .qr-scanner:hover {
-                background: #e8f5e8;
-            }
-            
-            .qr-icon {
-                font-size: 3em;
-                margin-bottom: 10px;
-            }
-            
-            .qr-text {
-                color: #4CAF50;
-                font-weight: bold;
-            }
         </style>
     </head>
     <body>
@@ -174,13 +151,6 @@ async def consumer_home(request: Request):
                 <button class="search-button" onclick="searchProduct()">🔍 Ver Trazabilidad</button>
             </div>
             
-            <div class="qr-scanner" onclick="showQRScanner()">
-                <div class="qr-icon">📱</div>
-                <div class="qr-text">Escanear Código QR</div>
-                <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                    Toca aquí para escanear el código QR del producto
-                </div>
-            </div>
             
             <div class="features">
                 <div class="feature">
@@ -221,9 +191,6 @@ async def consumer_home(request: Request):
                 }
             }
             
-            function showQRScanner() {
-                alert('Funcionalidad de escáner QR en desarrollo. Por ahora, usa el ID del producto.');
-            }
             
             // Permitir búsqueda con Enter
             document.getElementById('productId').addEventListener('keypress', function(e) {

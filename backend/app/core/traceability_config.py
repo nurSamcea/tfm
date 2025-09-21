@@ -23,11 +23,6 @@ class TraceabilitySettings(BaseSettings):
         "overall_reading_quality": 0.15
     }
     
-    # Configuración de códigos QR
-    qr_error_correction: str = "L"  # Nivel de corrección de errores (L, M, Q, H)
-    qr_box_size: int = 10  # Tamaño de los cuadros del QR
-    qr_border: int = 4  # Tamaño del borde del QR
-    
     # Configuración de verificación
     verification_score_threshold: float = 0.8  # Umbral mínimo para verificación
     blockchain_verification_weight: float = 0.4  # Peso de verificación blockchain
