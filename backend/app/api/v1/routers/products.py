@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Body, UploadFile, File, Form, status, Request
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from geopy.distance import geodesic
 import os
 import logging
@@ -26,18 +27,32 @@ async def create_product_with_image(
     name: str = Form(...),
     provider_id: int = Form(...),
     description: str = Form(None),
-    price: float = Form(None),
+    price: str = Form(None),
     currency: str = Form(None),
     unit: str = Form(None),
     category: str = Form(None),
-    stock_available: float = Form(None),
+    stock_available: str = Form(None),
     expiration_date: str = Form(None),
-    is_eco: bool = Form(False),
+    is_eco: str = Form("false"),
     image: UploadFile = File(None),
     db: Session = Depends(database.get_db)
 ):
     """Crear producto con imagen opcional"""
     try:
+        print(f"=== DEBUG: Datos recibidos ===")
+        print(f"name: '{name}' (tipo: {type(name)})")
+        print(f"provider_id: {provider_id} (tipo: {type(provider_id)})")
+        print(f"description: '{description}' (tipo: {type(description)})")
+        print(f"price: '{price}' (tipo: {type(price)})")
+        print(f"currency: '{currency}' (tipo: {type(currency)})")
+        print(f"unit: '{unit}' (tipo: {type(unit)})")
+        print(f"category: '{category}' (tipo: {type(category)})")
+        print(f"stock_available: '{stock_available}' (tipo: {type(stock_available)})")
+        print(f"expiration_date: '{expiration_date}' (tipo: {type(expiration_date)})")
+        print(f"is_eco: '{is_eco}' (tipo: {type(is_eco)})")
+        print(f"image: {image} (tipo: {type(image)})")
+        print(f"===============================")
+        
         # Procesar imagen si se proporciona
         image_url = ""
         if image:
@@ -56,34 +71,140 @@ async def create_product_with_image(
             
             image_url = f"/media/{filename}"
         
-        # Crear objeto de producto
-        product_data = {
-            "name": name,
+        # Procesar y validar datos
+        print("=== DEBUG: Iniciando procesamiento de datos ===")
+        processed_data = {
+            "name": name.strip() if name else None,
             "provider_id": provider_id,
-            "description": description,
-            "price": price,
-            "currency": currency,
-            "unit": unit,
-            "category": category,
-            "stock_available": stock_available,
-            "expiration_date": expiration_date,
-            "is_eco": is_eco,
-            "image_url": image_url,
-            # "is_hidden": False  # Descomentar cuando se añada la columna
+            "description": description.strip() if description and description.strip() else None,
+            "image_url": image_url if image_url else None,
         }
+        print(f"processed_data inicial: {processed_data}")
         
-        # Filtrar valores None
-        product_data = {k: v for k, v in product_data.items() if v is not None}
+        # Procesar precio
+        if price and price.strip():
+            try:
+                processed_data["price"] = float(price.strip())
+            except ValueError:
+                processed_data["price"] = None
+        else:
+            processed_data["price"] = None
+            
+        # Procesar moneda
+        if currency and currency.strip():
+            processed_data["currency"] = currency.strip()
+        else:
+            processed_data["currency"] = None
+            
+        # Procesar unidad
+        if unit and unit.strip():
+            processed_data["unit"] = unit.strip()
+        else:
+            processed_data["unit"] = None
+            
+        # Procesar categoría
+        print(f"=== DEBUG: Procesando categoría '{category}' ===")
+        if category and category.strip():
+            try:
+                # Convertir string a enum
+                category_enum = ProductCategory(category.strip())
+                processed_data["category"] = category_enum
+                print(f"Categoría convertida exitosamente: {category_enum}")
+            except ValueError as e:
+                print(f"Error convirtiendo categoría: {e}")
+                # Si la categoría no es válida, usar 'otros'
+                processed_data["category"] = ProductCategory.otros
+                print(f"Usando categoría por defecto: {ProductCategory.otros}")
+        else:
+            processed_data["category"] = None
+            print("Categoría es None")
+            
+        # Procesar stock disponible
+        if stock_available and stock_available.strip():
+            try:
+                processed_data["stock_available"] = float(stock_available.strip())
+            except ValueError:
+                processed_data["stock_available"] = None
+        else:
+            processed_data["stock_available"] = None
+            
+        # Procesar fecha de expiración
+        if expiration_date and expiration_date.strip():
+            try:
+                from datetime import datetime
+                processed_data["expiration_date"] = datetime.strptime(expiration_date.strip(), '%Y-%m-%d').date()
+            except ValueError:
+                processed_data["expiration_date"] = None
+        else:
+            processed_data["expiration_date"] = None
+            
+        # Procesar is_eco
+        if is_eco and is_eco.strip().lower() in ['true', '1', 'yes']:
+            processed_data["is_eco"] = True
+        else:
+            processed_data["is_eco"] = False
+        
+        # Filtrar valores None (excepto los campos requeridos)
+        product_data = {k: v for k, v in processed_data.items() if v is not None or k in ["name", "provider_id"]}
+        print(f"=== DEBUG: Datos finales para crear producto ===")
+        print(f"product_data: {product_data}")
+        print(f"===============================")
         
         # Crear producto en la base de datos
+        print("=== DEBUG: Creando producto en la base de datos ===")
         db_product = models.Product(**product_data)
+        print(f"Producto creado: {db_product}")
         db.add(db_product)
-        db.commit()
-        db.refresh(db_product)
+        print("Producto añadido a la sesión")
         
-        return db_product
+        try:
+            db.commit()
+            print("Commit realizado")
+            db.refresh(db_product)
+            print(f"Producto refrescado: {db_product}")
+            return db_product
+        except Exception as commit_error:
+            print(f"Error en commit: {commit_error}")
+            db.rollback()
+            
+            # Si es un error de secuencia, corregir y reintentar
+            if "duplicate key value violates unique constraint" in str(commit_error):
+                print("=== Corrigiendo secuencia de products ===")
+                try:
+                    # Obtener el máximo ID actual
+                    max_id_result = db.execute(text("SELECT COALESCE(MAX(id), 0) FROM products"))
+                    max_id = max_id_result.scalar()
+                    new_value = max_id + 1
+                    
+                    # Corregir la secuencia
+                    db.execute(text("SELECT setval('products_id_seq', :new_value, false)"), {"new_value": new_value})
+                    db.commit()
+                    print(f"Secuencia corregida a {new_value}")
+                    
+                    # Intentar crear el producto nuevamente
+                    db_product = models.Product(**product_data)
+                    db.add(db_product)
+                    db.commit()
+                    db.refresh(db_product)
+                    print(f"Producto creado exitosamente: {db_product}")
+                    return db_product
+                    
+                except Exception as fix_error:
+                    print(f"Error corrigiendo secuencia: {fix_error}")
+                    db.rollback()
+                    raise fix_error
+            
+            raise commit_error
         
     except Exception as e:
+        print(f"=== DEBUG: ERROR CAPTURADO ===")
+        print(f"Tipo de error: {type(e)}")
+        print(f"Mensaje de error: {str(e)}")
+        print(f"Traceback completo:")
+        import traceback
+        traceback.print_exc()
+        print(f"===============================")
+        logging.error(f"Error creando producto: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error interno del servidor: {str(e)}"

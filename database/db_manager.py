@@ -100,6 +100,58 @@ class SchemaManager:
         except Exception as e:
             logger.error(f"Error asegurando columnas core: {e}")
             return False
+
+    def fix_sequences(self) -> bool:
+        """Corrige las secuencias de auto-incremento que se han desincronizado con los datos existentes."""
+        try:
+            logger.info("Corrigiendo secuencias de auto-incremento...")
+            
+            # Solo corregir secuencias de las tablas principales que realmente las necesitan
+            main_tables = ['users', 'products', 'sensors', 'sensor_readings', 'transactions']
+            
+            for table in main_tables:
+                try:
+                    # Verificar si la tabla existe
+                    self.db.cursor.execute("""
+                        SELECT EXISTS (
+                            SELECT FROM information_schema.tables 
+                            WHERE table_schema = 'public' 
+                            AND table_name = %s
+                        );
+                    """, (table,))
+                    
+                    result = self.db.cursor.fetchone()
+                    if not result or not result[0]:
+                        continue
+                    
+                    # Obtener el nombre de la secuencia
+                    self.db.cursor.execute("""
+                        SELECT pg_get_serial_sequence(%s, 'id');
+                    """, (table,))
+                    sequence_result = self.db.cursor.fetchone()
+                    
+                    if sequence_result and sequence_result[0]:
+                        sequence_name = sequence_result[0]
+                        # Obtener el máximo ID actual
+                        self.db.cursor.execute(f"SELECT COALESCE(MAX(id), 0) FROM {table};")
+                        result = self.db.cursor.fetchone()
+                        max_id = result[0] if result else 0
+                        
+                        # Corregir la secuencia
+                        new_value = max_id + 1
+                        self.db.cursor.execute(f"SELECT setval(%s, %s, false);", (sequence_name, new_value))
+                        logger.info(f"✓ Tabla '{table}': secuencia corregida a {new_value}")
+                        
+                except Exception as e:
+                    logger.debug(f"Tabla '{table}': {e}")
+                    continue
+            
+            logger.info("Corrección de secuencias completada")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error corrigiendo secuencias: {e}")
+            return False
     def create_all_tables(self) -> bool:
         if not self.schema_file.exists():
             logger.error(f"Archivo de esquema no encontrado: {self.schema_file}")
@@ -361,6 +413,10 @@ class CreateOperation(DatabaseOperation):
         if not self.db_manager.schema_manager.ensure_core_columns():
             logger.warning("Algunas columnas core no pudieron asegurarse")
         
+        # Corregir secuencias de auto-incremento
+        if not self.db_manager.schema_manager.fix_sequences():
+            logger.warning("Error corrigiendo secuencias, pero continuando...")
+        
         if not self.db_manager.data_manager.insert_sample_data():
             logger.warning("Error insertando datos de ejemplo, pero esquema creado")
         
@@ -396,6 +452,7 @@ class TestOperation(DatabaseOperation):
         
         logger.info("Operación TEST completada - Conexión exitosa")
         return True
+
 
 
 class DatabaseManager:    
