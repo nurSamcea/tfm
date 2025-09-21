@@ -102,14 +102,17 @@ def calculate_product_score(
     """
     Calcula la puntuación de un producto basada en múltiples criterios.
     Puntuación más alta = mejor producto.
+    
+    Variables consideradas:
+    - Precio: menor precio = mayor puntuación
+    - Distancia: menor distancia = mayor puntuación
+    - Sostenibilidad/Huella de carbono: menor impacto ambiental = mayor puntuación
     """
     if weights is None:
         weights = {
-            "price": 0.3,
-            "distance": 0.25,
-            "sustainability": 0.2,
-            "eco": 0.15,
-            "stock": 0.1
+            "price": 0.5,
+            "distance": 0.3,
+            "sustainability": 0.2
         }
     
     score = 0.0
@@ -120,9 +123,9 @@ def calculate_product_score(
     score += weights.get("price", 0.3) * price_score
     
     # 2. Puntuación por distancia (más cerca = mejor)
+    distance_km = None
     if user_location and product.get("distance_km") is not None:
-        distance_score = max(0, 100 - (product["distance_km"] * 2))  # Penalizar distancia
-        score += weights.get("distance", 0.25) * distance_score
+        distance_km = product["distance_km"]
     elif user_location and product.get("provider_lat") and product.get("provider_lon"):
         # Calcular distancia si no está precalculada
         try:
@@ -130,25 +133,18 @@ def calculate_product_score(
                 user_location, 
                 (product["provider_lat"], product["provider_lon"])
             ).km
-            distance_score = max(0, 100 - (distance_km * 2))
-            score += weights.get("distance", 0.25) * distance_score
         except:
-            pass
+            distance_km = None
     
-    # 3. Puntuación por sostenibilidad (score del producto)
-    sustainability_score = product.get("score", 0) or 0
+    if distance_km is not None:
+        distance_score = max(0, 100 - (distance_km * 2))  # Penalizar distancia
+        score += weights.get("distance", 0.25) * distance_score
+    
+    # 3. Puntuación por sostenibilidad/huella de carbono
+    sustainability_score = calculate_sustainability_score(product, distance_km)
     score += weights.get("sustainability", 0.2) * sustainability_score
     
-    # 4. Bonus por ser ecológico
-    if product.get("is_eco", False):
-        score += weights.get("eco", 0.15) * 100
-    
-    # 5. Puntuación por stock disponible
-    stock = product.get("stock_available", 0) or product.get("stock", 0)
-    stock_score = min(100, stock * 10)  # Normalizar stock
-    score += weights.get("stock", 0.1) * stock_score
-    
-    # 6. Bonus por filtros activos
+    # 4. Bonus por filtros activos
     if filters:
         if filters.get("eco") and product.get("is_eco", False):
             score += 20  # Bonus extra por cumplir filtro ecológico
@@ -156,6 +152,53 @@ def calculate_product_score(
             score += 15  # Bonus por ser sin gluten
     
     return round(score, 2)
+
+
+def calculate_sustainability_score(product: Dict, distance_km: Optional[float] = None) -> float:
+    """
+    Calcula la puntuación de sostenibilidad/huella de carbono de un producto.
+    
+    Considera:
+    - Score base del producto (0-100)
+    - Impacto de la distancia de transporte
+    - Tipo de producto y su impacto ambiental
+    - Certificaciones ecológicas
+    """
+    base_score = product.get("score", 0) or 0
+    
+    # Factores de huella de carbono por categoría de producto (kg CO2 por kg)
+    co2_factors = {
+        "frutas": 0.5,
+        "verduras": 0.4,
+        "carnes": 2.5,
+        "pescados": 1.8,
+        "lacteos": 1.2,
+        "cereales": 0.3,
+        "legumbres": 0.2,
+        "otros": 0.8
+    }
+    
+    # Obtener categoría del producto
+    category = product.get("category", "otros")
+    if hasattr(category, 'value'):
+        category = category.value
+    category = str(category).lower()
+    
+    # Factor de CO2 del producto
+    co2_factor = co2_factors.get(category, co2_factors["otros"])
+    
+    # Penalización por distancia de transporte (0.1 kg CO2 por km)
+    transport_penalty = 0
+    if distance_km is not None:
+        transport_co2 = distance_km * 0.1
+        # Penalizar productos que vienen de lejos (máximo 10 kg CO2 de transporte = -20 puntos)
+        transport_penalty = min(20, transport_co2 * 2)
+    
+    # Calcular puntuación final de sostenibilidad
+    sustainability_score = base_score - transport_penalty
+    
+    # Asegurar que esté en el rango 0-100
+    return max(0, min(100, sustainability_score))
 
 
 def sort_products_by_priority(
@@ -191,20 +234,31 @@ def sort_products_by_priority(
     
     # Ordenación por criterio específico
     if sort_criteria == "price":
+        # Ordenar por precio (menor a mayor)
         return sorted(products, key=lambda p: p.get("price", 0))
     elif sort_criteria == "price_desc":
+        # Ordenar por precio (mayor a menor)
         return sorted(products, key=lambda p: p.get("price", 0), reverse=True)
     elif sort_criteria == "distance":
-        # Ordenar por distancia, poniendo al final los que no tienen distancia calculada
+        # Ordenar por distancia (más cerca primero)
         return sorted(
             products,
             key=lambda p: (p.get("distance_km") if p.get("distance_km") is not None else float('inf'))
         )
     elif sort_criteria == "sustainability":
-        return sorted(products, key=lambda p: p.get("score", 0), reverse=True)
+        # Ordenar por sostenibilidad/huella de carbono (mejor sostenibilidad primero)
+        # Usar la función mejorada de cálculo de sostenibilidad
+        for product in products:
+            if "sustainability_score" not in product:
+                product["sustainability_score"] = calculate_sustainability_score(
+                    product, product.get("distance_km")
+                )
+        return sorted(products, key=lambda p: p.get("sustainability_score", 0), reverse=True)
     elif sort_criteria == "stock":
+        # Ordenar por stock disponible (mayor stock primero)
         return sorted(products, key=lambda p: p.get("stock_available", 0) or p.get("stock", 0), reverse=True)
     elif sort_criteria == "eco":
+        # Ordenar por productos ecológicos primero
         return sorted(products, key=lambda p: p.get("is_eco", False), reverse=True)
     
     # Por defecto, usar algoritmo óptimo

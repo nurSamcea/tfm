@@ -64,10 +64,10 @@ class ProductRead(ProductBase):
 class ProductFilterRequest(BaseModel):
     search: Optional[str]
     filters: Dict[str, bool] = {} # Ej: {"eco": true, "gluten_free": false, ...}
-    weights: Dict[str, float] = {} # Ej: {"price": 0.5, "distance": 0.3, ...}
+    weights: Dict[str, float] = {} # Ej: {"price": 0.5, "distance": 0.3, "sustainability": 0.2, ...}
     user_lat: Optional[float] = None
     user_lon: Optional[float] = None
-    sort_criteria: Optional[str] = "optimal" # "optimal", "price", "distance", "sustainability", "eco", "stock"
+    sort_criteria: Optional[str] = "optimal" # Criterios disponibles: "optimal", "price", "price_desc", "distance", "sustainability", "stock", "eco"
 
 class ProductOptimizedResponse(BaseModel):
     id: int

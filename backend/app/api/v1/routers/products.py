@@ -386,6 +386,7 @@ def get_products_optimized(
         prod = {
             "id": p.id,
             "name": p.name,
+            "description": p.description,
             "price": float(p.price) if p.price is not None else 0.0,
             "category": p.category,
             "is_eco": p.is_eco if p.is_eco is not None else False,
@@ -395,6 +396,10 @@ def get_products_optimized(
             # Exponer también 'stock' para compatibilidad con clientes/algoritmos
             "stock": float(p.stock_available) if p.stock_available is not None else 0.0,
             "score": getattr(p, "score", 0) or 0,  # Score de sostenibilidad del producto
+            "image_url": p.image_url,  # Incluir URL de imagen
+            "unit": p.unit,  # Unidad del producto
+            "expiration_date": p.expiration_date.isoformat() if p.expiration_date else None,  # Fecha de expiración
+            "is_hidden": getattr(p, "is_hidden", False),  # Visibilidad del producto
             "distance_km": None,
             "provider_lat": None,
             "provider_lon": None

@@ -28,6 +28,7 @@ import com.example.frontend.ui.adapters.CartAdapter;
 import com.example.frontend.api.ApiService;
 import com.example.frontend.api.ApiClient;
 import com.example.frontend.utils.SessionManager;
+import com.example.frontend.services.LocationService;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.button.MaterialButton;
 import android.widget.TextView;
@@ -253,12 +254,8 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
                 break;
                 
             case "sustainability":
-                // Priorizar sostenibilidad
-                if (product.getScore() != null) {
-                    score = product.getScore();
-                } else {
-                    score = 0;
-                }
+                // Priorizar sostenibilidad/huella de carbono
+                score = calculateSustainabilityScore(product);
                 break;
                 
             case "eco":
@@ -290,35 +287,60 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
     private double calculateOptimalScore(Product product) {
         double score = 0.0;
         
-        // 1. Puntuación por precio (30% peso)
+        // 1. Puntuación por precio (50% peso)
         double priceScore = Math.max(0, 100 - (product.getPrice() * 10));
-        score += 0.3 * priceScore;
+        score += 0.5 * priceScore;
         
-        // 2. Puntuación por distancia (25% peso)
+        // 2. Puntuación por distancia (30% peso)
         if (product.getDistance_km() != null) {
             double distanceScore = Math.max(0, 100 - (product.getDistance_km() * 2));
-            score += 0.25 * distanceScore;
+            score += 0.3 * distanceScore;
         } else {
-            score += 0.25 * 50; // Score neutral si no hay distancia
+            score += 0.3 * 50; // Score neutral si no hay distancia
         }
         
-        // 3. Puntuación por sostenibilidad (20% peso)
-        if (product.getScore() != null) {
-            score += 0.2 * product.getScore();
-        }
-        
-        // 4. Bonus por ser ecológico (15% peso)
-        if (product.getIsEco() != null && product.getIsEco()) {
-            score += 0.15 * 100;
-        }
-        
-        // 5. Puntuación por stock disponible (10% peso)
-        double stock = product.getStockAvailable() != null ? 
-            product.getStockAvailable() : product.getStock();
-        double stockScore = Math.min(stock * 10, 100);
-        score += 0.1 * stockScore;
+        // 3. Puntuación por sostenibilidad/huella de carbono (20% peso)
+        double sustainabilityScore = calculateSustainabilityScore(product);
+        score += 0.2 * sustainabilityScore;
         
         return score;
+    }
+    
+    private double calculateSustainabilityScore(Product product) {
+        // Score base del producto
+        double baseScore = product.getScore() != null ? product.getScore() : 0;
+        
+        // Factores de huella de carbono por categoría (kg CO2 por kg)
+        double co2Factor = getCo2FactorByCategory(product.getCategory());
+        
+        // Penalización por distancia de transporte (0.1 kg CO2 por km)
+        double transportPenalty = 0;
+        if (product.getDistance_km() != null) {
+            double transportCo2 = product.getDistance_km() * 0.1;
+            // Penalizar productos que vienen de lejos (máximo 10 kg CO2 de transporte = -20 puntos)
+            transportPenalty = Math.min(20, transportCo2 * 2);
+        }
+        
+        // Calcular puntuación final de sostenibilidad
+        double sustainabilityScore = baseScore - transportPenalty;
+        
+        // Asegurar que esté en el rango 0-100
+        return Math.max(0, Math.min(100, sustainabilityScore));
+    }
+    
+    private double getCo2FactorByCategory(String category) {
+        if (category == null) return 0.8; // Factor por defecto
+        
+        switch (category.toLowerCase()) {
+            case "frutas": return 0.5;
+            case "verduras": return 0.4;
+            case "carnes": return 2.5;
+            case "pescados": return 1.8;
+            case "lacteos": return 1.2;
+            case "cereales": return 0.3;
+            case "legumbres": return 0.2;
+            default: return 0.8; // "otros"
+        }
     }
 
 
@@ -354,11 +376,13 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
                 sortCriteria = "distance";
                 break;
             case 3: // Sostenibilidad mayor
-                sortCriteria = "sustainability";
-                break;
+                Log.d("Curr LocationService", "Ordenar por sostenibilidad: solicitando al backend /products/optimized/ con sort_criteria=sustainability");
+                fetchOptimizedProductsSortedBySustainability();
+                return;
             case 4: // Stock disponible
-                sortCriteria = "stock";
-                break;
+                Log.d("Curr LocationService", "Ordenar por stock: solicitando al backend /products/optimized/ con sort_criteria=stock");
+                fetchOptimizedProductsSortedByStock();
+                return;
             case 5: // Algoritmo optimizado
                 sortCriteria = "optimal";
                 break;
@@ -554,6 +578,130 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
     public void onQuantityChanged(CartItem item, int newQuantity) {
         item.setQuantity(newQuantity);
         updateCartUI();
+    }
+
+    private void fetchOptimizedProductsSortedBySustainability() {
+        try {
+            ApiService.ProductFilterRequest req = new ApiService.ProductFilterRequest();
+            req.search = searchProducts.getText() != null ? searchProducts.getText().toString() : null;
+            req.sort_criteria = "sustainability";
+            req.filters = new java.util.HashMap<>();
+            req.weights = new java.util.HashMap<>();
+
+            // Si NO hay sesión, enviar user_lat/user_lon desde ubicación actual para evitar depender de token
+            boolean loggedIn = (sessionManager != null && sessionManager.isLoggedIn());
+            if (!loggedIn) {
+                Log.d("Curr LocationService", "No logueado: enviando lat/lon en la petición para ordenar por sostenibilidad");
+                LocationService ls = new LocationService(requireContext());
+                ls.getCurrentLocationWithFallback().thenAccept(loc -> {
+                    if (loc != null) {
+                        req.user_lat = loc.getLatitude();
+                        req.user_lon = loc.getLongitude();
+                        Log.d("Curr LocationService", String.format("Adjuntando coords en request: %.6f, %.6f", req.user_lat, req.user_lon));
+                    } else {
+                        Log.w("Curr LocationService", "No se obtuvo ubicación para adjuntar en request (se enviará sin coords)");
+                    }
+                    // Ejecutar llamada una vez resuelta la ubicación
+                    executeSustainabilityRequest(req);
+                }).exceptionally(ex -> {
+                    Log.e("Curr LocationService", "Error obteniendo ubicación para request sustainability: " + ex.getMessage());
+                    executeSustainabilityRequest(req);
+                    return null;
+                });
+                return;
+            }
+
+            // Si hay sesión, el backend usará la ubicación guardada -> ejecutamos directamente
+            executeSustainabilityRequest(req);
+        } catch (Exception ignored) {}
+    }
+
+    private void fetchOptimizedProductsSortedByStock() {
+        try {
+            ApiService.ProductFilterRequest req = new ApiService.ProductFilterRequest();
+            req.search = searchProducts.getText() != null ? searchProducts.getText().toString() : null;
+            req.sort_criteria = "stock";
+            req.filters = new java.util.HashMap<>();
+            req.weights = new java.util.HashMap<>();
+
+            // Si NO hay sesión, enviar user_lat/user_lon desde ubicación actual para evitar depender de token
+            boolean loggedIn = (sessionManager != null && sessionManager.isLoggedIn());
+            if (!loggedIn) {
+                Log.d("Curr LocationService", "No logueado: enviando lat/lon en la petición para ordenar por stock");
+                LocationService ls = new LocationService(requireContext());
+                ls.getCurrentLocationWithFallback().thenAccept(loc -> {
+                    if (loc != null) {
+                        req.user_lat = loc.getLatitude();
+                        req.user_lon = loc.getLongitude();
+                        Log.d("Curr LocationService", String.format("Adjuntando coords en request: %.6f, %.6f", req.user_lat, req.user_lon));
+                    } else {
+                        Log.w("Curr LocationService", "No se obtuvo ubicación para adjuntar en request (se enviará sin coords)");
+                    }
+                    // Ejecutar llamada una vez resuelta la ubicación
+                    executeStockRequest(req);
+                }).exceptionally(ex -> {
+                    Log.e("Curr LocationService", "Error obteniendo ubicación para request stock: " + ex.getMessage());
+                    executeStockRequest(req);
+                    return null;
+                });
+                return;
+            }
+
+            // Si hay sesión, el backend usará la ubicación guardada -> ejecutamos directamente
+            executeStockRequest(req);
+        } catch (Exception ignored) {}
+    }
+
+    private void executeSustainabilityRequest(ApiService.ProductFilterRequest req) {
+        // Usar ApiClient (con token si existe)
+        ApiService api = ApiClient.getApiService(requireContext());
+        retrofit2.Call<java.util.List<Product>> call = api.getProductsOptimized(req);
+        Log.d("Curr LocationService", "Enviando petición de productos optimizados (sustainability). search=" + req.search +
+                (req.user_lat != null ? (", lat/lon adjuntos") : ", sin lat/lon"));
+        call.enqueue(new retrofit2.Callback<java.util.List<Product>>() {
+            @Override
+            public void onResponse(retrofit2.Call<java.util.List<Product>> call, retrofit2.Response<java.util.List<Product>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Curr LocationService", "Respuesta OK (sustainability). Productos recibidos=" + response.body().size());
+                    filteredProducts.clear();
+                    filteredProducts.addAll(response.body());
+                    productAdapter.updateProducts(filteredProducts);
+                } else {
+                    Log.w("Curr LocationService", "Respuesta no exitosa al ordenar por sustainability. code=" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<java.util.List<Product>> call, Throwable t) {
+                Log.e("Curr LocationService", "Fallo al solicitar orden por sustainability: " + t.getMessage());
+            }
+        });
+    }
+
+    private void executeStockRequest(ApiService.ProductFilterRequest req) {
+        // Usar ApiClient (con token si existe)
+        ApiService api = ApiClient.getApiService(requireContext());
+        retrofit2.Call<java.util.List<Product>> call = api.getProductsOptimized(req);
+        Log.d("Curr LocationService", "Enviando petición de productos optimizados (stock). search=" + req.search +
+                (req.user_lat != null ? (", lat/lon adjuntos") : ", sin lat/lon"));
+        call.enqueue(new retrofit2.Callback<java.util.List<Product>>() {
+            @Override
+            public void onResponse(retrofit2.Call<java.util.List<Product>> call, retrofit2.Response<java.util.List<Product>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Curr LocationService", "Respuesta OK (stock). Productos recibidos=" + response.body().size());
+                    filteredProducts.clear();
+                    filteredProducts.addAll(response.body());
+                    productAdapter.updateProducts(filteredProducts);
+                } else {
+                    Log.w("Curr LocationService", "Respuesta no exitosa al ordenar por stock. code=" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<java.util.List<Product>> call, Throwable t) {
+                Log.e("Curr LocationService", "Fallo al solicitar orden por stock: " + t.getMessage());
+            }
+        });
     }
 
     @Override
