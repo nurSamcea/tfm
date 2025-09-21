@@ -43,7 +43,6 @@ public class ApiClient {
 
             // Configurar cliente OkHttp
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(new DebugInterceptor()) // Interceptor de debug personalizado
                     .addInterceptor(loggingInterceptor)
                     // Remover AuthInterceptor temporalmente para evitar IllegalStateException
                     // .addInterceptor(new AuthInterceptor()) 
@@ -91,7 +90,6 @@ public class ApiClient {
 
             // Configurar cliente OkHttp con autenticación
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(new DebugInterceptor()) // Interceptor de debug personalizado
                     .addInterceptor(loggingInterceptor)
                     .addInterceptor(createAuthInterceptor(context))
                     .connectTimeout(Constants.getConnectTimeout(), TimeUnit.SECONDS)
