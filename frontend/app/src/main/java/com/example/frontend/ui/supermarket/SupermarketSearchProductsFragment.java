@@ -594,7 +594,7 @@ public class SupermarketSearchProductsFragment extends Fragment implements Super
                 Log.d("Curr LocationService", "No logueado: enviando lat/lon en la petición para ordenar por sostenibilidad");
                 LocationService ls = new LocationService(requireContext());
                 ls.getCurrentLocationWithFallback().thenAccept(loc -> {
-                    if (loc != null) {
+                     if (loc != null) {
                         req.user_lat = loc.getLatitude();
                         req.user_lon = loc.getLongitude();
                         Log.d("Curr LocationService", String.format("Adjuntando coords en request: %.6f, %.6f", req.user_lat, req.user_lon));
