@@ -121,13 +121,31 @@ float readTemperature() {
 }
 
 float readSoilHumidity() {
-  int adcValue = analogRead(WATER_PIN);
-  float voltage = (adcValue * VREF) / (1 << ADC_BITS);
+  // Media simple de varias lecturas para reducir ruido
+  const int samples = 10;
+  unsigned long acc = 0;
+  for (int i = 0; i < samples; i++) {
+    acc += analogRead(WATER_PIN);
+    delay(2);
+  }
+  int adcValue = acc / samples;
+  
+  const float adcMax = float((1 << ADC_BITS) - 1);
+  float voltage = (adcValue * VREF) / adcMax;
   
   // Convertir voltaje a porcentaje de humedad
-  // Ajustar según calibración del sensor
-  float humidity = map(voltage * 100, 0, 330, 100, 0);
+  // Para sensores de agua/humedad: más agua = más conductividad = menor voltaje
+  // Calibración: 0V = 100% humedad, 3.3V = 0% humedad
+  float humidity = ((VREF - voltage) / VREF) * 100.0;
   humidity = constrain(humidity, 0, 100);
+  
+  // Debug info
+  Serial.print("[HUMIDITY] ADC="); 
+  Serial.print(adcValue);
+  Serial.print(" V="); 
+  Serial.print(voltage, 4);
+  Serial.print(" H="); 
+  Serial.println(humidity, 2);
   
   return humidity;
 }
