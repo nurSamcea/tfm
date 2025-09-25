@@ -213,7 +213,7 @@ public class ProductTraceabilityDialog extends DialogFragment {
             qualityScore.setText(String.format("%.1f/10", data.getSummary().getQualityScore()));
             sustainabilityScore.setText(String.format("%.1f/10", data.getSummary().getSustainabilityScore()));
             
-            if (data.getSummary().getBlockchainVerified()) {
+            if (data.getSummary().getBlockchainVerified() != null && data.getSummary().getBlockchainVerified()) {
                 blockchainStatus.setText("✓ Verificado en Blockchain");
                 blockchainStatus.setTextColor(Color.GREEN);
             } else {

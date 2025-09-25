@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Body, UploadFile, File, Form, status, Request
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from geopy.distance import geodesic
@@ -7,6 +8,7 @@ import logging
 import json
 
 from backend.app import schemas, database, models
+from backend.app.algorithms.traceability_service import TraceabilityService
 from backend.app.schemas.product import ProductFilterRequest, ProductOptimizedResponse
 from backend.app.api.v1.routers.dependencies import get_current_user, get_current_user_optional
 from backend.app.models.product import ProductCategory
@@ -20,6 +22,16 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(databas
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+    # Crear cadena de trazabilidad sin bloquear si falla
+    try:
+        trace_service = TraceabilityService(db)
+        trace_service.create_product_traceability_chain(
+            product_id=db_product.id,
+            producer_id=db_product.provider_id,
+            blockchain_private_key=""
+        )
+    except Exception:
+        pass
     return db_product
 
 @router.post("/upload", response_model=schemas.ProductRead)
@@ -162,6 +174,16 @@ async def create_product_with_image(
             print("Commit realizado")
             db.refresh(db_product)
             print(f"Producto refrescado: {db_product}")
+            # Intentar crear cadena de trazabilidad sin bloquear
+            try:
+                trace_service = TraceabilityService(db)
+                trace_service.create_product_traceability_chain(
+                    product_id=db_product.id,
+                    producer_id=db_product.provider_id,
+                    blockchain_private_key=""
+                )
+            except Exception:
+                pass
             return db_product
         except Exception as commit_error:
             print(f"Error en commit: {commit_error}")
@@ -187,6 +209,16 @@ async def create_product_with_image(
                     db.commit()
                     db.refresh(db_product)
                     print(f"Producto creado exitosamente: {db_product}")
+                    # Intentar crear cadena de trazabilidad sin bloquear
+                    try:
+                        trace_service = TraceabilityService(db)
+                        trace_service.create_product_traceability_chain(
+                            product_id=db_product.id,
+                            producer_id=db_product.provider_id,
+                            blockchain_private_key=""
+                        )
+                    except Exception:
+                        pass
                     return db_product
                     
                 except Exception as fix_error:
@@ -288,9 +320,23 @@ def delete_product(product_id: int, db: Session = Depends(database.get_db)):
     product = db.query(models.Product).get(product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    db.delete(product)
-    db.commit()
-    return {"message": "Product deleted"}
+    try:
+        db.delete(product)
+        db.commit()
+        return {"message": "Product deleted"}
+    except IntegrityError:
+        db.rollback()
+        # Conflicto por referencias (p.ej. pedidos, trazabilidad, etc.)
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=(
+                "No se puede eliminar el producto porque está referenciado por otros registros. "
+                "Puedes marcarlo como oculto para que no se muestre."
+            )
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 
 @router.patch("/{product_id}/toggle-hidden")

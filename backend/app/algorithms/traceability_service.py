@@ -357,6 +357,12 @@ class TraceabilityService:
                 TraceabilityEvent.product_id == product_id
             ).order_by(TraceabilityEvent.timestamp).all()
             
+            # Actualizar métricas antes de devolver el resumen
+            self._update_chain_metrics(product_id)
+            
+            # Refrescar la cadena para obtener las métricas actualizadas
+            self.db.refresh(chain)
+            
             # Obtener datos de sensores
             sensor_data = self.db.query(SensorTraceabilityData).join(
                 TraceabilityEvent
@@ -674,6 +680,11 @@ class TraceabilityService:
             if not chain:
                 return
             
+            # Obtener todos los eventos ordenados por timestamp
+            events = self.db.query(TraceabilityEvent).filter(
+                TraceabilityEvent.product_id == product_id
+            ).order_by(TraceabilityEvent.timestamp).all()
+            
             # Calcular distancia total
             transport_logs = self.db.query(TransportLog).join(
                 TraceabilityEvent
@@ -683,17 +694,20 @@ class TraceabilityService:
             
             total_distance = sum(log.distance_km or 0 for log in transport_logs)
             
-            # Calcular tiempo total
-            events = self.db.query(TraceabilityEvent).filter(
-                TraceabilityEvent.product_id == product_id
-            ).order_by(TraceabilityEvent.timestamp).all()
+            # Si no hay logs de transporte, calcular distancia basada en ubicaciones de eventos
+            if total_distance == 0 and len(events) >= 2:
+                total_distance = self._calculate_distance_from_events(events)
             
+            # Calcular tiempo total
             if len(events) >= 2:
                 start_time = events[0].timestamp
                 end_time = events[-1].timestamp
                 total_time = (end_time - start_time).total_seconds() / 3600  # En horas
             else:
+                # Si solo hay un evento (ej. creación del producto), usar tiempo desde creación hasta ahora
                 total_time = 0.0
+                if len(events) == 1 and events[0].timestamp is not None:
+                    total_time = (datetime.utcnow() - events[0].timestamp).total_seconds() / 3600
             
             # Calcular violaciones de temperatura
             sensor_data = self.db.query(SensorTraceabilityData).join(
@@ -744,6 +758,36 @@ class TraceabilityService:
         except Exception as e:
             self.db.rollback()
             raise Exception(f"Error actualizando métricas de la cadena: {str(e)}")
+    
+    def _calculate_distance_from_events(self, events: List[TraceabilityEvent]) -> float:
+        """
+        Calcula la distancia total basándose en las ubicaciones de los eventos
+        """
+        total_distance = 0.0
+        
+        # Filtrar eventos que tienen ubicación válida
+        events_with_location = [
+            event for event in events 
+            if event.location_lat is not None and event.location_lon is not None
+        ]
+        
+        if len(events_with_location) < 2:
+            return 0.0
+        
+        # Calcular distancia entre eventos consecutivos
+        for i in range(len(events_with_location) - 1):
+            current_event = events_with_location[i]
+            next_event = events_with_location[i + 1]
+            
+            distance = self.calculate_distance(
+                current_event.location_lat,
+                current_event.location_lon,
+                next_event.location_lat,
+                next_event.location_lon
+            )
+            total_distance += distance
+        
+        return total_distance
     
     def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float) -> float:
         """

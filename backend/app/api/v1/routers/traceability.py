@@ -15,7 +15,7 @@ router = APIRouter(prefix="/traceability", tags=["Trazabilidad Blockchain"])
 @router.post("/products/{product_id}/create-chain")
 def create_product_traceability_chain(
     product_id: int,
-    blockchain_private_key: str,
+    blockchain_private_key: str = "",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -47,7 +47,7 @@ def create_product_traceability_chain(
 def add_sensor_reading_to_traceability(
     product_id: int,
     sensor_reading_data: schemas.SensorTraceabilityDataCreate,
-    blockchain_private_key: str,
+    blockchain_private_key: str = "",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -81,7 +81,7 @@ def add_transport_event(
     product_id: int,
     event_type: str,
     transport_data: schemas.TransportLogCreate,
-    blockchain_private_key: str,
+    blockchain_private_key: str = "",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -121,7 +121,7 @@ def add_transport_event(
 @router.post("/transactions/{transaction_id}/add-to-traceability")
 def add_transaction_to_traceability(
     transaction_id: int,
-    blockchain_private_key: str,
+    blockchain_private_key: str = "",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -152,7 +152,7 @@ def add_transaction_to_traceability(
 def add_quality_check(
     product_id: int,
     check_data: schemas.QualityCheckCreate,
-    blockchain_private_key: str,
+    blockchain_private_key: str = "",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
