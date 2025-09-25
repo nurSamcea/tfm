@@ -81,3 +81,9 @@ class ProductOptimizedResponse(BaseModel):
     score: float
     optimization_score: Optional[float] = None
     stock_available: Optional[float] = None
+    image_url: Optional[str] = None
+    unit: Optional[str] = None
+    expiration_date: Optional[str] = None
+    is_hidden: Optional[bool] = None
+    provider_lat: Optional[float] = None
+    provider_lon: Optional[float] = None

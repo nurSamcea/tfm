@@ -184,16 +184,26 @@ def add_quality_check(
 @router.get("/products/{product_id}/summary")
 def get_product_traceability_summary(
     product_id: int,
+    consumer_lat: Optional[float] = None,
+    consumer_lon: Optional[float] = None,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Obtiene un resumen completo de la trazabilidad de un producto
+    Obtiene un resumen completo de la trazabilidad de un producto con datos falsificados
     """
     try:
         traceability_service = TraceabilityService(db)
         
-        summary = traceability_service.get_product_traceability_summary(product_id)
+        # Preparar ubicación del consumidor
+        consumer_location = None
+        if consumer_lat is not None and consumer_lon is not None:
+            consumer_location = (consumer_lat, consumer_lon)
+        
+        summary = traceability_service.get_product_traceability_summary(
+            product_id=product_id,
+            consumer_location=consumer_location
+        )
         
         return {
             "success": True,
@@ -229,6 +239,185 @@ def verify_traceability_authenticity(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error verificando autenticidad: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/blockchain-data")
+def get_product_blockchain_data(
+    product_id: int,
+    consumer_lat: Optional[float] = None,
+    consumer_lon: Optional[float] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene datos falsificados de blockchain para un producto específico
+    Incluye distancia al farmer, sostenibilidad, calidad y tiempo transcurrido
+    """
+    try:
+        from backend.app.algorithms.fake_blockchain_data import FakeBlockchainDataGenerator
+        
+        # Obtener el producto
+        product = db.query(models.Product).filter(models.Product.id == product_id).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        
+        # Obtener información del productor
+        producer = db.query(models.User).filter(models.User.id == product.provider_id).first()
+        farmer_location = None
+        producer_name = "Productor Desconocido"
+        
+        if producer:
+            farmer_location = (producer.location_lat, producer.location_lon) if producer.location_lat else None
+            producer_name = producer.name
+        
+        # Preparar ubicación del consumidor
+        consumer_location = None
+        if consumer_lat is not None and consumer_lon is not None:
+            consumer_location = (consumer_lat, consumer_lon)
+        
+        # Generar datos falsificados
+        fake_generator = FakeBlockchainDataGenerator()
+        
+        fake_product_data = fake_generator.generate_fake_product_data(
+            product_category=product.category.value if product.category else "default",
+            product_id=product_id,
+            consumer_location=consumer_location,
+            farmer_location=farmer_location,
+            publication_date=product.created_at
+        )
+        
+        fake_sustainability = fake_generator.generate_fake_sustainability_metrics(
+            product_id=product_id,
+            product_category=product.category.value if product.category else "default"
+        )
+        
+        fake_quality = fake_generator.generate_fake_quality_metrics(
+            product_id=product_id,
+            product_category=product.category.value if product.category else "default"
+        )
+        
+        fake_supply_events = fake_generator.generate_fake_supply_chain_events(
+            product_id=product_id,
+            product_category=product.category.value if product.category else "default",
+            farmer_location=farmer_location or (40.4168, -3.7038),  # Madrid por defecto
+            consumer_location=consumer_location or (40.4168, -3.7038)
+        )
+        
+        return {
+            "success": True,
+            "product_id": product_id,
+            "product_name": product.name,
+            "product_category": product.category.value if product.category else "default",
+            "producer_info": {
+                "id": product.provider_id,
+                "name": producer_name,
+                "location": {
+                    "lat": farmer_location[0] if farmer_location else None,
+                    "lon": farmer_location[1] if farmer_location else None
+                }
+            },
+            "consumer_metrics": {
+                "distance_to_farmer_km": fake_product_data.distance_to_consumer_km,
+                "time_since_publication_hours": fake_product_data.time_since_publication_hours,
+                "sustainability_score": fake_product_data.sustainability_score,
+                "quality_score": fake_product_data.quality_score,
+                "freshness_score": fake_product_data.freshness_score,
+                "local_sourcing_score": fake_product_data.local_sourcing_score,
+                "packaging_score": fake_product_data.packaging_score
+            },
+            "environmental_impact": {
+                "carbon_footprint_kg": fake_product_data.carbon_footprint_kg,
+                "water_usage_liters": fake_product_data.water_usage_liters,
+                "overall_sustainability": fake_sustainability["overall_sustainability_score"],
+                "environmental_details": fake_sustainability["environmental_impact"],
+                "social_impact": fake_sustainability["social_impact"],
+                "economic_impact": fake_sustainability["economic_impact"],
+                "certifications": fake_sustainability["certifications"],
+                "eco_friendly_practices": fake_sustainability["eco_friendly_practices"]
+            },
+            "quality_details": {
+                "overall_quality_score": fake_quality["overall_quality_score"],
+                "freshness_indicators": fake_quality["freshness_indicators"],
+                "safety_standards": fake_quality["safety_standards"],
+                "nutritional_quality": fake_quality["nutritional_quality"],
+                "sensory_quality": fake_quality["sensory_quality"]
+            },
+            "supply_chain_events": fake_supply_events,
+            "blockchain_info": {
+                "is_verified": True,
+                "blockchain_hash": f"0x{hash(str(product_id))[:64]}",
+                "verification_timestamp": datetime.utcnow().isoformat()
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando datos de blockchain: {str(e)}"
+        )
+
+@router.get("/products/{product_id}/basic-info")
+def get_product_basic_blockchain_info(
+    product_id: int,
+    consumer_lat: Optional[float] = None,
+    consumer_lon: Optional[float] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Obtiene información básica falsificada de blockchain para un producto
+    Incluye solo los datos más importantes: distancia, sostenibilidad, calidad y tiempo
+    """
+    try:
+        from backend.app.algorithms.fake_blockchain_data import FakeBlockchainDataGenerator
+        
+        # Obtener el producto
+        product = db.query(models.Product).filter(models.Product.id == product_id).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        
+        # Obtener información del productor
+        producer = db.query(models.User).filter(models.User.id == product.provider_id).first()
+        farmer_location = None
+        producer_name = "Productor Desconocido"
+        
+        if producer:
+            farmer_location = (producer.location_lat, producer.location_lon) if producer.location_lat else None
+            producer_name = producer.name
+        
+        # Preparar ubicación del consumidor
+        consumer_location = None
+        if consumer_lat is not None and consumer_lon is not None:
+            consumer_location = (consumer_lat, consumer_lon)
+        
+        # Generar datos falsificados básicos
+        fake_generator = FakeBlockchainDataGenerator()
+        
+        fake_product_data = fake_generator.generate_fake_product_data(
+            product_category=product.category.value if product.category else "default",
+            product_id=product_id,
+            consumer_location=consumer_location,
+            farmer_location=farmer_location,
+            publication_date=product.created_at
+        )
+        
+        return {
+            "product_id": product_id,
+            "product_name": product.name,
+            "producer_name": producer_name,
+            "distance_to_farmer_km": fake_product_data.distance_to_consumer_km,
+            "time_since_publication_hours": fake_product_data.time_since_publication_hours,
+            "sustainability_score": fake_product_data.sustainability_score,
+            "quality_score": fake_product_data.quality_score,
+            "freshness_score": fake_product_data.freshness_score,
+            "carbon_footprint_kg": fake_product_data.carbon_footprint_kg,
+            "local_sourcing_score": fake_product_data.local_sourcing_score,
+            "blockchain_verified": True,
+            "last_updated": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando información básica: {str(e)}"
         )
 
 @router.get("/products/{product_id}/events")

@@ -70,7 +70,7 @@ El sistema usa automáticamente las variables del archivo `.env` en la raíz del
 
 ```bash
 # Configurar variables en .env
-BACKEND_IP=10.35.89.237
+BACKEND_IP=10.100.194.237
 BACKEND_PORT=8000
 IOT_INGEST_TOKEN=dev_iot_token_2024
 ESP32_WIFI_SSID=TU_WIFI_SSID
@@ -101,7 +101,7 @@ python iot_manager.py
 ### **Variables de Entorno Principales**
 ```bash
 # Backend
-BACKEND_IP=10.35.89.237
+BACKEND_IP=10.100.194.237
 BACKEND_PORT=8000
 BACKEND_PROTOCOL=http
 IOT_INGEST_TOKEN=dev_iot_token_2024
@@ -124,7 +124,7 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/iot_system
 
 ### **Variables de Entorno**
 ```bash
-export BACKEND_URL="http://10.35.89.237:8000"
+export BACKEND_URL="http://10.100.194.237:8000"
 export IOT_INGEST_TOKEN="dev_iot_token_2024"
 ```
 
@@ -132,7 +132,7 @@ export IOT_INGEST_TOKEN="dev_iot_token_2024"
 ```cpp
 const char* WIFI_SSID = "TU_WIFI_SSID";
 const char* WIFI_PASSWORD = "TU_WIFI_PASSWORD";
-const char* BACKEND_URL = "http://10.35.89.237:8000/iot/ingest";
+const char* BACKEND_URL = "http://10.100.194.237:8000/iot/ingest";
 const char* IOT_INGEST_TOKEN = "dev_iot_token_2024";
 const char* DEVICE_ID = "maria-garcia-sensor-001";
 ```
@@ -202,17 +202,17 @@ const char* DEVICE_ID = "maria-garcia-sensor-001";
 
 ### **Ver Datos del Sensor Real**
 ```bash
-curl "http://10.35.89.237:8000/iot/devices/maria-garcia-sensor-001/telemetry"
+curl "http://10.100.194.237:8000/iot/devices/maria-garcia-sensor-001/telemetry"
 ```
 
 ### **Ver Datos del Simulador**
 ```bash
-curl "http://10.35.89.237:8000/iot/devices/pedro-sanchez-sensor-01/telemetry"
+curl "http://10.100.194.237:8000/iot/devices/pedro-sanchez-sensor-01/telemetry"
 ```
 
 ### **API Documentation**
 ```
-http://10.35.89.237:8000/docs
+http://10.100.194.237:8000/docs
 ```
 
 ## Troubleshooting
@@ -225,7 +225,7 @@ cd backend
 python -m uvicorn app.main:app --reload
 
 # Verificar IP en .env
-BACKEND_IP=10.35.89.237  # Cambiar por tu IP local
+BACKEND_IP=10.100.194.237  # Cambiar por tu IP local
 BACKEND_PORT=8000
 ```
 
