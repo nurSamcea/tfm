@@ -474,6 +474,29 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
             public void onResponse(Call<Product> call, Response<Product> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Producto creado exitosamente", Toast.LENGTH_SHORT).show();
+                    // Crear cadena de trazabilidad para el nuevo producto (mejora UX)
+                    try {
+                        Integer newProductId = null;
+                        if (response.body() != null && response.body().getId() != null) {
+                            newProductId = Integer.parseInt(response.body().getId());
+                        }
+                        if (newProductId != null) {
+                            com.example.frontend.services.TraceabilityApiService traceApi = com.example.frontend.api.ApiClient.getAuthenticatedClient(requireContext()).create(com.example.frontend.services.TraceabilityApiService.class);
+                            String pk = com.example.frontend.utils.Constants.getBlockchainPrivateKey();
+                            if (pk != null && !pk.trim().isEmpty()) {
+                                traceApi.createProductTraceabilityChain(newProductId, pk).enqueue(new retrofit2.Callback<Object>() {
+                                    @Override
+                                    public void onResponse(retrofit2.Call<Object> call2, retrofit2.Response<Object> resp2) {
+                                        // Opcional: feedback silencioso
+                                    }
+                                    @Override
+                                    public void onFailure(retrofit2.Call<Object> call2, Throwable t2) {
+                                        // Silencioso en UI, se puede loggear
+                                    }
+                                });
+                            }
+                        }
+                    } catch (Exception ignored) {}
                     loadFarmerProducts(); // Recargar lista
                 } else {
                     Toast.makeText(getContext(), "Error al crear producto", Toast.LENGTH_SHORT).show();
@@ -666,8 +689,26 @@ public class FarmerStockFragment extends Fragment implements FarmerStockAdapter.
                             if (response.isSuccessful()) {
                                 Toast.makeText(getContext(), "Producto eliminado correctamente", Toast.LENGTH_SHORT).show();
                                 loadFarmerProducts(); // Recargar lista
+                            } else if (response.code() == 409) {
+                                // Si no se puede eliminar por referencias, ocultarlo automáticamente
+                                ApiService api2 = ApiClient.getClient().create(ApiService.class);
+                                api2.toggleProductHidden(Integer.parseInt(product.getId())).enqueue(new Callback<java.util.Map<String, Object>>() {
+                                    @Override
+                                    public void onResponse(Call<java.util.Map<String, Object>> call2, Response<java.util.Map<String, Object>> resp2) {
+                                        if (resp2.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Producto ocultado (no se podía eliminar)", Toast.LENGTH_LONG).show();
+                                            loadFarmerProducts();
+                                        } else {
+                                            Toast.makeText(getContext(), "No se pudo ocultar el producto", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<java.util.Map<String, Object>> call2, Throwable t2) {
+                                        Toast.makeText(getContext(), "Error de conexión al ocultar producto", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             } else {
-                                Toast.makeText(getContext(), "Error al eliminar producto", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Error al eliminar producto (" + response.code() + ")", Toast.LENGTH_SHORT).show();
                             }
                         }
 

@@ -37,7 +37,7 @@ class IoTConfig:
     
     def __post_init__(self):
         if self.backend_url is None:
-            backend_ip = os.getenv('BACKEND_IP', '10.35.89.237')
+            backend_ip = os.getenv('BACKEND_IP', '10.100.194.237')
             backend_port = os.getenv('BACKEND_PORT', '8000')
             backend_protocol = os.getenv('BACKEND_PROTOCOL', 'http')
             self.backend_url = f"{backend_protocol}://{backend_ip}:{backend_port}"

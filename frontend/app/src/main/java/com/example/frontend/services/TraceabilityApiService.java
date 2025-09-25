@@ -8,7 +8,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface TraceabilityApiService {
     
@@ -20,4 +22,10 @@ public interface TraceabilityApiService {
     
     @GET("traceability/products/{productId}/events")
     Call<List<TraceabilityEvent>> getProductTraceabilityEvents(@Path("productId") Integer productId);
+
+    @POST("traceability/products/{productId}/create-chain")
+    Call<Object> createProductTraceabilityChain(
+        @Path("productId") Integer productId,
+        @Query("blockchain_private_key") String blockchainPrivateKey
+    );
 }

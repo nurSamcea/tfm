@@ -63,15 +63,11 @@ async def get_product_trace_json(
         traceability_service = TraceabilityService(db)
         try:
             trace_data = traceability_service.get_product_traceability_summary(product_id)
-            # Formatear datos para el consumidor
             consumer_data = format_trace_for_consumer(trace_data, product)
             return consumer_data
         except Exception as e:
-            # Si no hay trazabilidad, devolver datos vacíos en lugar de error
-            if "No se encontró cadena de trazabilidad" in str(e):
-                return format_empty_trace_for_consumer(product)
-            else:
-                raise HTTPException(status_code=500, detail=f"Error al obtener trazabilidad: {str(e)}")
+            # Si falla por cualquier motivo, devolver datos vacíos (mejor UX que 500)
+            return format_empty_trace_for_consumer(product)
         
     except HTTPException:
         raise
@@ -105,6 +101,40 @@ async def get_product_trace_summary(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener resumen: {str(e)}")
+
+@router.post("/products/{product_id}/trace/update-metrics")
+async def update_traceability_metrics(
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Fuerza la actualización de las métricas de trazabilidad de un producto
+    """
+    try:
+        product = get_product_or_404(product_id, db)
+        
+        # Actualizar métricas
+        traceability_service = TraceabilityService(db)
+        traceability_service._update_chain_metrics(product_id)
+        
+        # Obtener las métricas actualizadas
+        trace_data = traceability_service.get_product_traceability_summary(product_id)
+        
+        return {
+            "success": True,
+            "message": "Métricas de trazabilidad actualizadas",
+            "metrics": {
+                "total_distance_km": trace_data.get("chain_status", {}).get("total_distance_km", 0),
+                "total_time_hours": trace_data.get("chain_status", {}).get("total_time_hours", 0),
+                "quality_score": trace_data.get("chain_status", {}).get("quality_score", 0),
+                "temperature_violations": trace_data.get("chain_status", {}).get("temperature_violations", 0)
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al actualizar métricas: {str(e)}")
 
 def generate_consumer_trace_html(trace_data: dict, product: Product) -> str:
     """Genera HTML para mostrar la trazabilidad al consumidor"""
@@ -414,7 +444,7 @@ def format_trace_for_consumer(trace_data: dict, product: Product) -> dict:
         'product': {
             'id': product.id,
             'name': product.name,
-            'category': product.category,
+            'category': (product.category.value if getattr(product, 'category', None) is not None and hasattr(product.category, 'value') else product.category),
             'price': product.price
         },
         'summary': {
@@ -460,7 +490,7 @@ def format_empty_trace_for_consumer(product: Product) -> dict:
         'product': {
             'id': product.id,
             'name': product.name,
-            'category': product.category,
+            'category': (product.category.value if getattr(product, 'category', None) is not None and hasattr(product.category, 'value') else product.category),
             'price': product.price
         },
         'summary': {

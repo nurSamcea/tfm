@@ -762,8 +762,26 @@ public class SupermarketStockFragment extends Fragment implements FarmerStockAda
                             if (response.isSuccessful()) {
                                 Toast.makeText(getContext(), "Producto eliminado correctamente", Toast.LENGTH_SHORT).show();
                                 loadProducts(); // Recargar lista
+                            } else if (response.code() == 409) {
+                                // Si no se puede eliminar por referencias, ocultarlo automáticamente
+                                ApiService api2 = ApiClient.getClient().create(ApiService.class);
+                                api2.toggleProductHidden(Integer.parseInt(product.getId())).enqueue(new Callback<java.util.Map<String, Object>>() {
+                                    @Override
+                                    public void onResponse(Call<java.util.Map<String, Object>> call2, Response<java.util.Map<String, Object>> resp2) {
+                                        if (resp2.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Producto ocultado (no se podía eliminar)", Toast.LENGTH_LONG).show();
+                                            loadProducts();
+                                        } else {
+                                            Toast.makeText(getContext(), "No se pudo ocultar el producto", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<java.util.Map<String, Object>> call2, Throwable t2) {
+                                        Toast.makeText(getContext(), "Error de conexión al ocultar producto", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             } else {
-                                Toast.makeText(getContext(), "Error al eliminar producto", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Error al eliminar producto (" + response.code() + ")", Toast.LENGTH_SHORT).show();
                             }
                         }
 

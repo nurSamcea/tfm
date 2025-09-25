@@ -42,6 +42,14 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
 
     public void updateProducts(List<Product> newProducts) {
         this.products = newProducts;
+        
+        // Log para debuggear el problema de imágenes
+        android.util.Log.d("SupermarketProductAdapter", "Actualizando productos. Total: " + newProducts.size());
+        for (Product product : newProducts) {
+            android.util.Log.d("SupermarketProductAdapter", "Producto: " + product.getName() + 
+                ", ImageUrl: " + (product.getImageUrl() != null ? product.getImageUrl() : "null"));
+        }
+        
         notifyDataSetChanged();
     }
 
@@ -110,7 +118,7 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
             productStock.setText("Stock: " + String.format("%.0f", stockValue));
 
             // Mostrar imagen del producto si existe
-            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
+            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty() && !product.getImageUrl().equals("null")) {
                 String imageUrl = product.getImageUrl();
                 if (imageUrl.startsWith("/")) {
                     String baseUrl = ApiClient.getBaseUrl();
@@ -122,6 +130,13 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
                 
                 imageUrl += "?t=" + System.currentTimeMillis();
                 
+                // Log para debuggear el problema de imágenes
+                android.util.Log.d("SupermarketProductAdapter", "Cargando imagen para producto: " + product.getName() + 
+                    ", URL: " + imageUrl);
+                
+                // Limpiar la imagen anterior antes de cargar la nueva
+                Glide.with(itemView.getContext()).clear(productImage);
+                
                 Glide.with(itemView.getContext())
                     .load(imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -130,6 +145,11 @@ public class SupermarketProductAdapter extends RecyclerView.Adapter<SupermarketP
                     .error(R.drawable.ic_product_placeholder)
                     .into(productImage);
             } else {
+                // Log cuando no hay URL de imagen
+                android.util.Log.d("SupermarketProductAdapter", "No hay URL de imagen para producto: " + product.getName() + 
+                    ", ImageUrl: " + product.getImageUrl());
+                // Limpiar la imagen anterior y mostrar placeholder
+                Glide.with(itemView.getContext()).clear(productImage);
                 productImage.setImageResource(R.drawable.ic_product_placeholder);
             }
 

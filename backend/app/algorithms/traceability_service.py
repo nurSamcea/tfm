@@ -16,6 +16,7 @@ from backend.app.models.sensor import Sensor
 from backend.app.models.sensor_reading import SensorReading
 from backend.app.models.transaction import Transaction
 from backend.app.algorithms.blockchain_manager import BlockchainManager
+from backend.app.algorithms.fake_blockchain_data import FakeBlockchainDataGenerator
 from backend.app.core.config import settings
 
 class TraceabilityService:
@@ -24,6 +25,7 @@ class TraceabilityService:
     def __init__(self, db: Session):
         self.db = db
         self.blockchain_manager = BlockchainManager(settings.BLOCKCHAIN_URL)
+        self.fake_data_generator = FakeBlockchainDataGenerator()
     
     def create_product_traceability_chain(
         self, 
@@ -339,23 +341,35 @@ class TraceabilityService:
             self.db.rollback()
             raise Exception(f"Error añadiendo control de calidad: {str(e)}")
     
-    def get_product_traceability_summary(self, product_id: int) -> Dict[str, Any]:
+    def get_product_traceability_summary(self, product_id: int, consumer_location: Optional[Tuple[float, float]] = None) -> Dict[str, Any]:
         """
-        Obtiene un resumen completo de la trazabilidad de un producto
+        Obtiene un resumen completo de la trazabilidad de un producto con datos falsificados
         """
         try:
+            # Obtener el producto
+            product = self.db.query(Product).filter(Product.id == product_id).first()
+            if not product:
+                raise ValueError(f"Producto con ID {product_id} no encontrado")
+            
             # Obtener la cadena de trazabilidad
             chain = self.db.query(ProductTraceabilityChain).filter(
                 ProductTraceabilityChain.product_id == product_id
             ).first()
             
+            # Si no existe cadena, crear datos falsificados completos
             if not chain:
-                raise ValueError(f"No se encontró cadena de trazabilidad para el producto {product_id}")
+                return self._generate_complete_fake_traceability(product, consumer_location)
             
             # Obtener todos los eventos
             events = self.db.query(TraceabilityEvent).filter(
                 TraceabilityEvent.product_id == product_id
             ).order_by(TraceabilityEvent.timestamp).all()
+            
+            # Actualizar métricas antes de devolver el resumen
+            self._update_chain_metrics(product_id)
+            
+            # Refrescar la cadena para obtener las métricas actualizadas
+            self.db.refresh(chain)
             
             # Obtener datos de sensores
             sensor_data = self.db.query(SensorTraceabilityData).join(
@@ -378,6 +392,33 @@ class TraceabilityService:
                 TraceabilityEvent.product_id == product_id
             ).all()
             
+            # Generar datos falsificados adicionales
+            farmer_location = (chain.original_producer_location_lat, chain.original_producer_location_lon) if chain.original_producer_location_lat else None
+            fake_product_data = self.fake_data_generator.generate_fake_product_data(
+                product_category=product.category.value if product.category else "default",
+                product_id=product_id,
+                consumer_location=consumer_location,
+                farmer_location=farmer_location,
+                publication_date=chain.created_at
+            )
+            
+            fake_sustainability = self.fake_data_generator.generate_fake_sustainability_metrics(
+                product_id=product_id,
+                product_category=product.category.value if product.category else "default"
+            )
+            
+            fake_quality = self.fake_data_generator.generate_fake_quality_metrics(
+                product_id=product_id,
+                product_category=product.category.value if product.category else "default"
+            )
+            
+            fake_supply_events = self.fake_data_generator.generate_fake_supply_chain_events(
+                product_id=product_id,
+                product_category=product.category.value if product.category else "default",
+                farmer_location=farmer_location or (40.4168, -3.7038),  # Madrid por defecto
+                consumer_location=consumer_location or (40.4168, -3.7038)
+            )
+            
             return {
                 "product_id": product_id,
                 "product_name": chain.product_name,
@@ -397,6 +438,30 @@ class TraceabilityService:
                     "temperature_violations": chain.temperature_violations,
                     "quality_score": chain.quality_score
                 },
+                # Datos falsificados para el consumidor
+                "consumer_metrics": {
+                    "distance_to_farmer_km": fake_product_data.distance_to_consumer_km,
+                    "time_since_publication_hours": fake_product_data.time_since_publication_hours,
+                    "sustainability_score": fake_product_data.sustainability_score,
+                    "quality_score": fake_product_data.quality_score,
+                    "freshness_score": fake_product_data.freshness_score,
+                    "local_sourcing_score": fake_product_data.local_sourcing_score,
+                    "packaging_score": fake_product_data.packaging_score
+                },
+                "environmental_impact": {
+                    "carbon_footprint_kg": fake_product_data.carbon_footprint_kg,
+                    "water_usage_liters": fake_product_data.water_usage_liters,
+                    "overall_sustainability": fake_sustainability["overall_sustainability_score"],
+                    "certifications": fake_sustainability["certifications"],
+                    "eco_friendly_practices": fake_sustainability["eco_friendly_practices"]
+                },
+                "quality_details": {
+                    "overall_quality_score": fake_quality["overall_quality_score"],
+                    "freshness_indicators": fake_quality["freshness_indicators"],
+                    "safety_standards": fake_quality["safety_standards"],
+                    "nutritional_quality": fake_quality["nutritional_quality"]
+                },
+                "supply_chain_events": fake_supply_events,
                 "events": [
                     {
                         "id": event.id,
@@ -582,6 +647,99 @@ class TraceabilityService:
         except Exception as e:
             raise Exception(f"Error verificando autenticidad: {str(e)}")
     
+    def _generate_complete_fake_traceability(self, product: Product, consumer_location: Optional[Tuple[float, float]] = None) -> Dict[str, Any]:
+        """
+        Genera una trazabilidad completamente falsificada para productos sin cadena de trazabilidad
+        """
+        # Obtener información del productor
+        producer = self.db.query(User).filter(User.id == product.provider_id).first()
+        farmer_location = None
+        producer_name = "Productor Desconocido"
+        
+        if producer:
+            farmer_location = (producer.location_lat, producer.location_lon) if producer.location_lat else None
+            producer_name = producer.name
+        
+        # Generar datos falsificados completos
+        fake_product_data = self.fake_data_generator.generate_fake_product_data(
+            product_category=product.category.value if product.category else "default",
+            product_id=product.id,
+            consumer_location=consumer_location,
+            farmer_location=farmer_location,
+            publication_date=product.created_at
+        )
+        
+        fake_sustainability = self.fake_data_generator.generate_fake_sustainability_metrics(
+            product_id=product.id,
+            product_category=product.category.value if product.category else "default"
+        )
+        
+        fake_quality = self.fake_data_generator.generate_fake_quality_metrics(
+            product_id=product.id,
+            product_category=product.category.value if product.category else "default"
+        )
+        
+        fake_supply_events = self.fake_data_generator.generate_fake_supply_chain_events(
+            product_id=product.id,
+            product_category=product.category.value if product.category else "default",
+            farmer_location=farmer_location or (40.4168, -3.7038),  # Madrid por defecto
+            consumer_location=consumer_location or (40.4168, -3.7038)
+        )
+        
+        return {
+            "product_id": product.id,
+            "product_name": product.name,
+            "product_category": product.category.value if product.category else "default",
+            "is_eco": product.is_eco,
+            "original_producer": {
+                "id": product.provider_id,
+                "name": producer_name,
+                "location_lat": farmer_location[0] if farmer_location else None,
+                "location_lon": farmer_location[1] if farmer_location else None
+            },
+            "chain_status": {
+                "is_complete": True,
+                "is_verified": True,
+                "total_distance_km": fake_product_data.distance_to_consumer_km,
+                "total_time_hours": fake_product_data.time_since_publication_hours,
+                "temperature_violations": 0,
+                "quality_score": fake_product_data.quality_score
+            },
+            # Datos falsificados para el consumidor
+            "consumer_metrics": {
+                "distance_to_farmer_km": fake_product_data.distance_to_consumer_km,
+                "time_since_publication_hours": fake_product_data.time_since_publication_hours,
+                "sustainability_score": fake_product_data.sustainability_score,
+                "quality_score": fake_product_data.quality_score,
+                "freshness_score": fake_product_data.freshness_score,
+                "local_sourcing_score": fake_product_data.local_sourcing_score,
+                "packaging_score": fake_product_data.packaging_score
+            },
+            "environmental_impact": {
+                "carbon_footprint_kg": fake_product_data.carbon_footprint_kg,
+                "water_usage_liters": fake_product_data.water_usage_liters,
+                "overall_sustainability": fake_sustainability["overall_sustainability_score"],
+                "certifications": fake_sustainability["certifications"],
+                "eco_friendly_practices": fake_sustainability["eco_friendly_practices"]
+            },
+            "quality_details": {
+                "overall_quality_score": fake_quality["overall_quality_score"],
+                "freshness_indicators": fake_quality["freshness_indicators"],
+                "safety_standards": fake_quality["safety_standards"],
+                "nutritional_quality": fake_quality["nutritional_quality"]
+            },
+            "supply_chain_events": fake_supply_events,
+            "events": [],
+            "sensor_data": [],
+            "transport_logs": [],
+            "quality_checks": [],
+            "timestamps": {
+                "created_at": product.created_at.isoformat() if product.created_at else datetime.utcnow().isoformat(),
+                "completed_at": datetime.utcnow().isoformat(),
+                "verified_at": datetime.utcnow().isoformat()
+            }
+        }
+    
     def _create_traceability_event(
         self,
         product_id: int,
@@ -674,6 +832,11 @@ class TraceabilityService:
             if not chain:
                 return
             
+            # Obtener todos los eventos ordenados por timestamp
+            events = self.db.query(TraceabilityEvent).filter(
+                TraceabilityEvent.product_id == product_id
+            ).order_by(TraceabilityEvent.timestamp).all()
+            
             # Calcular distancia total
             transport_logs = self.db.query(TransportLog).join(
                 TraceabilityEvent
@@ -683,17 +846,20 @@ class TraceabilityService:
             
             total_distance = sum(log.distance_km or 0 for log in transport_logs)
             
-            # Calcular tiempo total
-            events = self.db.query(TraceabilityEvent).filter(
-                TraceabilityEvent.product_id == product_id
-            ).order_by(TraceabilityEvent.timestamp).all()
+            # Si no hay logs de transporte, calcular distancia basada en ubicaciones de eventos
+            if total_distance == 0 and len(events) >= 2:
+                total_distance = self._calculate_distance_from_events(events)
             
+            # Calcular tiempo total
             if len(events) >= 2:
                 start_time = events[0].timestamp
                 end_time = events[-1].timestamp
                 total_time = (end_time - start_time).total_seconds() / 3600  # En horas
             else:
+                # Si solo hay un evento (ej. creación del producto), usar tiempo desde creación hasta ahora
                 total_time = 0.0
+                if len(events) == 1 and events[0].timestamp is not None:
+                    total_time = (datetime.utcnow() - events[0].timestamp).total_seconds() / 3600
             
             # Calcular violaciones de temperatura
             sensor_data = self.db.query(SensorTraceabilityData).join(
@@ -744,6 +910,36 @@ class TraceabilityService:
         except Exception as e:
             self.db.rollback()
             raise Exception(f"Error actualizando métricas de la cadena: {str(e)}")
+    
+    def _calculate_distance_from_events(self, events: List[TraceabilityEvent]) -> float:
+        """
+        Calcula la distancia total basándose en las ubicaciones de los eventos
+        """
+        total_distance = 0.0
+        
+        # Filtrar eventos que tienen ubicación válida
+        events_with_location = [
+            event for event in events 
+            if event.location_lat is not None and event.location_lon is not None
+        ]
+        
+        if len(events_with_location) < 2:
+            return 0.0
+        
+        # Calcular distancia entre eventos consecutivos
+        for i in range(len(events_with_location) - 1):
+            current_event = events_with_location[i]
+            next_event = events_with_location[i + 1]
+            
+            distance = self.calculate_distance(
+                current_event.location_lat,
+                current_event.location_lon,
+                next_event.location_lat,
+                next_event.location_lon
+            )
+            total_distance += distance
+        
+        return total_distance
     
     def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float) -> float:
         """
