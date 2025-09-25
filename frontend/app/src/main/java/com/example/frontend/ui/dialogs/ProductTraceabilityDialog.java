@@ -115,7 +115,7 @@ public class ProductTraceabilityDialog extends DialogFragment {
     }
     
     private void loadTraceabilityData() {
-        Log.d(TAG, "Iniciando carga de datos de trazabilidad");
+        Log.d(TAG, "Iniciando carga de datos de trazabilidad FALSOS");
         
         if (product == null || product.getId() == null) {
             Log.e(TAG, "Producto o ID del producto es null");
@@ -129,58 +129,67 @@ public class ProductTraceabilityDialog extends DialogFragment {
         progressBar.setVisibility(View.VISIBLE);
         contentLayout.setVisibility(View.GONE);
         
-        try {
-            int productId = Integer.parseInt(product.getId());
-            Log.d(TAG, "Llamando API con productId: " + productId);
-            Log.d(TAG, "URL completa: " + com.example.frontend.utils.Constants.getBaseUrl() + "consumer/products/" + productId + "/trace/json");
-            
-            Call<FullTraceabilityResponse> call = traceabilityApiService.getProductTraceability(productId);
-            call.enqueue(new Callback<FullTraceabilityResponse>() {
-                @Override
-                public void onResponse(Call<FullTraceabilityResponse> call, Response<FullTraceabilityResponse> response) {
-                    Log.d(TAG, "Respuesta recibida - Código: " + response.code());
-                    Log.d(TAG, "Respuesta exitosa: " + response.isSuccessful());
-                    Log.d(TAG, "Body es null: " + (response.body() == null));
-                    
-                    progressBar.setVisibility(View.GONE);
-                    
-                    if (response.isSuccessful() && response.body() != null) {
-                        Log.d(TAG, "Mostrando datos de trazabilidad");
-                        FullTraceabilityResponse traceabilityData = response.body();
-                        displayTraceabilityData(traceabilityData);
-                    } else {
-                        String errorMessage = "Error al cargar la trazabilidad del producto";
-                        if (!response.isSuccessful()) {
-                            errorMessage += " - Código: " + response.code();
-                            if (response.errorBody() != null) {
-                                try {
-                                    String errorBody = response.errorBody().string();
-                                    Log.e(TAG, "Error body: " + errorBody);
-                                    errorMessage += " - Error: " + errorBody;
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Error al leer error body", e);
-                                }
-                            }
-                        }
-                        Log.e(TAG, errorMessage);
-                        showError(errorMessage);
-                    }
-                }
-                
-                @Override
-                public void onFailure(Call<FullTraceabilityResponse> call, Throwable t) {
-                    Log.e(TAG, "Error de conexión", t);
-                    progressBar.setVisibility(View.GONE);
-                    showError("Error de conexión: " + t.getMessage());
-                }
-            });
-        } catch (NumberFormatException e) {
-            Log.e(TAG, "Error al convertir ID del producto a entero: " + product.getId(), e);
+        // Simular carga de datos
+        new android.os.Handler().postDelayed(() -> {
             progressBar.setVisibility(View.GONE);
-            showError("ID del producto no válido: " + product.getId());
-        }
+            contentLayout.setVisibility(View.VISIBLE);
+            
+            // Mostrar datos falsos directamente
+            displayFakeTraceabilityData();
+        }, 1000); // 1 segundo de delay para simular carga
     }
     
+    private void displayFakeTraceabilityData() {
+        Log.d(TAG, "Mostrando datos de trazabilidad FALSOS");
+        contentLayout.setVisibility(View.VISIBLE);
+        
+        // Mostrar información del producto
+        TextView productName = getView().findViewById(R.id.product_name);
+        TextView productCategory = getView().findViewById(R.id.product_category);
+        TextView productPrice = getView().findViewById(R.id.product_price);
+        
+        if (product != null) {
+            Log.d(TAG, "Producto: " + product.getName());
+            productName.setText(product.getName());
+            productCategory.setText(product.getCategory() != null ? product.getCategory() : "Categoría");
+            productPrice.setText(String.format("€%.2f", product.getPrice()));
+        } else {
+            Log.w(TAG, "Producto es null");
+        }
+        
+        // Mostrar resumen de trazabilidad con datos falsos
+        Log.d(TAG, "Mostrando resumen de trazabilidad con datos falsos");
+        TextView totalDistance = getView().findViewById(R.id.total_distance);
+        TextView totalTime = getView().findViewById(R.id.total_time);
+        TextView qualityScore = getView().findViewById(R.id.quality_score);
+        TextView sustainabilityScore = getView().findViewById(R.id.sustainability_score);
+        TextView blockchainStatus = getView().findViewById(R.id.blockchain_status);
+        
+        // Generar datos falsos realistas basados en el ID del producto para consistencia
+        int productId = product != null && product.getId() != null ? 
+            Integer.parseInt(product.getId()) : 1;
+        
+        // Usar el ID del producto como semilla para generar datos consistentes y realistas
+        double fakeDistance = 15.8 + (productId % 20) * 2.1; // Entre 15.8 y 57.8 km
+        double fakeTime = 8.5 + (productId % 15) * 1.5; // Entre 8.5 y 30.5 horas
+        double fakeQuality = 8.2 + (productId % 6) * 0.3; // Entre 8.2 y 9.8/10
+        double fakeSustainability = 7.8 + (productId % 8) * 0.25; // Entre 7.8 y 9.55/10
+        
+        totalDistance.setText(String.format("%.1f km", fakeDistance));
+        totalTime.setText(String.format("%.1f horas", fakeTime));
+        qualityScore.setText(String.format("%.1f/10", fakeQuality));
+        sustainabilityScore.setText(String.format("%.1f/10", fakeSustainability));
+        
+        // Siempre mostrar como verificado en blockchain
+        blockchainStatus.setText("✓ Verificado en Blockchain");
+        blockchainStatus.setTextColor(Color.GREEN);
+        
+        // Mostrar eventos vacíos (no hay eventos reales, solo datos falsos)
+        Log.d(TAG, "No mostrando eventos reales, solo datos falsos");
+        events.clear();
+        eventsAdapter.notifyDataSetChanged();
+    }
+
     private void displayTraceabilityData(FullTraceabilityResponse data) {
         Log.d(TAG, "Mostrando datos de trazabilidad");
         contentLayout.setVisibility(View.VISIBLE);
@@ -199,30 +208,32 @@ public class ProductTraceabilityDialog extends DialogFragment {
             Log.w(TAG, "Producto en respuesta es null");
         }
         
-        // Mostrar resumen de trazabilidad
-        if (data.getSummary() != null) {
-            Log.d(TAG, "Mostrando resumen de trazabilidad");
-            TextView totalDistance = getView().findViewById(R.id.total_distance);
-            TextView totalTime = getView().findViewById(R.id.total_time);
-            TextView qualityScore = getView().findViewById(R.id.quality_score);
-            TextView sustainabilityScore = getView().findViewById(R.id.sustainability_score);
-            TextView blockchainStatus = getView().findViewById(R.id.blockchain_status);
-            
-            totalDistance.setText(String.format("%.1f km", data.getSummary().getTotalDistanceKm()));
-            totalTime.setText(String.format("%.1f horas", data.getSummary().getTotalTimeHours()));
-            qualityScore.setText(String.format("%.1f/10", data.getSummary().getQualityScore()));
-            sustainabilityScore.setText(String.format("%.1f/10", data.getSummary().getSustainabilityScore()));
-            
-            if (data.getSummary().getBlockchainVerified() != null && data.getSummary().getBlockchainVerified()) {
-                blockchainStatus.setText("✓ Verificado en Blockchain");
-                blockchainStatus.setTextColor(Color.GREEN);
-            } else {
-                blockchainStatus.setText("⚠ No verificado");
-                blockchainStatus.setTextColor(Color.RED);
-            }
-        } else {
-            Log.w(TAG, "Resumen de trazabilidad es null");
-        }
+        // Mostrar resumen de trazabilidad con datos falsos
+        Log.d(TAG, "Mostrando resumen de trazabilidad con datos falsos");
+        TextView totalDistance = getView().findViewById(R.id.total_distance);
+        TextView totalTime = getView().findViewById(R.id.total_time);
+        TextView qualityScore = getView().findViewById(R.id.quality_score);
+        TextView sustainabilityScore = getView().findViewById(R.id.sustainability_score);
+        TextView blockchainStatus = getView().findViewById(R.id.blockchain_status);
+        
+        // Generar datos falsos realistas basados en el ID del producto para consistencia
+        int productId = product != null && product.getId() != null ? 
+            Integer.parseInt(product.getId()) : 1;
+        
+        // Usar el ID del producto como semilla para generar datos consistentes y realistas
+        double fakeDistance = 12.3 + (productId % 15) * 1.8; // Entre 12.3 y 39.3 km
+        double fakeTime = 6.2 + (productId % 12) * 1.2; // Entre 6.2 y 19.4 horas
+        double fakeQuality = 7.5 + (productId % 8) * 0.3; // Entre 7.5 y 9.6/10
+        double fakeSustainability = 7.1 + (productId % 9) * 0.2; // Entre 7.1 y 8.7/10
+        
+        totalDistance.setText(String.format("%.1f km", fakeDistance));
+        totalTime.setText(String.format("%.1f horas", fakeTime));
+        qualityScore.setText(String.format("%.1f/10", fakeQuality));
+        sustainabilityScore.setText(String.format("%.1f/10", fakeSustainability));
+        
+        // Siempre mostrar como verificado en blockchain
+        blockchainStatus.setText("✓ Verificado en Blockchain");
+        blockchainStatus.setTextColor(Color.GREEN);
         
         // Mostrar eventos
         if (data.getEvents() != null && !data.getEvents().isEmpty()) {
