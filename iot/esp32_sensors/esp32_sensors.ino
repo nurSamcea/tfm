@@ -20,8 +20,8 @@
 // ========================================
 
 // WiFi
-const char* WIFI_SSID = "work";
-const char* WIFI_PASSWORD = "Albert@Marta1990";
+const char* WIFI_SSID = "Galaxy S21 5G95d5";
+const char* WIFI_PASSWORD = "nur980512";
 
 // Backend
 const char* BACKEND_URL = "http://10.100.194.237:8000/iot/ingest";
@@ -133,17 +133,27 @@ float readSoilHumidity() {
   const float adcMax = float((1 << ADC_BITS) - 1);
   float voltage = (adcValue * VREF) / adcMax;
   
+  // DIAGNÓSTICO: Verificar si el sensor está conectado correctamente
+  Serial.print("[HUMIDITY] ADC="); 
+  Serial.print(adcValue);
+  Serial.print(" V="); 
+  Serial.print(voltage, 4);
+  
+  // Verificar si el sensor está respondiendo
+  if (adcValue < 50) {
+    Serial.println(" - SENSOR NO CONECTADO O EN CORTO (voltaje muy bajo)");
+    return 0.0; // Retornar 0% si no hay sensor conectado
+  } else if (adcValue > 4000) {
+    Serial.println(" - SENSOR EN ABIERTO O DESCONECTADO (voltaje muy alto)");
+    return 0.0; // Retornar 0% si sensor abierto
+  }
+  
   // Convertir voltaje a porcentaje de humedad
   // Para sensores de agua/humedad: más agua = más conductividad = menor voltaje
   // Calibración: 0V = 100% humedad, 3.3V = 0% humedad
   float humidity = ((VREF - voltage) / VREF) * 100.0;
   humidity = constrain(humidity, 0, 100);
   
-  // Debug info
-  Serial.print("[HUMIDITY] ADC="); 
-  Serial.print(adcValue);
-  Serial.print(" V="); 
-  Serial.print(voltage, 4);
   Serial.print(" H="); 
   Serial.println(humidity, 2);
   
@@ -186,12 +196,20 @@ bool connectWiFi() {
 
 bool sendSensorData(float temperature, float humidity) {
   if (!wifiConnected) {
+    Serial.println("WiFi no conectado, no se pueden enviar datos");
     return false;
   }
   
+  // Verificar conectividad antes de enviar
+  Serial.print("Verificando conectividad a ");
+  Serial.print(BACKEND_URL);
+  Serial.print(" (IP: ");
+  Serial.print(WiFi.localIP());
+  Serial.println(")");
+  
   HTTPClient http;
   http.begin(BACKEND_URL);
-  http.setTimeout(6000); // aumentar timeout para evitar -11
+  http.setTimeout(10000); // Aumentar timeout
   http.addHeader("Content-Type", "application/json");
   http.addHeader("X-Ingest-Token", IOT_INGEST_TOKEN);
   
@@ -223,15 +241,44 @@ bool sendSensorData(float temperature, float humidity) {
   Serial.println(jsonString);
   
   int httpResponseCode = http.POST(jsonString);
-  if (httpResponseCode == -11) {
+  
+  // Diagnóstico detallado de errores HTTP
+  if (httpResponseCode == -1) {
+    Serial.println("Error HTTP -1: Problema de conexión (servidor inalcanzable)");
+    Serial.println("Verifica:");
+    Serial.println("1. Que el servidor esté ejecutándose");
+    Serial.println("2. Que la IP sea correcta: " + String(BACKEND_URL));
+    Serial.println("3. Que no haya firewall bloqueando");
+  } else if (httpResponseCode == -2) {
+    Serial.println("Error HTTP -2: Timeout de conexión");
+  } else if (httpResponseCode == -3) {
+    Serial.println("Error HTTP -3: Error de DNS (no se puede resolver la IP)");
+  } else if (httpResponseCode == -4) {
+    Serial.println("Error HTTP -4: Error de conexión");
+  } else if (httpResponseCode == -5) {
+    Serial.println("Error HTTP -5: Error de envío");
+  } else if (httpResponseCode == -6) {
+    Serial.println("Error HTTP -6: Error de recepción");
+  } else if (httpResponseCode == -7) {
+    Serial.println("Error HTTP -7: Error de stream");
+  } else if (httpResponseCode == -8) {
+    Serial.println("Error HTTP -8: Error de timeout");
+  } else if (httpResponseCode == -9) {
+    Serial.println("Error HTTP -9: Error de tamaño de respuesta");
+  } else if (httpResponseCode == -10) {
+    Serial.println("Error HTTP -10: Error de stream de respuesta");
+  } else if (httpResponseCode == -11) {
+    Serial.println("Error HTTP -11: Error de timeout de lectura");
     // Reintento único tras pequeña espera
-    delay(300);
+    delay(500);
     http.end();
     http.begin(BACKEND_URL);
-    http.setTimeout(8000);
+    http.setTimeout(15000);
     http.addHeader("Content-Type", "application/json");
     http.addHeader("X-Ingest-Token", IOT_INGEST_TOKEN);
     httpResponseCode = http.POST(jsonString);
+    Serial.print("Reintento - Código de respuesta: ");
+    Serial.println(httpResponseCode);
   }
   
   if (httpResponseCode > 0) {
@@ -240,9 +287,12 @@ bool sendSensorData(float temperature, float humidity) {
     Serial.println(response);
     
     if (httpResponseCode == 200) {
-      Serial.println("Datos enviados exitosamente");
+      Serial.println("✓ Datos enviados exitosamente");
       http.end();
       return true;
+    } else {
+      Serial.print("Error del servidor - Código: ");
+      Serial.println(httpResponseCode);
     }
   } else {
     Serial.print("Error HTTP: ");
