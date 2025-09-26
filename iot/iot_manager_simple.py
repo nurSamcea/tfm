@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Sistema IoT Híbrido - Sensores Reales y Simulados
-Maneja tanto sensores reales (ESP32) como simulados (Python)
+Sistema IoT Híbrido - Sensores Simulados (Versión Simple)
+Usa solo librerías estándar de Python para evitar problemas de dependencias
 """
 
 import os
 import sys
 import logging
-import asyncio
 import json
 import time
 import random
@@ -15,13 +14,9 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from pathlib import Path
-
-import aiohttp
-from dotenv import load_dotenv
-
-# Cargar variables de entorno
-load_dotenv()
+import urllib.request
+import urllib.parse
+import urllib.error
 
 logging.basicConfig(
     level=logging.INFO,
@@ -47,28 +42,6 @@ class IoTConfig:
         if self.ingest_token is None:
             self.ingest_token = os.getenv('IOT_INGEST_TOKEN', 'dev_iot_token_2024')
 
-class IoTConnection:    
-    def __init__(self, config: IoTConfig):
-        self.config = config
-        self.session: Optional[aiohttp.ClientSession] = None
-    
-    async def connect(self) -> bool:
-        try:
-            self.session = aiohttp.ClientSession(
-                timeout=aiohttp.ClientTimeout(total=30),
-                headers={"Content-Type": "application/json"}
-            )
-            logger.info("Conexión HTTP establecida")
-            return True
-        except Exception as e:
-            logger.error(f"Error estableciendo conexión HTTP: {e}")
-            return False
-    
-    async def disconnect(self):
-        if self.session:
-            await self.session.close()
-            logger.info("Conexión HTTP cerrada")
-
 class Sensor(ABC):
     def __init__(self, device_id: str, name: str, sensor_type: str):
         self.device_id = device_id
@@ -78,7 +51,7 @@ class Sensor(ABC):
         self.reading_count = 0
     
     @abstractmethod
-    async def read_sensor_data(self) -> Dict[str, Any]:
+    def read_sensor_data(self) -> Dict[str, Any]:
         pass
     
     def get_stats(self) -> Dict[str, Any]:
@@ -88,20 +61,6 @@ class Sensor(ABC):
             "type": self.sensor_type,
             "readings": self.reading_count,
             "last_reading": self.last_reading
-        }
-
-class RealSensor(Sensor):    
-    def __init__(self, device_id: str, name: str, sensor_type: str):
-        super().__init__(device_id, name, sensor_type)
-        logger.info(f"Sensor real configurado: {device_id}")
-    
-    async def read_sensor_data(self) -> Dict[str, Any]:
-        # Los sensores reales se conectan directamente al backend
-        # Este método es solo para documentación
-        return {
-            "device_id": self.device_id,
-            "sensor_type": self.sensor_type,
-            "status": "real_sensor_connected_directly"
         }
 
 class SimulatedSensor(Sensor):    
@@ -115,7 +74,7 @@ class SimulatedSensor(Sensor):
         self.humidity_variance = humidity_variance
         logger.info(f"Sensor simulado configurado: {device_id}")
     
-    async def read_sensor_data(self) -> Dict[str, Any]:
+    def read_sensor_data(self) -> Dict[str, Any]:
         # Simular variaciones naturales
         temp_variation = random.uniform(-self.temperature_variance, self.temperature_variance)
         humidity_variation = random.uniform(-self.humidity_variance, self.humidity_variance)
@@ -147,7 +106,6 @@ class SimulatedSensor(Sensor):
 class IoTManager:    
     def __init__(self, config: IoTConfig = None):
         self.config = config or IoTConfig()
-        self.connection = IoTConnection(self.config)
         self.sensors: Dict[str, Sensor] = {}
         self.running = False
         self.stats = {
@@ -157,47 +115,44 @@ class IoTManager:
             "sensors_active": 0
         }
     
-    async def initialize(self) -> bool:
+    def initialize(self) -> bool:
         logger.info("Inicializando sistema IoT híbrido...")
         
-        if not await self.connection.connect():
-            logger.error("❌ Error conectando al backend")
-            return False
-        
         # Verificar conectividad con el backend
-        if not await self.verify_backend_connection():
-            logger.error("❌ Error verificando conexión con backend")
+        if not self.verify_backend_connection():
+            logger.error("Error verificando conexión con backend")
             return False
         
         # Crear sensores simulados
-        if not await self.create_simulated_sensors():
-            logger.error("❌ Error creando sensores simulados")
+        if not self.create_simulated_sensors():
+            logger.error("Error creando sensores simulados")
             return False
         
-        logger.info("✅ Sistema IoT híbrido inicializado exitosamente")
+        logger.info("Sistema IoT híbrido inicializado exitosamente")
         return True
     
-    async def verify_backend_connection(self) -> bool:
+    def verify_backend_connection(self) -> bool:
         """Verificar que el backend está disponible"""
         try:
             url = f"{self.config.backend_url}/"
             logger.info(f"Verificando conectividad con: {url}")
             
-            async with self.connection.session.get(url) as response:
-                response_text = await response.text()
+            req = urllib.request.Request(url)
+            with urllib.request.urlopen(req, timeout=10) as response:
+                response_text = response.read().decode('utf-8')
                 logger.info(f"Respuesta backend: {response.status} - {response_text[:100]}...")
                 
                 if response.status == 200:
-                    logger.info("✅ Backend disponible")
+                    logger.info("Backend disponible")
                     return True
                 else:
-                    logger.error(f"❌ Backend respondió con status {response.status}")
+                    logger.error(f"Backend respondió con status {response.status}")
                     return False
         except Exception as e:
-            logger.error(f"❌ Error conectando al backend: {e}")
+            logger.error(f"Error conectando al backend: {e}")
             return False
     
-    async def create_simulated_sensors(self):
+    def create_simulated_sensors(self):
         # Sensor simulado de Pedro Sánchez
         pedro_sensor = SimulatedSensor(
             device_id="pedro-sanchez-sensor-01",
@@ -211,41 +166,42 @@ class IoTManager:
         self.sensors[pedro_sensor.device_id] = pedro_sensor
         
         # Verificar que el sensor existe en la base de datos
-        if not await self.verify_sensor_exists(pedro_sensor.device_id):
-            logger.error(f"❌ Sensor {pedro_sensor.device_id} no existe en la base de datos")
-            logger.error("💡 Ejecuta primero: python register_sensor.py")
+        if not self.verify_sensor_exists(pedro_sensor.device_id):
+            logger.error(f"Sensor {pedro_sensor.device_id} no existe en la base de datos")
+            logger.error("Ejecuta primero: python register_sensor.py")
             return False
         
-        logger.info(f"✅ Creados {len(self.sensors)} sensores simulados")
+        logger.info(f"Creados {len(self.sensors)} sensores simulados")
         return True
     
-    async def verify_sensor_exists(self, device_id: str) -> bool:
+    def verify_sensor_exists(self, device_id: str) -> bool:
         """Verificar que el sensor existe en la base de datos"""
         try:
             url = f"{self.config.backend_url}/iot/devices/{device_id}/telemetry?limit=1"
             logger.info(f"Verificando sensor en: {url}")
             
-            async with self.connection.session.get(url) as response:
-                response_text = await response.text()
+            req = urllib.request.Request(url)
+            with urllib.request.urlopen(req, timeout=10) as response:
+                response_text = response.read().decode('utf-8')
                 logger.info(f"Respuesta verificación: {response.status} - {response_text}")
                 
                 if response.status == 200:
-                    logger.info(f"✅ Sensor {device_id} verificado en la base de datos")
+                    logger.info(f"Sensor {device_id} verificado en la base de datos")
                     return True
                 elif response.status == 404:
-                    logger.error(f"❌ Sensor {device_id} no encontrado en la base de datos")
+                    logger.error(f"Sensor {device_id} no encontrado en la base de datos")
                     return False
                 else:
-                    logger.error(f"❌ Error verificando sensor {device_id}: {response.status} - {response_text}")
+                    logger.error(f"Error verificando sensor {device_id}: {response.status} - {response_text}")
                     return False
         except Exception as e:
-            logger.error(f"❌ Error verificando sensor {device_id}: {e}")
+            logger.error(f"Error verificando sensor {device_id}: {e}")
             return False
     
-    async def send_sensor_reading(self, sensor: Sensor) -> bool:
+    def send_sensor_reading(self, sensor: Sensor) -> bool:
         try:
             # Leer datos del sensor
-            sensor_data = await sensor.read_sensor_data()
+            sensor_data = sensor.read_sensor_data()
             
             # Preparar payload para el backend (formato exacto según el endpoint)
             payload = {
@@ -263,46 +219,53 @@ class IoTManager:
             logger.info(f"Enviando datos a: {url}")
             logger.info(f"Payload: {payload}")
             
-            async with self.connection.session.post(
-                url,
-                json=payload,
-                headers=headers
-            ) as response:
-                response_text = await response.text()
+            # Crear request
+            data = json.dumps(payload).encode('utf-8')
+            req = urllib.request.Request(
+                url, 
+                data=data,
+                headers={
+                    **headers,
+                    'Content-Type': 'application/json'
+                }
+            )
+            
+            with urllib.request.urlopen(req, timeout=30) as response:
+                response_text = response.read().decode('utf-8')
                 logger.info(f"Respuesta del servidor: {response.status} - {response_text}")
                 
                 if response.status == 200:
                     self.stats["successful_sends"] += 1
-                    logger.info(f"✅ Datos enviados: {sensor.device_id} - Temp: {payload.get('temperature')}°C, Hum: {payload.get('humidity')}%")
+                    logger.info(f"Datos enviados: {sensor.device_id} - Temp: {payload.get('temperature')}°C, Hum: {payload.get('humidity')}%")
                     return True
                 else:
                     self.stats["failed_sends"] += 1
-                    logger.error(f"❌ Error enviando datos: {response.status} - {sensor.device_id} - {response_text}")
+                    logger.error(f"Error enviando datos: {response.status} - {sensor.device_id} - {response_text}")
                     return False
                     
         except Exception as e:
             self.stats["failed_sends"] += 1
-            logger.error(f"❌ Error en sensor {sensor.device_id}: {e}")
+            logger.error(f"Error en sensor {sensor.device_id}: {e}")
             return False
     
-    async def start_all_sensors(self):
+    def start_all_sensors(self):
         logger.info("Iniciando sensores simulados...")
         self.running = True
         
         while self.running:
             for sensor in self.sensors.values():
                 if isinstance(sensor, SimulatedSensor):
-                    await self.send_sensor_reading(sensor)
+                    self.send_sensor_reading(sensor)
                     self.stats["total_readings"] += 1
-                    await asyncio.sleep(1)  # Pequeña pausa entre sensores
+                    time.sleep(1)  # Pequeña pausa entre sensores
             
             # Pausa entre ciclos completos
-            await asyncio.sleep(30)  # 30 segundos entre ciclos
+            logger.info(f"Estadísticas: {self.get_stats()}")
+            time.sleep(30)  # 30 segundos entre ciclos
     
-    async def shutdown(self):
+    def shutdown(self):
         logger.info("Cerrando sistema IoT...")
         self.running = False
-        await self.connection.disconnect()
         logger.info("Sistema IoT cerrado")
     
     def get_stats(self) -> Dict[str, Any]:
@@ -312,9 +275,8 @@ class IoTManager:
             "running": self.running
         }
 
-async def main():
-    logger.info("=== SISTEMA IoT HÍBRIDO ===")
-    logger.info("Sensores reales: ESP32 (conexión directa al backend)")
+def main():
+    logger.info("=== SISTEMA IoT HÍBRIDO (Versión Simple) ===")
     logger.info("Sensores simulados: Python (este programa)")
     
     # Crear gestor IoT
@@ -322,7 +284,7 @@ async def main():
     
     try:
         # Inicializar sistema
-        if not await iot_manager.initialize():
+        if not iot_manager.initialize():
             logger.error("Error inicializando sistema IoT")
             return
         
@@ -330,14 +292,14 @@ async def main():
         logger.info(f"Estadísticas iniciales: {iot_manager.get_stats()}")
         
         # Iniciar sensores simulados
-        await iot_manager.start_all_sensors()
+        iot_manager.start_all_sensors()
         
     except KeyboardInterrupt:
         logger.info("Sistema detenido por el usuario")
     except Exception as e:
         logger.error(f"Error en sistema IoT: {e}")
     finally:
-        await iot_manager.shutdown()
+        iot_manager.shutdown()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

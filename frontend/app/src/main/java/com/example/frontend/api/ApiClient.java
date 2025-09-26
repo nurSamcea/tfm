@@ -31,7 +31,7 @@ public class ApiClient {
             return baseUrl;
         } catch (Exception e) {
             // Fallback a URL por defecto si hay problemas
-            return "http://10.100.194.237:8000/";
+            return "http://10.167.157.98:8000/";
         }
     }
 

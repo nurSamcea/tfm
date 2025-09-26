@@ -7,7 +7,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <!-- IP del backend - se lee desde .env en la raíz del proyecto -->
-        <domain includeSubdomains="true">10.100.194.237</domain>
+        <domain includeSubdomains="true">10.167.157.98</domain>
         <!-- Dominios de desarrollo local -->
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">127.0.0.1</domain>
